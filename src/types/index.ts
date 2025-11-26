@@ -2,11 +2,13 @@ export interface User {
   id: number; // 또는 string UUID (백앤드에서 주는 대로)
   name: string;
   profileImage?: string;
+  createdAt: string; // ISO 8601
 }
 
 export interface Profile extends User {
   introduction: string;
-  area: string;
+  city: string;
+  district: string;
   level: '초급' | '중급' | '상급';
 }
 
@@ -36,7 +38,8 @@ export interface Session {
   name: string;
   description: string;
   image?: string;
-  location: string;
+  city: string; // 지역(시)
+  district: string; // 지역(구)
   createdAt: string; // ISO 8601
   sessionAt: string; // ISO 8601 - 세션 시간
   registerBy: string; // ISO 8601 - 신청 마감
@@ -45,7 +48,7 @@ export interface Session {
   minParticipantCount: number;
   maxParticipantCount: number;
   participants: Member[];
-  heartUsers: User[];
+  likedUsers: User[];
   reviews: Review[];
 }
 
@@ -56,4 +59,5 @@ export interface Review {
   description: string;
   rating: 0 | 1 | 2 | 3 | 4 | 5;
   createdAt: string; // ISO 8601
+  image?: string;
 }
