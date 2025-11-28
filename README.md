@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RunFit
 
-## Getting Started
+내 러닝 조건(지역·날짜·페이스)에 꼭 맞는 모임을 한 번에 찾는 러닝 매칭 서비스
 
-First, run the development server:
+## 프로젝트 개요
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+RunFit은 함께 달릴 사람을 쉽고 빠르게 찾을 수 있는 러닝 모임 플랫폼입니다. <br/>
+지역 기반 필터링, 페이스·난이도 기반 탐색, 신뢰 기반 리뷰 시스템을 통해 <br/>
+초보 러너부터 크루 리더까지 모두가 만족할 수 있는 러닝 환경을 제공합니다.
+
+## 기술 스택
+
+| Category      | Tech                                    |
+| ------------- | --------------------------------------- |
+| Framework     | Next.js (App Router)                    |
+| Language      | TypeScript                              |
+| Styling       | Tailwind CSS                            |
+| State Mgmt    | Zustand                                 |
+| Data Fetching | React Query, Axios                      |
+| Testing       | Jest, React Testing Library, Playwright |
+| CI/CD         | GitHub Actions                          |
+| Hosting       |                                         |
+
+## 아키텍처
+
+- Next.js(App Router) 기반의 클라이언트 중심 구조
+- React Query로 서버 상태 관리 + Zustand로 UI/로컬 상태 관리
+- JWT 기반 인증 + 역할별 UI 제어(RBAC)
+- Feature-based 폴더 구조 적용
+- 공통 컴포넌트는 Storybook으로 문서화
+
+## 폴더 구조
+
+```
+run-fit
+ ┣ app
+ ┣ components
+ ┣ hooks
+ ┣ libs
+ ┣ types
+ ┗ docs
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 주요 기능
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- 지역·날짜·페이스 기반 세션 탐색
+- 단발성 세션(번개) + 지속형 크루 운영
+- 세션 생성·수정·관리
+- 리뷰 기반 신뢰도 시스템
+- 찜한 세션(북마크)
+- 마이페이지(내 세션·내 리뷰·내 크루)
+- 인증/권한 (크루장/운영진/일반 멤버)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 기여도와 역할
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 결과 및 성과
