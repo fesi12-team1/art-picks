@@ -10,7 +10,9 @@
     "test": "jest",
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui",
-    "prepare": "husky"
+    "prepare": "husky",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -49,6 +51,10 @@
     "prettier-plugin-tailwindcss": "^0.7.1",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
-    "typescript": "^5"
+    "typescript": "^5",
+    "storybook": "^10.1.2",
+    "@storybook/nextjs-vite": "^10.1.2",
+    "vite": "^7.2.6",
+    "eslint-plugin-storybook": "^10.1.2"
   }
 }
