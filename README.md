@@ -14,12 +14,13 @@ RunFit은 함께 달릴 사람을 쉽고 빠르게 찾을 수 있는 러닝 모�
 | ------------- | --------------------------------------- |
 | Framework     | Next.js (App Router)                    |
 | Language      | TypeScript                              |
-| Styling       | Tailwind CSS                            |
+| Styling       | Tailwind CSS, Shadcn UI                 |
 | State Mgmt    | Zustand                                 |
-| Data Fetching | React Query, Axios                      |
+| Data Fetching | Tanstack Query, Axios                   |
+| UI System     | Storybook                               |
 | Testing       | Jest, React Testing Library, Playwright |
 | CI/CD         | GitHub Actions                          |
-| Hosting       |                                         |
+| Hosting       | Vercel                                  |
 
 ## 아키텍처
 
@@ -33,12 +34,29 @@ RunFit은 함께 달릴 사람을 쉽고 빠르게 찾을 수 있는 러닝 모�
 
 ```
 run-fit
- ┣ app
- ┣ components
- ┣ hooks
- ┣ libs
- ┣ types
- ┗ docs
+├── src
+│   ├── app               # Next.js App Router pages
+│   │   ├── api/          # Route Handlers
+│   │   ├── crews/        # 크루 목록/상세
+│   │   ├── sessions/     # 세션 목록/상세/생성
+│   │   ├── my/           # 마이페이지
+│   │   ├── signin/       # 로그인
+│   │   └── signup/       # 회원가입
+│   │
+│   ├── assets/           # 정적 파일
+│   ├── components/       # 공통 UI 컴포넌트 (Shadcn UI + 커스텀)
+│   ├── hooks/            # React Query hooks
+│   ├── lib/              # constants, utils 등
+│   ├── mocks/            # MSW handlers
+│   ├── provider/         # Providers (ex: QueryProvider)
+│   ├── stores/           # Zustand store
+│   └── types/            # 타입 정의
+│
+├── e2e/                  # Playwright E2E tests
+├── .github/              # GitHub workflows
+├── .husky/               # Git hooks
+├── node_modules/
+└── 기타 설정 파일들      # eslint, jest, tsconfig, next.config 등
 ```
 
 ## 주요 기능
@@ -48,8 +66,8 @@ run-fit
 - 세션 생성·수정·관리
 - 리뷰 기반 신뢰도 시스템
 - 찜한 세션(북마크)
-- 마이페이지(내 세션·내 리뷰·내 크루)
-- 인증/권한 (크루장/운영진/일반 멤버)
+- 마이페이지(내 세션·리뷰·크루)
+- 역할 기반 권한 (크루장 / 운영진 / 일반 멤버)
 
 ## 기여도와 역할
 
