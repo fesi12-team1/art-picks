@@ -25,14 +25,14 @@ RunFit은 함께 달릴 사람을 쉽고 빠르게 찾을 수 있는 러닝 모�
 ## 아키텍처
 
 - Next.js(App Router) 기반의 클라이언트 중심 구조
-- React Query로 서버 상태 관리 + Zustand로 UI/로컬 상태 관리
+- Tanstack Query로 서버 상태 관리 + Zustand로 UI/로컬 상태 관리
 - JWT 기반 인증 + 역할별 UI 제어(RBAC)
 - App Router 중심의 domain-based 폴더 구조 사용
 - 디자인 시스템은 Shadcn + Storybook 기반 UI 컴포넌트 구축
 
 ## 폴더 구조
 
-```
+```text
 run-fit
 ├── src
 │   ├── app               # Next.js App Router pages
