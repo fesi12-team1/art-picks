@@ -1,4 +1,9 @@
-import { Crew, PaginationQueryParams, Response, ResponseError } from '@/types';
+import {
+  Crew,
+  PaginationQueryParams,
+  ResponseData,
+  ResponseError,
+} from '@/types';
 
 export async function createCrew(
   body: Pick<Crew, 'name' | 'description' | 'city' | 'image'>
@@ -11,7 +16,7 @@ export async function createCrew(
     body: JSON.stringify(body),
   });
 
-  const data: Response<Crew, ResponseError> = await response.json();
+  const data: ResponseData<Crew, ResponseError> = await response.json();
   return data;
 }
 
@@ -32,24 +37,28 @@ export async function getCrews(
     }
   );
 
-  const data: Response<Crew[], ResponseError> = await response.json();
+  const data: ResponseData<Crew[], ResponseError> = await response.json();
   return data;
 }
 
 export async function getCrewById(crewId: string) {
   // GET /crews/:crewId
-  // 성공시
-  // body: Crew
+  const response = await fetch(`/api/crews/${crewId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  const data: ResponseData<Crew, ResponseError> = await response.json();
+
+  return data;
 }
 
-type GetCrewMembersQueryParams = {
-  role?: 'leader' | 'staff' | 'general';
-} & PaginationQueryParams;
 export async function getCrewMembersById(
   crewId: string,
-  queryParams?: GetCrewMembersQueryParams
+  queryParams?: { role?: 'leader' | 'staff' | 'member' }
 ) {
-  // GET /crews/:crewId/members?queryParams
+  // GET /crews/:crewId/members?role=leader|staff|member
   // queryParams: {
   //   role?: 'leader' | 'staff' | 'member',
   //   page?: number,
