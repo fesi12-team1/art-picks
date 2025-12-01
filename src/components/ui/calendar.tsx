@@ -22,7 +22,16 @@ function Calendar({
 }: React.ComponentProps<typeof DayPicker> & {
   buttonVariant?: React.ComponentProps<typeof Button>['variant'];
 }) {
+  const { fromYear, toYear, ...restProps } = props;
   const defaultClassNames = getDefaultClassNames();
+  const now = React.useMemo(() => new Date(), []);
+  const dropdownYearRange =
+    captionLayout === 'dropdown'
+      ? {
+          fromYear: fromYear ?? now.getFullYear() - 5,
+          toYear: toYear ?? now.getFullYear() + 5,
+        }
+      : {};
 
   return (
     <DayPicker
@@ -169,7 +178,8 @@ function Calendar({
         },
         ...components,
       }}
-      {...props}
+      {...dropdownYearRange}
+      {...restProps}
     />
   );
 }

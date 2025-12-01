@@ -1,7 +1,7 @@
 'use client';
 
 import { CalendarIcon } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Label } from '@/components/ui/label';
@@ -10,13 +10,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { formatSessionAt } from '@/lib/date';
 import { TimePicker, TimeValue } from './TimePicker';
 
 type DateTimePickerProps = {
   label?: string;
+  onChange?: (sessionAt?: string) => void;
 };
 
-export function DateTimePicker({ label }: DateTimePickerProps) {
+export function DateTimePicker({ label, onChange }: DateTimePickerProps) {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [time, setTime] = useState<TimeValue>({
@@ -26,6 +28,15 @@ export function DateTimePicker({ label }: DateTimePickerProps) {
   });
   const today = useMemo(() => new Date(), []);
   const displayDate = date ?? today;
+
+  const sessionAt = useMemo(() => {
+    if (!date) return undefined;
+    return formatSessionAt(date, time);
+  }, [date, time]);
+
+  useEffect(() => {
+    onChange?.(sessionAt);
+  }, [onChange, sessionAt]);
 
   return (
     <div className="flex flex-col gap-3">
