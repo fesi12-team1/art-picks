@@ -5,7 +5,7 @@ import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
-function Select({
+export default function Select({
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Root>) {
   return <SelectPrimitive.Root data-slot="select" {...props} />;
@@ -172,15 +172,12 @@ function SelectScrollDownButton({
   );
 }
 
-export {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectScrollDownButton,
-  SelectScrollUpButton,
-  SelectSeparator,
-  SelectTrigger,
-  SelectValue,
-};
+Select.SelectContent = SelectContent;
+Select.SelectGroup = SelectGroup;
+Select.SelectItem = SelectItem;
+Select.SelectLabel = SelectLabel;
+Select.SelectScrollDownButton = SelectScrollDownButton;
+Select.SelectScrollUpButton = SelectScrollUpButton;
+Select.SelectSeparator = SelectSeparator;
+Select.SelectTrigger = SelectTrigger;
+Select.SelectValue = SelectValue;
