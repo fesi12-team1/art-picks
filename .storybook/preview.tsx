@@ -1,7 +1,16 @@
 import type { Preview } from '@storybook/nextjs-vite';
 import '@app/globals.css';
+import { INITIAL_VIEWPORTS, MINIMAL_VIEWPORTS } from 'storybook/viewport';
 
 const preview: Preview = {
+  decorators: [
+    (Story) => (
+      <div className="antialiased">
+        <Story />
+      </div>
+    ),
+  ],
+
   parameters: {
     controls: {
       matchers: {
@@ -16,10 +25,14 @@ const preview: Preview = {
         dark: { name: 'dark', value: '#000000' },
       },
     },
+    viewport: {
+      options: { ...MINIMAL_VIEWPORTS, ...INITIAL_VIEWPORTS },
+    },
   },
 
   initialGlobals: {
     backgrounds: { value: 'default' },
+    viewport: { value: 'Small mobile', isRotated: false },
   },
 };
 
