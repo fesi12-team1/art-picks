@@ -2,14 +2,10 @@
 
 import { CalendarIcon } from 'lucide-react';
 import { useState } from 'react';
-import { Calendar } from '@/components/composite/Calendar';
-import { Button } from '@/components/ui/Button';
-import { Label } from '@/components/ui/Label';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/Popover';
+import Calendar from '@/components/composite/Calendar';
+import Button from '@/components/ui/Button';
+import Label from '@/components/ui/Label';
+import Popover from '@/components/ui/Popover';
 
 interface DatePickerProps {
   value?: Date;
@@ -18,7 +14,7 @@ interface DatePickerProps {
   inline?: boolean;
 }
 
-export function DatePicker({
+export default function DatePicker({
   value,
   onChange,
   label = '날짜',
@@ -54,7 +50,7 @@ export function DatePicker({
     <div className="flex flex-col gap-2">
       <Label>{label}</Label>
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
+        <Popover.Trigger asChild>
           <Button
             variant="outline"
             className="w-56 justify-between font-normal"
@@ -68,8 +64,8 @@ export function DatePicker({
               )}
             </span>
           </Button>
-        </PopoverTrigger>
-        <PopoverContent>
+        </Popover.Trigger>
+        <Popover.Content>
           <Calendar
             mode="single"
             selected={selectedDate}
@@ -79,7 +75,7 @@ export function DatePicker({
               setOpen(false);
             }}
           />
-        </PopoverContent>
+        </Popover.Content>
       </Popover>
     </div>
   );

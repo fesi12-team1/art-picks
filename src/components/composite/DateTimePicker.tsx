@@ -1,15 +1,11 @@
 'use client';
 
-import { Button } from '@components/ui/Button';
-import { Label } from '@components/ui/Label';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@components/ui/Popover';
+import Button from '@components/ui/Button';
+import Label from '@components/ui/Label';
+import Popover from '@components/ui/Popover';
 import { CalendarIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { DatePicker } from './DatePicker';
+import DatePicker from './DatePicker';
 import TimePicker, { type TimeValue } from './TimePicker';
 
 interface DateTimePickerProps {
@@ -48,7 +44,7 @@ export default function DateTimePicker({
     <div className="flex flex-col gap-3">
       <Label>{label ?? '날짜/시간'}</Label>
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
+        <Popover.Trigger asChild>
           <Button variant="outline" className="w-56 justify-between">
             <span>{displayDate.toLocaleDateString()}</span>
             <span>
@@ -56,8 +52,8 @@ export default function DateTimePicker({
             </span>
             <CalendarIcon className="h-4 w-4" />
           </Button>
-        </PopoverTrigger>
-        <PopoverContent className="p-4">
+        </Popover.Trigger>
+        <Popover.Content className="p-4">
           <div className="flex flex-col items-center">
             <DatePicker
               inline
@@ -72,7 +68,7 @@ export default function DateTimePicker({
               완료
             </Button>
           </div>
-        </PopoverContent>
+        </Popover.Content>
       </Popover>
     </div>
   );

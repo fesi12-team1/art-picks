@@ -172,12 +172,12 @@ function SelectScrollDownButton({
   );
 }
 
-Select.SelectContent = SelectContent;
-Select.SelectGroup = SelectGroup;
-Select.SelectItem = SelectItem;
-Select.SelectLabel = SelectLabel;
-Select.SelectScrollDownButton = SelectScrollDownButton;
-Select.SelectScrollUpButton = SelectScrollUpButton;
-Select.SelectSeparator = SelectSeparator;
-Select.SelectTrigger = SelectTrigger;
-Select.SelectValue = SelectValue;
+Select.Content = SelectContent;
+Select.Group = SelectGroup;
+Select.Item = SelectItem;
+Select.Label = SelectLabel;
+Select.ScrollDownButton = SelectScrollDownButton;
+Select.ScrollUpButton = SelectScrollUpButton;
+Select.Separator = SelectSeparator;
+Select.Trigger = SelectTrigger;
+Select.Value = SelectValue;

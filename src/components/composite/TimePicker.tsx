@@ -1,6 +1,6 @@
 'use client';
 
-import { Label } from '@/components/ui/Label';
+import Label from '@/components/ui/Label';
 import Select from '@/components/ui/Select';
 
 export type TimeValue = {
@@ -26,19 +26,19 @@ export default function TimePicker({ value, onChange }: TimePickerProps) {
           value={value.hour}
           onValueChange={(nextHour) => onChange({ ...value, hour: nextHour })}
         >
-          <Select.SelectTrigger className="w-20">
-            <Select.SelectValue placeholder="hh" />
-          </Select.SelectTrigger>
-          <Select.SelectContent>
+          <Select.Trigger className="w-20">
+            <Select.Value placeholder="hh" />
+          </Select.Trigger>
+          <Select.Content>
             {Array.from({ length: 12 }).map((_, i) => {
               const val = String(i + 1).padStart(2, '0');
               return (
-                <Select.SelectItem key={val} value={val}>
+                <Select.Item key={val} value={val}>
                   {val}
-                </Select.SelectItem>
+                </Select.Item>
               );
             })}
-          </Select.SelectContent>
+          </Select.Content>
         </Select>
 
         {/* Minute */}
@@ -48,19 +48,19 @@ export default function TimePicker({ value, onChange }: TimePickerProps) {
             onChange({ ...value, minute: nextMinute })
           }
         >
-          <Select.SelectTrigger className="w-20">
-            <Select.SelectValue placeholder="mm" />
-          </Select.SelectTrigger>
-          <Select.SelectContent>
+          <Select.Trigger className="w-20">
+            <Select.Value placeholder="mm" />
+          </Select.Trigger>
+          <Select.Content>
             {Array.from({ length: 60 }).map((_, i) => {
               const val = String(i).padStart(2, '0');
               return (
-                <Select.SelectItem key={val} value={val}>
+                <Select.Item key={val} value={val}>
                   {val}
-                </Select.SelectItem>
+                </Select.Item>
               );
             })}
-          </Select.SelectContent>
+          </Select.Content>
         </Select>
 
         {/* AM/PM */}
@@ -70,13 +70,13 @@ export default function TimePicker({ value, onChange }: TimePickerProps) {
             onChange({ ...value, ampm: nextAmpm as TimeValue['ampm'] })
           }
         >
-          <Select.SelectTrigger className="w-20">
-            <Select.SelectValue placeholder="AM/PM" />
-          </Select.SelectTrigger>
-          <Select.SelectContent>
-            <Select.SelectItem value="AM">AM</Select.SelectItem>
-            <Select.SelectItem value="PM">PM</Select.SelectItem>
-          </Select.SelectContent>
+          <Select.Trigger className="w-20">
+            <Select.Value placeholder="AM/PM" />
+          </Select.Trigger>
+          <Select.Content>
+            <Select.Item value="AM">AM</Select.Item>
+            <Select.Item value="PM">PM</Select.Item>
+          </Select.Content>
         </Select>
       </div>
     </div>
