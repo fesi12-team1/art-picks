@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { Textarea } from './Textarea';
 
 /**
- * 버튼은 사용자가 클릭하여 작업을 수행하거나 다른 페이지로 이동할 수 있는 클릭 가능한 요소입니다.
+ * Textarea 컴포넌트는 사용자가 여러 줄의 텍스트를 입력할 수 있는 입력 필드입니다.
  */
 
 const meta: Meta<typeof Textarea> = {
@@ -24,7 +24,6 @@ export const States: Story = {
   render: () => (
     <div className="flex flex-col gap-4">
       <Textarea placeholder="Normal" />
-      <Textarea placeholder="Focused" autoFocus />
       <Textarea disabled placeholder="Disabled" />
       <Textarea aria-invalid placeholder="Invalid" />
     </div>
