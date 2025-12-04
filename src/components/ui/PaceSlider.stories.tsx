@@ -14,7 +14,7 @@ const meta: Meta<typeof PaceSlider> = {
   tags: ['autodocs'],
   argTypes: {
     value: {
-      control: 'object',
+      control: 'number',
       description: '현재 페이스 값 (초 단위)',
       table: {
         category: 'State',
@@ -57,7 +57,7 @@ const meta: Meta<typeof PaceSlider> = {
       },
     },
     defaultValue: {
-      control: 'object',
+      control: 'number',
       description: '초기값',
       table: {
         type: { summary: 'number' },
