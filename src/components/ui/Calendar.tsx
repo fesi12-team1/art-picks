@@ -14,7 +14,7 @@ export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
   buttonVariant?: React.ComponentProps<typeof Button>['variant'];
 };
 
-export default function Calendar({
+function CalendarRoot({
   className,
   classNames,
   showOutsideDays = true,
@@ -224,4 +224,8 @@ function CalendarDayButton({
   );
 }
 
-Calendar.DayButton = CalendarDayButton;
+const Calendar = Object.assign(CalendarRoot, {
+  DayButton: CalendarDayButton,
+});
+
+export default Calendar;
