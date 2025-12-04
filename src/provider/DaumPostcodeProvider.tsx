@@ -7,7 +7,6 @@ const DAUM_POSTCODE_SCRIPT_SRC = `${process.env.NEXT_PUBLIC_DAUM_POSTCODE_URL ||
 
 interface DaumPostcodeContextValue {
   loaded: boolean;
-  error: Error | null;
   openAddressSearch: (options: {
     onSelectComplete: (address: string) => void;
   }) => void;
@@ -31,6 +30,7 @@ export function DaumPostcodeProvider({
     onSelectComplete: (address: string) => void;
   }) => {
     if (!loaded || !window.daum?.Postcode) {
+      console.warn('Daum Postcode script가 로드되지 않았습니다.');
       return;
     }
 
@@ -43,6 +43,13 @@ export function DaumPostcodeProvider({
       popupKey: 'postcodePopup',
     });
   };
+
+  // 오류 처리를 위한 useEffect는 주석 처리했습니다.
+  // useEffect(() => {
+  //   if (error) {
+  //     throw error;
+  //   }
+  // }, [error]);
 
   return (
     <>
@@ -60,10 +67,11 @@ export function DaumPostcodeProvider({
             );
           }
         }}
+        onError={() =>
+          setError(new Error('Failed to load Daum Postcode script'))
+        }
       />
-      <DaumPostcodeContext.Provider
-        value={{ loaded, error, openAddressSearch }}
-      >
+      <DaumPostcodeContext.Provider value={{ loaded, openAddressSearch }}>
         {children}
       </DaumPostcodeContext.Provider>
     </>
