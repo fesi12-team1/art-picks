@@ -186,7 +186,7 @@ export default function Calendar({
   );
 }
 
-export function CalendarDayButton({
+function CalendarDayButton({
   className,
   day,
   modifiers,

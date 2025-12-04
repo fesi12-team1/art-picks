@@ -79,7 +79,7 @@ export const Disabled: Story = {
 /**
  * 기본 시간값을 커스텀한 예시
  */
-export const CustomInitialTime: Story = {
+export const InitialValue: Story = {
   render: (args) => {
     const [value, setValue] = useState<DateTimeValue>({
       date: new Date('2025-12-31'),

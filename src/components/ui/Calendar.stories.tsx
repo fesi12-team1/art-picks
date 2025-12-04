@@ -51,7 +51,7 @@ type Story = StoryObj<CalendarProps>;
 /**
  * 하나의 날짜만 클릭 가능하고 이전/다음 달 날짜를 표시합니다.
  */
-export const Basic: Story = {
+export const Default: Story = {
   args: {
     mode: 'single',
     showOutsideDays: true,
@@ -114,7 +114,7 @@ export const ControlledSingle: Story = {
 export const ControlledRange: Story = {
   render: (args: CalendarProps) => {
     const [date, setDate] = React.useState<DateRange | undefined>({
-      from: new Date(2025, 12, 3),
+      from: new Date('2025-12-03'),
       to: undefined,
     });
 

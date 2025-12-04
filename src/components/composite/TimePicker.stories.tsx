@@ -58,31 +58,9 @@ export const Default: Story = {
 /**
  * 초기값 있는 경우
  */
-export const EmptyState: Story = {
+export const InitialValue: Story = {
   render: (args) => {
     const [value, setValue] = useState<TimeValue>(args.value);
     return <TimePicker {...args} value={value} onChange={setValue} />;
-  },
-};
-
-/**
- * Custom Label 예시 (라벨만 변경하는 경우)
- */
-export const CustomInitialTime: Story = {
-  render: (args) => {
-    const [value, setValue] = useState<TimeValue>({
-      hour: '01',
-      minute: '15',
-      ampm: 'PM',
-    });
-
-    return (
-      <TimePicker
-        {...args}
-        label="마감 시간"
-        value={value}
-        onChange={setValue}
-      />
-    );
   },
 };

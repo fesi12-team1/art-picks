@@ -59,19 +59,6 @@ export const Default: Story = {
 };
 
 /**
- * 초기값 있는 경우
- */
-export const DefaultValue: Story = {
-  args: {
-    value: new Date(2025, 12, 25),
-  },
-  render: (args) => {
-    const [value, setValue] = useState<Date | undefined>(args.value);
-    return <DatePicker {...args} value={value} onChange={setValue} />;
-  },
-};
-
-/**
  * 비활성(disabled) 상태
  */
 export const Disabled: Story = {
@@ -79,6 +66,19 @@ export const Disabled: Story = {
     const [value] = useState<Date | undefined>(undefined);
 
     return <DatePicker {...args} value={value} onChange={() => {}} disabled />;
+  },
+};
+
+/**
+ * 초기값 있는 경우
+ */
+export const InitialValue: Story = {
+  args: {
+    value: new Date(2025, 12, 25),
+  },
+  render: (args) => {
+    const [value, setValue] = useState<Date | undefined>(args.value);
+    return <DatePicker {...args} value={value} onChange={setValue} />;
   },
 };
 
