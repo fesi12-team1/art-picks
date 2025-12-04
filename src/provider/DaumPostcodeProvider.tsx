@@ -6,7 +6,7 @@ import React, { createContext, useContext, useState } from 'react';
 type DaumPostcodeContextValue = {
   loaded: boolean;
   error: Error | null;
-  searchPostcode: (options: {
+  openAddressSearch: (options: {
     onSelectComplete: (address: string) => void;
   }) => void;
 };
@@ -23,7 +23,7 @@ export function DaumPostcodeProvider({
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const searchPostcode = ({
+  const openAddressSearch = ({
     onSelectComplete,
   }: {
     onSelectComplete: (address: string) => void;
@@ -59,7 +59,9 @@ export function DaumPostcodeProvider({
           }
         }}
       />
-      <DaumPostcodeContext.Provider value={{ loaded, error, searchPostcode }}>
+      <DaumPostcodeContext.Provider
+        value={{ loaded, error, openAddressSearch }}
+      >
         {children}
       </DaumPostcodeContext.Provider>
     </>
