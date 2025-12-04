@@ -82,7 +82,7 @@ export const Disabled: Story = {
 export const InitialValue: Story = {
   render: (args) => {
     const [value, setValue] = useState<DateTimeValue>({
-      date: new Date('2025-12-31'),
+      date: new Date('2025-12-25'),
       time: {
         hour: '08',
         minute: '45',

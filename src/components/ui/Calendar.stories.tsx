@@ -114,7 +114,7 @@ export const ControlledSingle: Story = {
 export const ControlledRange: Story = {
   render: (args: CalendarProps) => {
     const [date, setDate] = React.useState<DateRange | undefined>({
-      from: new Date('2025-12-03'),
+      from: new Date('2025-12-25'),
       to: undefined,
     });
 

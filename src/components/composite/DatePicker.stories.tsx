@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { useState } from 'react';
 import DatePicker, { type DatePickerProps } from './DatePicker';
 
+const today = new Date('2025-12-25');
+
 /**
  * DatePicker 컴포넌트는 사용자가 날짜를 선택할 수 있는 UI 요소입니다.
  *
@@ -74,7 +76,7 @@ export const Disabled: Story = {
  */
 export const InitialValue: Story = {
   args: {
-    value: new Date(2025, 12, 25),
+    value: today,
   },
   render: (args) => {
     const [value, setValue] = useState<Date | undefined>(args.value);
@@ -86,9 +88,9 @@ export const InitialValue: Story = {
  * Inline 모드
  */
 export const Inline: Story = {
-  render: (args) => {
-    const [value, setValue] = useState<Date | undefined>(args.value);
-    return <DatePicker {...args} value={value} inline onChange={setValue} />;
+  render: () => {
+    const [value, setValue] = useState<Date | undefined>(undefined);
+    return <DatePicker value={value} inline onChange={setValue} />;
   },
 };
 
@@ -96,11 +98,10 @@ export const Inline: Story = {
  * Inline Label 모드
  */
 export const InlineLabel: Story = {
-  render: (args) => {
-    const [value, setValue] = useState<Date | undefined>(args.value);
+  render: () => {
+    const [value, setValue] = useState<Date | undefined>(undefined);
     return (
       <DatePicker
-        {...args}
         value={value}
         inline
         onChange={setValue}
@@ -114,11 +115,10 @@ export const InlineLabel: Story = {
  * Inline Label Disabled 모드
  */
 export const InlineLabelDisabled: Story = {
-  render: (args) => {
-    const [value, setValue] = useState<Date | undefined>(args.value);
+  render: () => {
+    const [value, setValue] = useState<Date | undefined>(undefined);
     return (
       <DatePicker
-        {...args}
         value={value}
         inline
         onChange={setValue}
