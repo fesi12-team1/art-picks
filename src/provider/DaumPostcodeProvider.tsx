@@ -3,6 +3,8 @@
 import Script from 'next/script';
 import React, { createContext, useContext, useState } from 'react';
 
+const DAUM_POSTCODE_SCRIPT_SRC = `${process.env.NEXT_PUBLIC_DAUM_POSTCODE_URL || '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js'}`;
+
 type DaumPostcodeContextValue = {
   loaded: boolean;
   error: Error | null;
@@ -45,7 +47,7 @@ export function DaumPostcodeProvider({
   return (
     <>
       <Script
-        src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
+        src={DAUM_POSTCODE_SCRIPT_SRC}
         strategy="afterInteractive"
         onLoad={() => {
           if (window.daum?.Postcode) {
