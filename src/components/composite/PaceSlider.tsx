@@ -70,7 +70,7 @@ export default function PaceSlider({
               'relative grow overflow-hidden rounded-full bg-[#181820] data-[orientation=horizontal]:h-2 data-[orientation=horizontal]:w-full'
             )}
           >
-            {Array.from({ length: 9 }, (_, index) => {
+            {Array.from({ length: CIRCLE_COUNT }, (_, index) => {
               return (
                 <div
                   key={index}
