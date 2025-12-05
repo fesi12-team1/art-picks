@@ -89,7 +89,7 @@ export default function Input({
             type="button"
             onClick={() => setShowPassword(!showPassword)}
             className="text-muted-foreground absolute top-1/2 right-3 -translate-y-1/2 transition-colors hover:text-white"
-            tabIndex={-1}
+            aria-label={showPassword ? '비밀번호 숨기기' : '비밀번호 보기'}
           >
             {showPassword ? (
               <EyeOff className="size-4" />
