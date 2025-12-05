@@ -40,7 +40,8 @@ export default function KakaoMap({
       markerRef.current?.setMap(null);
       container.innerHTML = '';
     };
-  }, [loaded, createMap, createMarker, coords]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loaded, createMap, createMarker, coords.lat, coords.lng]);
 
   const handleMapClick = () => {
     window.open(
