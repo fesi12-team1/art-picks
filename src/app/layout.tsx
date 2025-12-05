@@ -15,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className="antialiased">
+      <body className="bg-gray-900 antialiased">
         <QueryProvider>{children}</QueryProvider>
       </body>
     </html>

@@ -1,43 +1,155 @@
-import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
-import { cn } from '@/lib/utils';
+import Level from '@/assets/icons/level.svg';
+import { cn, formatTextPace, secondsToMinutes } from '@/lib/utils';
 
 export const badgeVariants = cva(
-  'inline-flex items-center justify-center rounded-full border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden',
+  'inline-flex items-center justify-center whitespace-nowrap shrink-0 [&>svg]:size-3 [&>svg]:pointer-events-none overflow-hidden font-semibold',
   {
     variants: {
       variant: {
-        default:
-          'border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90',
-        secondary:
-          'border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90',
-        destructive:
-          'border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
-        outline:
-          'text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground',
+        dday: 'text-brand-600 bg-linear-to-br from-[rgba(247,223,249,1)] via-[rgba(223,229,249,1)] to-[rgba(186,186,250,1)]',
+        level: 'bg-gray-800',
+        pace: 'bg-blue-950 text-blue-300',
+      },
+      size: {
+        sm: 'rounded-sm px-1 py-0.5 text-[10px] font-semibold',
+        md: 'rounded-md px-2 py-1 text-[12px] font-semibold',
+        lg: 'rounded-lg px-2 py-1 text-[14px] font-semibold',
       },
     },
     defaultVariants: {
-      variant: 'default',
+      variant: 'level',
+      size: 'sm',
     },
   }
 );
 
+type BaseBadgeProps = React.ComponentProps<'span'> & {
+  children?: React.ReactNode;
+  variant?: VariantProps<typeof badgeVariants>['variant'];
+  size?: VariantProps<typeof badgeVariants>['size'];
+};
+
+type LevelBadgeProps = BaseBadgeProps & {
+  variant: 'level';
+  level: 'easy' | 'medium' | 'hard';
+  pace?: never;
+};
+
+type PaceBadgeProps = BaseBadgeProps & {
+  variant: 'pace';
+  pace: number;
+  level?: never;
+};
+
+type DdayBadgeProps = BaseBadgeProps & {
+  variant: 'dday';
+  level?: never;
+  pace?: never;
+};
+
+type BadgeProps = LevelBadgeProps | PaceBadgeProps | DdayBadgeProps;
+
 export default function Badge({
   className,
   variant,
-  asChild = false,
-  ...props
-}: React.ComponentProps<'span'> &
-  VariantProps<typeof badgeVariants> & { asChild?: boolean }) {
-  const Comp = asChild ? Slot : 'span';
-
+  size,
+  children,
+}: BadgeProps) {
   return (
-    <Comp
+    <div
       data-slot="badge"
-      className={cn(badgeVariants({ variant }), className)}
-      {...props}
-    />
+      className={cn(badgeVariants({ variant, size }), className)}
+    >
+      {children}
+    </div>
   );
 }
+
+export function PaceBadge({
+  className,
+  pace,
+  size,
+}: Omit<PaceBadgeProps, 'variant'>) {
+  return (
+    <Badge variant="pace" pace={pace} size={size} className={className}>
+      {formatTextPace(...secondsToMinutes(pace || 0))}
+    </Badge>
+  );
+}
+
+export function LevelBadge({
+  className,
+  level,
+  size,
+}: Omit<LevelBadgeProps, 'variant'>) {
+  const fillColor = {
+    easy: 'fill-gray-200',
+    medium: 'fill-[#F2B48A]',
+    hard: 'fill-[#FF819E]',
+  };
+  const textColor = {
+    easy: 'text-gray-200',
+    medium: 'text-[#F2B48A]',
+    hard: 'text-[#FF819E]',
+  };
+  const text = {
+    easy: '초급',
+    medium: '중급',
+    hard: '고급',
+  };
+  return (
+    <Badge variant="level" level={level} size={size} className={className}>
+      <Level className={`size-3 ${fillColor[level]}`} />
+      <span className={`${textColor[level]}`}>{text[level]}</span>
+    </Badge>
+  );
+}
+
+export function DdayBadge({
+  className,
+  size,
+}: Omit<DdayBadgeProps, 'variant'>) {
+  return (
+    <Badge variant="dday" size={size} className={className}>
+      마감 D-3
+    </Badge>
+  );
+}
+
+export const DdayBadges = (
+  <>
+    <div
+      className={cn(
+        'text-brand-600 inline-flex items-center justify-center rounded-sm bg-linear-to-br from-[rgba(247,223,249,1)] via-[rgba(223,229,249,1)] to-[rgba(186,186,250,1)]',
+        'px-2 py-1 text-[14px] font-semibold'
+      )}
+    >
+      D-day lg
+    </div>
+    <div
+      className={cn(
+        'text-brand-600 inline-flex items-center justify-center rounded-sm bg-linear-to-br from-[rgba(247,223,249,1)] via-[rgba(223,229,249,1)] to-[rgba(186,186,250,1)]',
+        'px-1.5 py-0.5 text-[10px] font-semibold'
+      )}
+    >
+      <span>D-day sm</span>
+    </div>
+  </>
+);
+
+export const PaceBadges = () => (
+  <>
+    <PaceBadge pace={300} size="sm" />
+    <PaceBadge pace={325} size="md" />
+    <PaceBadge pace={375} size="lg" />
+  </>
+);
+export const LevelBadges = () => (
+  <>
+    <LevelBadge level="hard" size="sm" />
+    <LevelBadge level="medium" size="md" />
+    <LevelBadge level="easy" size="lg" />
+  </>
+);
