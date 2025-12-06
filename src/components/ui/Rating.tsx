@@ -31,19 +31,30 @@ export default function Rating({
   };
 
   return (
-    <div className={cn('flex items-center', className)}>
+    <div
+      className={cn('flex items-center', className)}
+      role="slider"
+      aria-label="별점 선택"
+      aria-valuenow={value}
+      aria-valuemin={0}
+      aria-valuemax={max}
+      aria-disabled={disabled}
+    >
       {Array.from({ length: max }).map((_, i) => {
         const index = i + 1;
         const active = index <= displayValue;
-
         return (
           <button
             key={i}
             disabled={disabled}
+            aria-label={`${index}점`}
             onMouseEnter={() => !disabled && setHoveredRating(index)}
             onMouseLeave={() => !disabled && setHoveredRating(0)}
             onClick={() => handleClick(index)}
-            className={`${index < max ? 'pr-0.5' : ''} focus:outline-none`}
+            className={cn(
+              index < max ? 'pr-0.5' : '',
+              'rounded-sm focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2'
+            )}
           >
             <Star
               width={size}
