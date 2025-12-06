@@ -14,7 +14,7 @@ beforeAll(() => {
 
 describe('TimeSlider', () => {
   const defaultProps = {
-    value: [360, 1080],
+    value: [360, 1080] as [number, number],
     onValueChange: jest.fn(),
   };
   test('초기 렌더링: 초기 시간 텍스트와 min/max 라벨이 표시된다', () => {

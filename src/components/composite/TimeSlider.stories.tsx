@@ -61,7 +61,7 @@ export const Default: Story = {
   render: function Render(args) {
     const [{ value }, updateArgs] = useArgs();
 
-    const onValueChange = (newValue: number) => {
+    const onValueChange = (newValue: [number, number]) => {
       updateArgs({ value: newValue });
       args.onValueChange?.(newValue);
     };
