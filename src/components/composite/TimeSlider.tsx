@@ -22,11 +22,14 @@ export default function TimeSlider({
   ...props
 }: TimeSliderProps) {
   const isAllDay = value[0] === 0 && value[1] === 1440;
+  const isSame = value[0] === value[1];
   return (
     <div className="w-full">
       <div className="text-body2-semibold mb-7 flex justify-center gap-3 text-white">
         {isAllDay ? (
           <p>하루 종일</p>
+        ) : isSame ? (
+          <p>{`${formatMinutesToKoreanTime(value[0])}`}</p>
         ) : (
           <>
             <p>{`${formatMinutesToKoreanTime(value[0])}`}</p>
