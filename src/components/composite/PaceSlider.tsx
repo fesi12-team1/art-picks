@@ -14,7 +14,7 @@ const OFFSET_PX = CIRCLE_SIZE - (CIRCLE_COUNT * CIRCLE_SIZE) / GAP_COUNT;
 interface PaceSliderProps
   extends Omit<
     React.ComponentProps<typeof SliderPrimitive.Root>,
-    'value' | 'onValueChange' | 'defalutValue'
+    'value' | 'onValueChange' | 'defaultValue'
   > {
   // Radix의 배열 타입을 number로 재정의
   value: number;
