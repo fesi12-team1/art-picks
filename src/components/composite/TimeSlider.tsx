@@ -8,13 +8,14 @@ import { cn } from '@/lib/utils';
 export default function TimeSlider({
   className,
   value,
-  min = 0,
-  max = 1440,
   step = 10,
   onValueChange,
   ...props
-}: Omit<React.ComponentProps<typeof SliderPrimitive.Root>, 'defaultValue'>) {
-  const isAllDay = value[0] === min && value[1] === max;
+}: Omit<
+  React.ComponentProps<typeof SliderPrimitive.Root>,
+  'defaultValue' | 'min' | 'max'
+>) {
+  const isAllDay = value[0] === 0 && value[1] === 1440;
   return (
     <div className="w-full">
       <div className="text-body2-semibold mb-7 flex justify-center gap-3 text-white">
@@ -32,8 +33,8 @@ export default function TimeSlider({
         data-slot="slider"
         aria-label="러닝 시간 선택"
         value={value}
-        min={min}
-        max={max}
+        min={0}
+        max={1440}
         onValueChange={onValueChange}
         step={step}
         className={cn(
@@ -64,8 +65,8 @@ export default function TimeSlider({
         ))}
       </SliderPrimitive.Root>
       <div className="text-body3-regular mt-3 flex justify-between text-gray-300">
-        <div>{min / 60}시</div>
-        <div>{max / 60}시</div>
+        <div>0시</div>
+        <div>24시</div>
       </div>
     </div>
   );
