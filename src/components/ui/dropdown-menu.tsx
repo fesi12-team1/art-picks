@@ -1,0 +1,45 @@
+'use client';
+
+import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
+import * as React from 'react';
+import ArrowDown from '@/assets/icons/arrow-down.svg';
+import { cn } from '@/lib/utils';
+
+export function DropdownMenu({
+  ...props
+}: React.ComponentProps<typeof DropdownMenuPrimitive.Root>) {
+  return <DropdownMenuPrimitive.Root data-slot="dropdown-menu" {...props} />;
+}
+
+export function DropdownMenuTrigger({
+  className,
+  children,
+  size,
+  ...props
+}: React.ComponentProps<typeof DropdownMenuPrimitive.Trigger> & {
+  size?: 'sm' | 'lg';
+}) {
+  return (
+    <DropdownMenuPrimitive.Trigger
+      data-slot="dropdown-menu-trigger"
+      className={cn(
+        size === 'lg'
+          ? 'text-body3-medium h-10 gap-2'
+          : 'text-caption-medium h-8 gap-1',
+        'group index-full flex items-center justify-between rounded-lg px-3 py-2',
+        'bg-gray-800 text-gray-200',
+        'border border-transparent',
+        'data-[state=open]:border-brand-500 data-[state=open]:bg-brand-950 data-[state=open]:text-brand-200',
+        className
+      )}
+      {...props}
+    >
+      {children}
+      <ArrowDown
+        width={size === 'lg' ? 24 : 16}
+        height={size === 'lg' ? 24 : 16}
+        className="group-data-[state=open]:text-brand-200 text-gray-200 group-data-[state=open]:rotate-180"
+      />
+    </DropdownMenuPrimitive.Trigger>
+  );
+}
