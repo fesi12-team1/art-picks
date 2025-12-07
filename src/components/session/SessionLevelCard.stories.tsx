@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { useState } from 'react';
 import SessionLevelCard from './SessionLevelCard';
 
 /**
@@ -9,36 +10,12 @@ import SessionLevelCard from './SessionLevelCard';
 const meta: Meta<typeof SessionLevelCard> = {
   title: 'session/SessionLevelCard',
   component: SessionLevelCard,
-  parameters: {
-    layout: 'centered',
-  },
+  parameters: { layout: 'centered' },
   tags: ['autodocs'],
   argTypes: {
-    size: {
-      control: 'inline-radio',
-      options: ['sm', 'md'],
-      description: '카드의 크기 (padding 및 높이 정의)',
-    },
-    label: {
-      control: 'text',
-      description: '카드의 제목',
-    },
-    description: {
-      control: 'text',
-      description: '카드의 설명 텍스트',
-    },
-    checked: {
-      control: 'boolean',
-      description: '선택 여부',
-    },
-    disabled: {
-      control: 'boolean',
-      description: '비활성화 여부',
-    },
-    onClick: {
-      action: 'clicked',
-      description: '카드 클릭 이벤트 핸들러',
-    },
+    size: { control: 'inline-radio', options: ['sm', 'md'] },
+    checked: { control: 'boolean' },
+    disabled: { control: 'boolean' },
   },
   args: {
     size: 'md',
@@ -50,67 +27,115 @@ const meta: Meta<typeof SessionLevelCard> = {
 };
 
 export default meta;
+
 type Story = StoryObj<typeof SessionLevelCard>;
 
 /**
- * 기본 형태의 SessionLevelCard 스토리
+ * 모든 스토리에서 클릭 가능하도록 하는 공통 Template
  */
-export const Default: Story = {};
+function ControlledTemplate(args: {
+  size?: 'sm' | 'md';
+  label: string;
+  description: string;
+  checked?: boolean;
+  disabled?: boolean;
+}) {
+  const [checked, setChecked] = useState(args.checked ?? false);
+
+  return (
+    <SessionLevelCard
+      {...args}
+      checked={checked}
+      onClick={() => setChecked(!checked)}
+    />
+  );
+}
 
 /**
- * 체크된 상태의 SessionLevelCard 스토리
+ * 기본
+ */
+export const Default: Story = {
+  render: (args) => <ControlledTemplate {...args} />,
+};
+
+/**
+ * 체크된 상태
  */
 export const Checked: Story = {
-  args: {
-    checked: true,
-  },
+  args: { checked: true },
+  render: (args) => <ControlledTemplate {...args} />,
 };
 
 /**
- * 비활성 상태의 SessionLevelCard 스토리
+ * 비활성 상태
  */
 export const Disabled: Story = {
-  args: {
-    disabled: true,
-  },
+  args: { disabled: true },
+  render: (args) => <ControlledTemplate {...args} />,
 };
 
 /**
- * sm / md 두 가지 사이즈를 비교하는 스토리
+ * 사이즈 비교
  */
 export const Sizes: Story = {
-  render: (args) => (
-    <div className="flex flex-col gap-4">
-      <SessionLevelCard {...args} size="sm" label="초급 러너 (sm)" />
-      <SessionLevelCard {...args} size="md" label="기본 러너 (md)" />
-    </div>
-  ),
-  args: {
-    checked: false,
+  render: (args) => {
+    const [selected, setSelected] = useState<string | null>(null);
+
+    return (
+      <div className="flex flex-col gap-4">
+        <SessionLevelCard
+          {...args}
+          size="sm"
+          checked={selected === 'sm'}
+          onClick={() => setSelected(selected === 'sm' ? null : 'sm')}
+          label="초급(sm)"
+        />
+        <SessionLevelCard
+          {...args}
+          size="md"
+          checked={selected === 'md'}
+          onClick={() => setSelected(selected === 'md' ? null : 'md')}
+          label="중급(md)"
+        />
+      </div>
+    );
   },
 };
 
 /**
- * 여러 개의 레벨 카드를 나열한 시나리오 스토리
+ * 리스트 예시
  */
 export const LevelList: Story = {
-  render: (args) => (
-    <div className="flex w-[327px] flex-col gap-4">
-      <SessionLevelCard
-        {...args}
-        label="초급 러너"
-        description="5~6분 페이스, 러닝 입문자를 위한 레벨"
-      />
-      <SessionLevelCard
-        {...args}
-        label="중급 러너"
-        description="5분 이내 페이스 유지 가능한 러너"
-      />
-      <SessionLevelCard
-        {...args}
-        label="고급 러너"
-        description="4~5분 페이스를 지속할 수 있는 러너"
-      />
-    </div>
-  ),
+  render: (args) => {
+    const [selected, setSelected] = useState<string | null>(null);
+
+    return (
+      <div className="flex w-[327px] flex-col gap-4">
+        <SessionLevelCard
+          {...args}
+          checked={selected === 'beginner'}
+          onClick={() =>
+            setSelected(selected === 'beginner' ? null : 'beginner')
+          }
+          label="초급"
+        />
+        <SessionLevelCard
+          {...args}
+          checked={selected === 'intermediate'}
+          onClick={() =>
+            setSelected(selected === 'intermediate' ? null : 'intermediate')
+          }
+          label="중급"
+        />
+        <SessionLevelCard
+          {...args}
+          checked={selected === 'advanced'}
+          onClick={() =>
+            setSelected(selected === 'advanced' ? null : 'advanced')
+          }
+          label="고급"
+        />
+      </div>
+    );
+  },
 };
