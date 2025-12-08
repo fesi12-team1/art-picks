@@ -11,14 +11,15 @@ interface SessionCardProps {
 }
 
 export default function SessionCard({ data }: SessionCardProps) {
-  const today = new Date('2025-12-15T19:00:00');
+  const today = new Date();
   const registerBy = new Date(data.registerBy);
-  const dayDiff = today.getDay() - registerBy.getDay();
-  console.log('dayDiff', dayDiff);
-  const ddayText = `마감 D-${dayDiff}`;
+  const timeDiff = registerBy.getTime() - today.getTime();
+  const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+  const ddayText =
+    dayDiff > 0 ? `마감 D-${dayDiff}` : dayDiff === 0 ? '마감 D-Day' : '마감됨';
 
   const sessionAt = new Date(data.sessionAt);
-  const sessionDate = `${sessionAt.getMonth()}월 ${sessionAt.getDay()}일`;
+  const sessionDate = `${sessionAt.getMonth() + 1}월 ${sessionAt.getDate()}일`;
   const sessionTime = formatTimeInKorean(
     sessionAt.getHours(),
     sessionAt.getMinutes()
@@ -48,9 +49,9 @@ export default function SessionCard({ data }: SessionCardProps) {
           <DdayBadge className="hidden tablet:inline-flex laptop:hidden" size="md">{ddayText}</DdayBadge>
           <DdayBadge className="hidden laptop:inline-flex" size="lg">{ddayText}</DdayBadge>
         </div>
-        <div className="absolute top-3 right-3">
+        <button onClick={() => {}} className="absolute top-3 right-3">
           <Liked className="stroke-offset-[-0.50px] size-6 fill-neutral-900/50 stroke-sky-100 stroke-1" />
-        </div>
+        </button>
         <div className="absolute bottom-3 left-3 flex items-center gap-0.5 md:gap-1">
           <Location className="size-4 fill-gray-200" />
           <div className="text-caption-medium laptop:text-body3-medium font-medium text-gray-200">
@@ -74,6 +75,7 @@ export default function SessionCard({ data }: SessionCardProps) {
           <LevelBadge level={level} size="lg" className="hidden laptop:inline-flex" />
         </div>
       <div className="flex gap-1">
+        {/* TODO: 추후에는 실제 데이터 전달 */}
         <ProfileList participants={[]} />
         <div className="text-caption-regular laptop:text-body3-regular text-gray-300">
           {`${data.currentParticipantCount}/${data.maxParticipantCount}명 • 달리는 거북이`}

@@ -8,7 +8,7 @@ interface SessionInfPropsProps {
 
 export default function SessionInfo({ data }: SessionInfPropsProps) {
   const sessionAt = new Date(data.sessionAt);
-  const sessionDate = `${sessionAt.getFullYear()}년 ${sessionAt.getMonth()}월 ${sessionAt.getDay()}일`;
+  const sessionDate = `${sessionAt.getFullYear()}년 ${sessionAt.getMonth() + 1}월 ${sessionAt.getDate()}일`;
   const sessionTime = formatTimeInKorean(
     sessionAt.getHours(),
     sessionAt.getMinutes()

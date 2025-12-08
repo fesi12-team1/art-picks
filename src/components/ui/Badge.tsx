@@ -57,6 +57,7 @@ export default function Badge({
   variant,
   size,
   children,
+  ...rest
 }: BadgeProps) {
   return (
     <div
@@ -75,7 +76,7 @@ export function PaceBadge({
 }: Omit<PaceBadgeProps, 'variant'>) {
   return (
     <Badge variant="pace" pace={pace} size={size} className={className}>
-      {formatPaceText(...secondsToMinutes(pace || 0))}
+      {formatPaceText(...secondsToMinutes(pace ?? 0))}
     </Badge>
   );
 }
@@ -107,8 +108,8 @@ export function LevelBadge({
   };
   return (
     <Badge variant="level" level={level} size={size} className={className}>
-      <Level className={`${iconSize[size]} ${fillColor[level]}`} />
-      <span className={`${textColor[level]}`}>{text[level]}</span>
+      <Level className={cn(iconSize[size], fillColor[level])} />
+      <span className={textColor[level]}>{text[level]}</span>
     </Badge>
   );
 }
@@ -124,39 +125,3 @@ export function DdayBadge({
     </Badge>
   );
 }
-
-// export const DdayBadges = (
-//   <>
-//     <div
-//       className={cn(
-//         'text-brand-600 inline-flex items-center justify-center rounded-sm bg-linear-to-br from-[rgba(247,223,249,1)] via-[rgba(223,229,249,1)] to-[rgba(186,186,250,1)]',
-//         'px-2 py-1 text-[14px] font-semibold'
-//       )}
-//     >
-//       D-day lg
-//     </div>
-//     <div
-//       className={cn(
-//         'text-brand-600 inline-flex items-center justify-center rounded-sm bg-linear-to-br from-[rgba(247,223,249,1)] via-[rgba(223,229,249,1)] to-[rgba(186,186,250,1)]',
-//         'px-1.5 py-0.5 text-[10px] font-semibold'
-//       )}
-//     >
-//       <span>D-day sm</span>
-//     </div>
-//   </>
-// );
-
-// export const PaceBadges = () => (
-//   <>
-//     <PaceBadge pace={300} size="sm" />
-//     <PaceBadge pace={325} size="md" />
-//     <PaceBadge pace={375} size="lg" />
-//   </>
-// );
-// export const LevelBadges = () => (
-//   <>
-//     <LevelBadge level="hard" size="sm" />
-//     <LevelBadge level="medium" size="md" />
-//     <LevelBadge level="easy" size="lg" />
-//   </>
-// );

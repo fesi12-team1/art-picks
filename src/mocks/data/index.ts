@@ -84,7 +84,7 @@ export const mockSessions = [
     sessionAt: new Date('2025-12-20T20:00:00').toISOString(),
     registerBy: new Date('2025-12-19T23:59:59').toISOString(),
     level: 'BEGINNER',
-    status: 'OPEN',
+    status: 'CLOSED',
     pace: 6.0 * 60,
     maxParticipantCount: 25,
     currentParticipantCount: 25,

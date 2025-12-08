@@ -15,7 +15,7 @@ export default function Page() {
       )}
       <ul className="tablet:gap-x-4 flex w-full flex-col gap-x-3 divide-y">
         {mockCrews.map((crew) => (
-          <CrewCard key={crew.id} data={crew} /> // 실제로는 crewId를 key로 사용
+          <CrewCard key={crew.id} data={crew} />
         ))}
       </ul>
     </div>

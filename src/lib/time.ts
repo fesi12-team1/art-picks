@@ -22,7 +22,7 @@ export function formatMinutesToKoreanTime(totalMinutes: number): string {
 }
 
 export function formatTimeInKorean(hour: number, minutes: number): string {
-  const isAM = hour < 12;
+  const isAM = hour <= 12;
   const ampm = isAM ? '오전' : '오후';
 
   const hour12: number = isAM ? hour : hour - 12;
