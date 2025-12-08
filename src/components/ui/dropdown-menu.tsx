@@ -60,6 +60,18 @@ export function DropdownMenuTrigger({
   );
 }
 
+export function DropdownMenuTriggerNoArrow({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <DropdownMenuPrimitive.Trigger asChild>
+      <button>{children}</button>
+    </DropdownMenuPrimitive.Trigger>
+  );
+}
+
 export function DropdownMenuContent({
   className,
   sideOffset = 4,
