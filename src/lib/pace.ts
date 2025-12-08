@@ -5,7 +5,7 @@ export function secondsToMinutes(totalSeconds: number): [number, number] {
   return [minutes, seconds];
 }
 
-export function formatTextPace(minutes: number, seconds: number) {
+export function formatPaceText(minutes: number, seconds: number) {
   const formattedSeconds = String(seconds).padStart(2, '0');
   return `${minutes}'${formattedSeconds}''`;
 }
