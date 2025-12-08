@@ -1,15 +1,38 @@
-export const mockReviewData = [
+export const mockCrews = [
   {
-    id: 'review1',
-    sessionId: 'session1',
-    crewId: 'crew1',
-    userId: 'user2',
+    id: 1,
+    name: 'Seoul Runners',
+    description: '서울을 기반으로 활동하는 러닝 크루입니다. 함께 달려요!',
+    city: '서울',
+    createdAt: new Date('2025-11-01T10:00:00').toISOString(),
+  },
+  {
+    id: 2,
+    name: 'Busan Gazelles',
+    description: '부산의 아름다운 해변을 따라 달리는 크루입니다.',
+    city: '부산',
+    createdAt: new Date('2025-11-05T12:00:00').toISOString(),
+  },
+  {
+    id: 3,
+    name: 'Night Runners',
     description:
-      '한강 야경을 보면서 뛰는게 정말 환상적이었습니다! 다음에 또 참여하고 싶어요.',
-    ranks: 5,
-    createdAt: new Date('2025-12-16T10:00:00').toISOString(),
+      '주로 야간에 활동하며 도시의 야경을 즐기는 러너들의 모임입니다.',
+    city: '서울',
+    createdAt: new Date('2025-11-10T20:00:00').toISOString(),
   },
 ];
+
+export const mockReviewData = {
+  id: 'review1',
+  sessionId: 'session1',
+  crewId: 'crew1',
+  userId: 'user2',
+  description:
+    '한강 야경을 보면서 뛰는게 정말 환상적이었습니다! 다음에 또 참여하고 싶어요.',
+  ranks: 5,
+  createdAt: new Date('2025-12-16T10:00:00').toISOString(),
+};
 
 export const mockSessions = [
   {

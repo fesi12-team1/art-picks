@@ -1,11 +1,11 @@
 import Image from 'next/image';
 
-// interface SessionCardProps {
-//   data: Session;
-// }
+interface CrewCardProps {
+  // eslint-disable-next-line
+  data: any; // Crew;
+}
 
-// export default function SessionCard({ data }: SessionCardProps) {
-export default function CrewCard() {
+export default function CrewCard({ data }: CrewCardProps) {
   return (
     <li className="laptop:justify-between flex w-full py-5">
       <div className="tablet:flex-row flex flex-col">
@@ -17,16 +17,13 @@ export default function CrewCard() {
             className="object-cover"
           />
           <div className="text-caption-regular absolute bottom-3.5 left-3.5">
-            서울 • 멤버 64명
+            {`${data.city} • 멤버 64명`}
           </div>
         </div>
         <div className="laptop:w-[500px] p-3">
-          <div className="text-title3-semibold text-gray-50">
-            달리는 거북이 크루
-          </div>
+          <div className="text-title3-semibold text-gray-50">{data.name}</div>
           <div className="text-body2-regular line-clamp-2 text-gray-300">
-            안녕하세요 달리는 거북이 크루 소개입니다안녕하세요 달리는 거북이
-            크루 소개입니다안녕하세요 달리는 거북이 크루 소개입니다
+            {data.description}
           </div>
         </div>
       </div>
