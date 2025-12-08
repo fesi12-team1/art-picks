@@ -96,7 +96,7 @@ export default function Input({
               size,
               tone,
             }),
-            Icon,
+            Icon ? 'pr-10' : '',
             className
           )}
           {...restProps}
