@@ -83,6 +83,7 @@ function DropdownContent({
         className={cn(
           'overflow-hidden rounded-xl border border-gray-500',
           'min-w-(--radix-dropdown-menu-trigger-width)',
+          'max-h-[300px] overflow-y-auto',
           className
         )}
         {...props}
