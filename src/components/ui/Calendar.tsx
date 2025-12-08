@@ -1,5 +1,6 @@
 'use client';
 
+import { ko } from 'date-fns/locale';
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
@@ -7,12 +8,8 @@ import {
 } from 'lucide-react';
 import * as React from 'react';
 import { DayButton, DayPicker, getDefaultClassNames } from 'react-day-picker';
-import Button, { buttonVariants } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
-
-export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
-  buttonVariant?: React.ComponentProps<typeof Button>['variant'];
-};
+import Button, { buttonVariants } from './Button';
 
 function CalendarRoot({
   className,
@@ -23,20 +20,14 @@ function CalendarRoot({
   formatters,
   components,
   ...props
-}: CalendarProps) {
-  const { fromYear, toYear, ...restProps } = props;
+}: React.ComponentProps<typeof DayPicker> & {
+  buttonVariant?: React.ComponentProps<typeof Button>['variant'];
+}) {
   const defaultClassNames = getDefaultClassNames();
-  const now = React.useMemo(() => new Date(), []);
-  const dropdownYearRange =
-    captionLayout === 'dropdown'
-      ? {
-          fromYear: fromYear ?? now.getFullYear() - 5,
-          toYear: toYear ?? now.getFullYear() + 5,
-        }
-      : {};
 
   return (
     <DayPicker
+      locale={ko}
       showOutsideDays={showOutsideDays}
       className={cn(
         'bg-background group/calendar p-3 [--cell-size:--spacing(8)] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent',
@@ -180,8 +171,7 @@ function CalendarRoot({
         },
         ...components,
       }}
-      {...dropdownYearRange}
-      {...restProps}
+      {...props}
     />
   );
 }
