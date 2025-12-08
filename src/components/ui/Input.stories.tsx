@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import { Calendar, Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import Input, { InputProps } from './Input';
 
@@ -95,17 +96,33 @@ export const InitialValue: Story = {
  * 비밀번호 입력 필드. 아이콘을 클릭하여 비밀번호 표시/숨기기 가능
  */
 export const Password: Story = {
+  args: {
+    label: '비밀번호',
+    placeholder: '비밀번호를 입력하세요',
+    type: 'password',
+  },
   render: (args) => {
     const [value, setValue] = useState('');
+    const [show, setShow] = useState(false);
 
     return (
       <Input
         {...args}
         label="비밀번호"
         placeholder="비밀번호를 입력하세요"
-        type="password"
+        type={show ? 'text' : 'password'}
         value={value}
         onChange={(e) => setValue(e.target.value)}
+        Icon={
+          <button
+            type="button"
+            onClick={() => setShow(!show)}
+            aria-label={show ? '비밀번호 숨기기' : '비밀번호 보기'}
+            className="text-gray-300 hover:text-white"
+          >
+            {show ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+          </button>
+        }
       />
     );
   },
@@ -157,5 +174,17 @@ export const ErrorInvalid: Story = {
         errorMessage="올바른 이메일 형식이 아닙니다"
       />
     );
+  },
+};
+
+/**
+ * 아이콘이 포함된 입력 필드
+ */
+
+export const WithIcons: Story = {
+  args: {
+    label: '날짜',
+    placeholder: '날짜를 입력하세요',
+    Icon: <Calendar />,
   },
 };
