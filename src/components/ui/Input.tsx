@@ -66,10 +66,6 @@ export default function Input({
   const ariaDescribedBy =
     [ariaDescribedByProp, errorId].filter(Boolean).join(' ') || undefined;
 
-  const isPassword = type === 'password';
-
-  const isIcon = Icon || isPassword ? 'pr-10' : '';
-
   return (
     <div className="grid w-full gap-2">
       {label && (
@@ -100,7 +96,7 @@ export default function Input({
               size,
               tone,
             }),
-            isIcon,
+            Icon,
             className
           )}
           {...restProps}
