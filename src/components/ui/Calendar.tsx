@@ -198,6 +198,9 @@ function CalendarDayButton({
         data-outside={modifiers.outside}
         className={cn(
           defaultClassNames.day,
+          modifiers.disabled &&
+            'pointer-events-none cursor-not-allowed text-gray-400 opacity-40',
+
           'text-body2-regular h-full w-full rounded-lg',
 
           isStart && 'bg-brand-300 text-brand-900 rounded-l-lg',
