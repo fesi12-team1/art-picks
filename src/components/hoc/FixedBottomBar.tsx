@@ -28,8 +28,7 @@ export function useFixedBottomBar() {
   useEffect(() => {
     const element = ref.current;
     if (element) {
-      // Set initial height immediately
-      setHeight(element.offsetHeight);
+      setHeight(element.offsetHeight + extraPadding);
 
       const observer = new ResizeObserver(() => {
         setHeight(element.offsetHeight + extraPadding);

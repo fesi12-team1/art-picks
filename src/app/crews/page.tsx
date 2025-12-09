@@ -24,7 +24,7 @@ export default function Page() {
         </div>
       )}
       <div
-        className="tablet:mx-8 laptop:mx-100 mx-4 flex min-h-screen flex-col items-center gap-12"
+        className="tablet:mx-8 laptop:mx-100 h-main mx-4 flex flex-col items-center gap-12"
         style={{ paddingBottom: height }}
       >
         {Array.from({ length: 10 }, (_, index) => (
@@ -43,7 +43,7 @@ export default function Page() {
           aria-label="크루 링크 공유하기"
           onClick={handleShare}
         >
-          <Share className="size-6" />
+          <Share className="size-6 stroke-[#9CA3AF]" />
         </button>
         <Button
           className="bg-brand-500 text-body2-semibold flex-1 px-6 py-3"
