@@ -1,7 +1,8 @@
 import { Dot } from 'lucide-react';
 import Image from 'next/image';
-import { mockSessions } from '@/mocks/data';
+import { mockProfiles, mockSessions } from '@/mocks/data';
 import { Crew } from '@/types';
+import ProfileList from '../session/ProfileList';
 
 interface CrewCardProps {
   data: Crew;
@@ -13,29 +14,32 @@ export default function CrewCard({ data }: CrewCardProps) {
   const crewMemberCount = 64;
 
   return (
-    <li className="laptop:justify-between flex w-full py-5">
-      <div className="tablet:flex-row flex flex-col">
-        <div className="tablet:w-60 relative aspect-video self-stretch overflow-hidden rounded-lg bg-blue-300">
+    <li className="laptop:justify-between tablet:pt-5 flex w-full pb-5">
+      <div className="@laptop:w-min-[240px] tablet:flex-row flex w-full flex-col">
+        <div className="tablet:w-60 tablet:aspect-video relative aspect-327/75 shrink-0 self-stretch overflow-hidden rounded-lg bg-blue-300">
           <Image
             src="/crew.local.jpg"
             alt="Crew"
             fill
             className="object-cover"
           />
-          <div className="text-caption-regular absolute bottom-3.5 left-3.5 flex items-center">
-            {`${data.city}`}
-            <Dot />
-            {`멤버 ${crewMemberCount}명`}
-          </div>
         </div>
-        <div className="laptop:w-[500px] p-3">
-          <div className="text-title3-semibold text-gray-50">{data.name}</div>
-          <div className="text-body2-regular line-clamp-2 text-gray-300">
+        <div className="w-full grow p-3">
+          <div className="tablet:text-title3-semibold text-body2-semibold line-clamp-1 text-gray-50">
+            {data.name}
+          </div>
+          <div className="tablet:text-body2-regular text-caption-regular line-clamp-2 text-gray-300">
             {data.description}
+          </div>
+          <div className="flex items-center">
+            <span className="text-caption-medium tablet:text-body3-medium rounded-lg bg-gray-500 px-2 py-1 text-gray-100">{`${data.city}`}</span>
+            <Dot color="var(--color-gray-300)" />
+            <span className="text-caption-regular tablet:text-body3-regular mr-1 text-gray-300">{`멤버 ${crewMemberCount}명`}</span>
+            <ProfileList profiles={mockProfiles} />
           </div>
         </div>
       </div>
-      <div className="laptop:flex hidden w-[300px] flex-col gap-2 p-3">
+      <div className="@min-[1040px]:laptop:flex ml-20 hidden w-[300px] flex-col gap-2 p-3">
         <div className="text-body3-semibold text-gray-300">진행된 세션</div>
         <ul className="">
           {/* 이후에는 hook으로 받아온 3개 이하의 crewSessions 사용 */}
