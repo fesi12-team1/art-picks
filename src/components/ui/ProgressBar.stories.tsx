@@ -27,8 +27,8 @@ const meta: Meta<typeof ProgressBar> = {
     },
   },
   args: {
-    value: 0,
-    max: 25,
+    value: 30,
+    max: 40,
   },
 };
 
@@ -40,7 +40,7 @@ export const Default: Story = {
     const [{ value, max }] = useArgs();
 
     return (
-      <div className="flex flex-wrap gap-4">
+      <div className="w-[200px]">
         <ProgressBar value={value} max={max} />
       </div>
     );
