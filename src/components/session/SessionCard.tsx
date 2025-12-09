@@ -1,13 +1,15 @@
+import { Dot } from 'lucide-react';
 import Image from 'next/image';
 import Liked from '@/assets/icons/liked.svg';
 import Location from '@/assets/icons/location.svg';
-import { formatTimeInKorean } from '@/lib/time';
+import { formatTimeToKorean } from '@/lib/time';
+import { mockSessionParticipants } from '@/mocks/data';
+import { Session } from '@/types';
 import { DdayBadge, LevelBadge, PaceBadge } from '../ui/Badge';
 import ProfileList from './ProfileList';
 
 interface SessionCardProps {
-  // eslint-disable-next-line
-  data: any; // Session;
+  data: Session;
 }
 
 export default function SessionCard({ data }: SessionCardProps) {
@@ -20,7 +22,7 @@ export default function SessionCard({ data }: SessionCardProps) {
 
   const sessionAt = new Date(data.sessionAt);
   const sessionDate = `${sessionAt.getMonth() + 1}월 ${sessionAt.getDate()}일`;
-  const sessionTime = formatTimeInKorean(
+  const sessionTime = formatTimeToKorean(
     sessionAt.getHours(),
     sessionAt.getMinutes()
   );
@@ -32,7 +34,10 @@ export default function SessionCard({ data }: SessionCardProps) {
   };
   const level = levelMap[data.level] || 'easy';
 
-  // const { status, data: crewData, error } = useCrewDetail(data.crewId); // tanstack-query hook
+  // TODO: 추후에는 실제 데이터 전달
+  // const { data: crewData } = useCrewDetail(data.crewId); // tanstack-query hook
+  const crewData = { name: '달리는 거북이' };
+  const participantList = mockSessionParticipants.participants;
 
   return (
     <li className="flex w-full flex-col">
@@ -62,8 +67,10 @@ export default function SessionCard({ data }: SessionCardProps) {
       <div className="text-body3-semibold tablet:text-body2-semibold laptop:text-title3-semibold text-gray-50">
         {data.name}
       </div>
-      <div className="text-caption-regular tablet:text-body3-regular tablet:mb-2 text-gray-300">
-        {`${sessionDate} • ${sessionTime}`}
+      <div className="text-caption-regular tablet:text-body3-regular tablet:mb-2 flex items-center text-gray-300">
+        {`${sessionDate}`}
+        <Dot />
+        {`${sessionTime}`}
       </div>
       {/* prettier-ignore */}
       <div className="flex gap-0.5 mb-2 tablet:mb-3">
@@ -75,11 +82,11 @@ export default function SessionCard({ data }: SessionCardProps) {
           <LevelBadge level={level} size="lg" className="hidden laptop:inline-flex" />
         </div>
       <div className="flex gap-1">
-        {/* TODO: 추후에는 실제 데이터 전달 */}
-        <ProfileList participants={[]} />
-        <div className="text-caption-regular laptop:text-body3-regular text-gray-300">
-          {`${data.currentParticipantCount}/${data.maxParticipantCount}명 • 달리는 거북이`}
-          {/* crewData.name - 달리는 거북이 */}
+        <ProfileList participants={participantList} />
+        <div className="text-caption-regular laptop:text-body3-regular flex items-center text-gray-300">
+          {`${data.currentParticipantCount}/${data.maxParticipantCount}명`}
+          <Dot />
+          {`${crewData.name}`}
         </div>
       </div>
     </li>

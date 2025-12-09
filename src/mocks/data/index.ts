@@ -20,6 +20,7 @@ export const mockProfiles: Profile[] = [
     city: '부산',
     pace: 420,
     styles: ['COASTAL_RUN'],
+    image: 'https://github.com/shadcn.png',
   },
   {
     id: 3,
@@ -30,6 +31,7 @@ export const mockProfiles: Profile[] = [
     city: '서울',
     pace: 390,
     styles: ['BEGINNER_FRIENDLY', 'GROUP_RUN'],
+    image: 'https://github.com/maxleiter.png',
   },
   {
     id: 4,
@@ -40,6 +42,7 @@ export const mockProfiles: Profile[] = [
     city: '인천',
     pace: 450,
     styles: ['MORNING_RUN'],
+    image: 'https://github.com/evilrabbit.png',
   },
 ];
 export const mockMembers: Member[] = [
@@ -183,3 +186,30 @@ export const mockSessions: Session[] = [
     currentParticipantCount: 10,
   },
 ];
+
+export const mockSessionParticipants = {
+  participants: [
+    {
+      userId: '1',
+      name: '홍길동',
+      image: 'https://github.com/shadcn.png',
+      role: 'LEADER',
+      joinedAt: '2025-11-28T10:00:00+09:00',
+    },
+    {
+      userId: '2',
+      name: '김러너',
+      image: 'https://github.com/maxleiter.png',
+      role: 'STAFF',
+      joinedAt: '2025-11-28T11:30:00+09:00',
+    },
+    {
+      userId: '3',
+      name: '이달리기',
+      image: null,
+      role: 'MEMBER',
+      joinedAt: '2025-11-29T09:00:00+09:00',
+    },
+  ],
+  totalCount: 3,
+};
