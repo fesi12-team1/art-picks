@@ -23,7 +23,7 @@ export default function ProgressBar({
 
   return (
     <div className="flex h-[38px] flex-col">
-      <div className="flex justify-between">
+      <div className="flex items-center justify-between gap-4">
         <Label className="text-sm">{clampedValue}명</Label>
         <div className="flex items-center gap-0.5">
           <span>/</span>
@@ -33,7 +33,7 @@ export default function ProgressBar({
       <ProgressPrimitive.Root
         data-slot="progress"
         className={cn(
-          'relative h-2.5 w-[319px] overflow-hidden rounded-md bg-gray-500',
+          'relative h-2.5 w-full overflow-hidden rounded-md bg-gray-500',
           className
         )}
         value={clampedValue}
