@@ -163,7 +163,7 @@ function CalendarDayButton({
   return (
     <div
       className={cn(
-        'relative h-full w-full overflow-hidden',
+        'relative aspect-square w-full overflow-hidden',
 
         // 날짜 범위(range)는 wrapper가 bg 담당
         isRange && 'bg-brand-800',
@@ -189,7 +189,7 @@ function CalendarDayButton({
         data-outside={modifiers.outside}
         className={cn(
           defaultClassNames.day,
-          'text-body2-regular size-(--cell-size) rounded-lg',
+          'text-body2-regular h-full w-full rounded-lg',
 
           // 날짜 범위(range)
           modifiers.range_start && 'bg-brand-300 text-brand-900 rounded-l-lg',
