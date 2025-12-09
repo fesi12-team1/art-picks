@@ -1,6 +1,7 @@
 import {
   PaginationQueryParams,
   ResponseData,
+  ResponseErrorData,
   Session,
   SliceData,
   User,

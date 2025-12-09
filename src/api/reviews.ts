@@ -1,4 +1,10 @@
-import { PageData, PaginationQueryParams, ResponseData, Review } from '@/types';
+import {
+  PageData,
+  PaginationQueryParams,
+  ResponseData,
+  ResponseErrorData,
+  Review,
+} from '@/types';
 
 export async function createSessionReview(
   sessionId: string,

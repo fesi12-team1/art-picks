@@ -1,4 +1,4 @@
-import { Profile, ResponseData } from '@/types';
+import { Profile, ResponseData, ResponseErrorData } from '@/types';
 
 export async function getCurrentUserProfile() {
   // const accessToken = '';
