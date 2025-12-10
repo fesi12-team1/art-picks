@@ -12,6 +12,7 @@ import {
   DayPicker,
   getDefaultClassNames,
   type DateRange,
+  type Matcher,
   type OnSelectHandler,
 } from 'react-day-picker';
 import { cn } from '@/lib/utils';
@@ -32,9 +33,16 @@ function CalendarRoot({
   const defaultClassNames = getDefaultClassNames();
 
   const today = new Date();
-  const disabled = disablePastDates
-    ? { ...(props.disabled as object | undefined), before: today }
-    : props.disabled;
+  const disabledMatchers: Matcher[] = [];
+  if (disablePastDates) {
+    disabledMatchers.push({ before: today });
+  }
+  if (props.disabled) {
+    disabledMatchers.push(
+      ...(Array.isArray(props.disabled) ? props.disabled : [props.disabled])
+    );
+  }
+  const disabled = disabledMatchers.length > 0 ? disabledMatchers : undefined;
 
   return (
     <DayPicker
