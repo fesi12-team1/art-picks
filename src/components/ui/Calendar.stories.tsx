@@ -66,7 +66,9 @@ export const Range: Story = {
       <div className="flex flex-col items-center gap-4">
         <Calendar.Range {...args} selected={range} onSelect={setRange} />
         <span>
-          {`${range?.from?.toLocaleDateString()} - ${range?.to?.toLocaleDateString()}`}
+          {range?.from
+            ? `${range.from.toLocaleDateString()} - ${range.to?.toLocaleDateString() ?? '선택 중...'}`
+            : '날짜 범위를 선택하세요'}
         </span>
       </div>
     );
