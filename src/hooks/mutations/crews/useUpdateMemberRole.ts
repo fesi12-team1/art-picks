@@ -12,7 +12,7 @@ export default function useUpdateMemberRole(crewId: number, userId: number) {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.crews.members.all(crewId), // 멤버 목록 캐시 무효화
+        queryKey: [QUERY_KEY.crews, crewId, QUERY_KEY.members], // 크루 멤버 목록 캐시 무효화
       });
       queryClient.invalidateQueries({
         queryKey: QUERY_KEYS.crews.members.count(crewId), // 멤버 카운트 캐시 무효화

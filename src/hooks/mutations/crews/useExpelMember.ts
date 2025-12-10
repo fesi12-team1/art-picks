@@ -11,7 +11,7 @@ export default function useExpelMember(crewId: number) {
 
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: QUERY_KEYS.crews.members.all(numericCrewId), // 멤버 목록 캐시 무효화
+        queryKey: [QUERY_KEY.crews, crewId, QUERY_KEY.members], // 크루 멤버 목록 캐시 무효화
       });
       queryClient.invalidateQueries({
         queryKey: QUERY_KEYS.crews.members.count(numericCrewId), // 멤버 수 캐시 무효화
