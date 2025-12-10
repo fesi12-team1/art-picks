@@ -2,11 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getCrewMemberDetailById } from '@/api/crews';
 import { QUERY_KEYS } from '@/lib/constants';
 
-/**
- * 특정 크루 내 사용자의 역할을 조회
- * @param crewId
- * @param userId
- */
+// 특정 크루 내 사용자의 역할을 조회
 export default function useCrewMemberRole(crewId: number, userId: number) {
   return useQuery({
     queryKey: QUERY_KEYS.crews.members.role(crewId, userId),

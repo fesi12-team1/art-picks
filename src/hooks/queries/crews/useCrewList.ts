@@ -3,11 +3,7 @@ import { getCrews } from '@/api/crews';
 import { QUERY_KEYS } from '@/lib/constants';
 import { CrewListFilters } from '@/types';
 
-/**
- * 크루 목록 조회 (필터링)
- * - 조건(필터)에 맞는 러닝 크루 목록을 조회합니다.
- * @param filters - 지역, 날짜, 시간, 난이도 필터 옵션
- */
+// 크루 목록 조회 (필터링)
 export default function useCrewList(filters: CrewListFilters) {
   return useQuery({
     queryKey: QUERY_KEYS.crews.list(filters),

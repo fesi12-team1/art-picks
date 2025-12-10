@@ -2,11 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getCrewMembers } from '@/api/crews';
 import { QUERY_KEYS } from '@/lib/constants';
 
-/**
- * 크루 멤버 정보 조회
- * @param crewId
- * @param role - (선택) 필터링 할 멤버 역할. 생략 시 전체 멤버 조회
- */
+// 크루 멤버 정보 조회
 export default function useCrewMembers(
   crewId: number,
   role?: 'leader' | 'staff' | 'member'
