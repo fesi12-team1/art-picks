@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { expelMember } from '@/api/crews';
-import { QUERY_KEYS } from '@/lib/constants';
+import { QUERY_KEY, QUERY_KEYS } from '@/lib/constants';
 
 // 크루 멤버 추방
 export default function useExpelMember(crewId: number) {

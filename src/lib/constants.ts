@@ -1,7 +1,7 @@
 import { CrewListFilters } from '@/types/crew';
 import { SessionListFilters } from '@/types/session';
 
-const QUERY_KEY = {
+export const QUERY_KEY = {
   crews: 'crews',
   sessions: 'sessions',
   members: 'members',
