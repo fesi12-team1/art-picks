@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Github 레포지토리 불러오기
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: pnpm 10 설치
         uses: pnpm/action-setup@v4
