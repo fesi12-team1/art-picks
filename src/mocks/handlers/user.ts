@@ -151,4 +151,31 @@ export const userHandlers = [
 
     return HttpResponse.json(userReviews, { status: 200 });
   }),
+
+  // 내가 작성한 리뷰 목록
+  http.get(path('/api/user/me/reviews'), ({ params }) => {
+    if (!params.id || typeof params.id !== 'string') {
+      return HttpResponse.json({ message: 'Invalid user ID' }, { status: 400 });
+    }
+    const userId = parseInt(params.id, 10);
+
+    const user = users.findFirst((q) => q.where({ id: userId }));
+    if (!user) {
+      return HttpResponse.json({ message: 'User not found' }, { status: 404 });
+    }
+
+    const userReviews = reviews.all().filter((review) => {
+      const reviewUser = review.user;
+      if (
+        !reviewUser ||
+        typeof reviewUser !== 'object' ||
+        !('id' in reviewUser)
+      ) {
+        return false;
+      }
+      return reviewUser.id === user.id;
+    });
+
+    return HttpResponse.json(userReviews, { status: 200 });
+  }),
 ];

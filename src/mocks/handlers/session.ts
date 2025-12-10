@@ -283,4 +283,38 @@ export const sessionHandlers = [
 
     return HttpResponse.json(responseBody, { status: 200 });
   }),
+
+  // 세션 리뷰 목록 조회
+  http.get(path('/api/sessions/:id/reviews'), ({ params }) => {
+    const sessionId = Number(params.id);
+    const session = sessions.findFirst((q) => q.where({ id: sessionId }));
+
+    if (!session) {
+      return HttpResponse.json(
+        { message: 'Session not found' },
+        { status: 404 }
+      );
+    }
+
+    // For simplicity, returning an empty list
+    return HttpResponse.json({ reviews: [] }, { status: 200 });
+  }),
+
+  // 세션 리뷰 작성
+  http.post(path('/api/sessions/:id/reviews'), ({ params }) => {
+    const sessionId = Number(params.id);
+    const session = sessions.findFirst((q) => q.where({ id: sessionId }));
+
+    if (!session) {
+      return HttpResponse.json(
+        { message: 'Session not found' },
+        { status: 404 }
+      );
+    }
+
+    return HttpResponse.json(
+      { message: `Successfully created review for session ID: ${sessionId}` },
+      { status: 201 }
+    );
+  }),
 ];

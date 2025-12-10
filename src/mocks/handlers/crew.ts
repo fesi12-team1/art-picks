@@ -387,4 +387,27 @@ export const crewHandlers = [
 
     return HttpResponse.json({ message: '크루가 성공적으로 삭제되었습니다.' });
   }),
+
+  // 크루 리뷰 목록 조회
+  http.get(path('/api/crews/:id/reviews'), ({ params }) => {
+    const crewId = parseIdParam(params.id);
+
+    if (crewId === null) {
+      return HttpResponse.json(
+        { message: '유효하지 않은 크루 ID입니다.' },
+        { status: 400 }
+      );
+    }
+
+    const crew = crews.findFirst((q) => q.where({ id: crewId }));
+    if (!crew) {
+      return HttpResponse.json(
+        { message: '크루가 존재하지 않습니다.' },
+        { status: 404 }
+      );
+    }
+
+    // For simplicity, returning an empty list
+    return HttpResponse.json({ reviews: [] }, { status: 200 });
+  }),
 ];
