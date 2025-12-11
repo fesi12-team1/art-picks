@@ -60,7 +60,7 @@ export const Password: Story = {
         placeholder="비밀번호 입력"
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        Icon={
+        RightElement={
           <button type="button" onClick={() => setShow(!show)}>
             {show ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
           </button>
