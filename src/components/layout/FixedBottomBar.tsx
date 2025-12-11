@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useEffectEvent, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface FixedBottomBarProps {
   children: React.ReactNode;
@@ -27,10 +27,6 @@ export function useFixedBottomBar() {
   const ref = useRef<HTMLDivElement>(null);
   const blockHeight = useRef(0);
 
-  const onHeightChange = useEffectEvent(() => {
-    console.log('height', height);
-  });
-
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
 
@@ -41,7 +37,6 @@ export function useFixedBottomBar() {
         if (blockHeight.current !== newBlockHeight) {
           blockHeight.current = newBlockHeight;
           setHeight(newBlockHeight + extraPadding);
-          onHeightChange();
         }
       }, 1000);
     });
