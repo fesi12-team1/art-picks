@@ -1,6 +1,12 @@
 import { http, HttpResponse } from 'msw';
-import { crews, memberships } from '../db';
-import { parseIdParam, path } from '../utils';
+import { crews, memberships, sessions } from '../db';
+import {
+  errorResponse,
+  getAuthenticatedUser,
+  parseIdParam,
+  path,
+  successResponse,
+} from '../utils';
 
 interface CreateCrewRequest {
   name: string;
@@ -16,12 +22,15 @@ export const crewHandlers = [
 
     if (!name || !description || !city) {
       return HttpResponse.json(
-        { message: '필수 필드가 누락되었습니다.' },
+        errorResponse({
+          code: 'BAD_REQUEST',
+          message: '필수 입력값이 누락되었습니다.',
+        }),
         { status: 400 }
       );
     }
 
-    const newCrew = crews.create({
+    const newCrew = await crews.create({
       id: crews.all().length + 1,
       name,
       description,
@@ -31,30 +40,126 @@ export const crewHandlers = [
       updatedAt: new Date().toISOString(),
     });
 
-    return HttpResponse.json(newCrew, { status: 201 });
+    const data = {
+      id: newCrew.id,
+      name: newCrew.name,
+      description: newCrew.description,
+      city: newCrew.city,
+      image: newCrew.image,
+      createdAt: newCrew.createdAt,
+    };
+
+    return HttpResponse.json(successResponse(data), { status: 201 });
   }),
 
   // 크루 목록 조회
-  http.get(path('/api/crews'), () => {
-    const allCrews = crews.all();
+  http.get(path('/api/crews'), ({ request }) => {
+    const user = getAuthenticatedUser(request);
 
-    const responseBody = allCrews.map((crew) => {
-      const memberCount = memberships
-        .all()
-        .filter((m) => m.crew === crew).length;
+    if (!user) {
+      return HttpResponse.json(
+        errorResponse({ code: 'UNAUTHORIZED', message: 'Unauthorized' }),
+        { status: 401 }
+      );
+    }
 
-      return {
-        id: crew.id,
-        name: crew.name,
-        description: crew.description,
-        city: crew.city,
-        image: crew.image,
-        createdAt: crew.createdAt,
-        memberCount,
-      };
-    });
+    const url = new URL(request.url);
 
-    return HttpResponse.json(responseBody);
+    const page = parseInt(url.searchParams.get('page') || '0', 10);
+    const size = parseInt(url.searchParams.get('size') || '20', 10);
+    const city = url.searchParams.get('city'); // 복수 선택 가능
+    const keyword = url.searchParams.get('keyword') || '';
+    const sort = url.searchParams.get('sort') || 'createdAtDesc'; // createdAtDesc, lastSessionDesc, memberCountDesc, nameAsc, nameDesc
+
+    let filteredCrews = crews.all();
+
+    if (city) {
+      filteredCrews = filteredCrews.filter((c) => c.city === city);
+    }
+
+    if (keyword) {
+      filteredCrews = filteredCrews.filter((c) =>
+        c.name.toLowerCase().includes(keyword.toLowerCase())
+      );
+    }
+
+    // 정렬
+    if (sort === 'createdAtDesc') {
+      filteredCrews.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+    }
+
+    if (sort === 'lastSessionDesc') {
+      // 마지막 세션 날짜 기준 정렬
+      filteredCrews.sort((a, b) => {
+        // 각 크루의 세션들 가져오기
+        const aCrewSessions = sessions.all().filter((s) => s.crewId === a.id);
+        const bCrewSessions = sessions.all().filter((s) => s.crewId === b.id);
+
+        // 가장 최근 세션의 createdAt 찾기
+        const aLatestSession =
+          aCrewSessions.length > 0
+            ? Math.max(
+                ...aCrewSessions.map((s) => new Date(s.createdAt).getTime())
+              )
+            : 0;
+        const bLatestSession =
+          bCrewSessions.length > 0
+            ? Math.max(
+                ...bCrewSessions.map((s) => new Date(s.createdAt).getTime())
+              )
+            : 0;
+
+        return bLatestSession - aLatestSession;
+      });
+    }
+
+    if (sort === 'memberCountDesc') {
+      // 멤버 수 기준 정렬
+      filteredCrews.sort((a, b) => {
+        const aMemberCount = memberships
+          .all()
+          .filter((m) => m.crewId === a.id).length;
+        const bMemberCount = memberships
+          .all()
+          .filter((m) => m.crewId === b.id).length;
+        return bMemberCount - aMemberCount;
+      });
+    }
+
+    if (sort === 'nameAsc') {
+      filteredCrews.sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    if (sort === 'nameDesc') {
+      filteredCrews.sort((a, b) => b.name.localeCompare(a.name));
+    }
+
+    // 무한스크롤
+    const startIndex = page * size;
+    const endIndex = startIndex + size;
+    const paginatedCrews = filteredCrews.slice(startIndex, endIndex);
+    const hasNext = endIndex < filteredCrews.length;
+
+    const data = paginatedCrews.map((crew) => ({
+      id: crew.id,
+      name: crew.name,
+      description: crew.description,
+      city: crew.city,
+      image: crew.image,
+      memberCount: 24,
+      createdAt: crew.createdAt,
+    }));
+
+    return HttpResponse.json(
+      successResponse({
+        data: data,
+        hasNext: hasNext,
+      }),
+      { status: 200 }
+    );
   }),
 
   // 크루 상세 조회
@@ -63,7 +168,10 @@ export const crewHandlers = [
 
     if (crewId === null) {
       return HttpResponse.json(
-        { message: '유효하지 않은 크루 ID입니다.' },
+        errorResponse({
+          code: 'BAD_REQUEST',
+          message: '유효하지 않은 크루 ID입니다.',
+        }),
         { status: 400 }
       );
     }
@@ -72,12 +180,17 @@ export const crewHandlers = [
 
     if (!crew) {
       return HttpResponse.json(
-        { message: '크루가 존재하지 않습니다.' },
-        { status: 404 }
+        errorResponse({
+          code: 'NOT_FOUND',
+          message: '크루가 존재하지 않습니다.',
+        }),
+        {
+          status: 404,
+        }
       );
     }
 
-    const responseBody = {
+    const data = {
       id: crew.id,
       name: crew.name,
       description: crew.description,
@@ -86,7 +199,7 @@ export const crewHandlers = [
       createdAt: crew.createdAt,
     };
 
-    return HttpResponse.json(responseBody);
+    return HttpResponse.json(successResponse(data), { status: 200 });
   }),
 
   // 크루 멤버 목록 조회
@@ -95,7 +208,10 @@ export const crewHandlers = [
 
     if (crewId === null) {
       return HttpResponse.json(
-        { message: '유효하지 않은 크루 ID입니다.' },
+        errorResponse({
+          code: 'BAD_REQUEST',
+          message: '유효하지 않은 크루 ID입니다.',
+        }),
         { status: 400 }
       );
     }
@@ -104,23 +220,43 @@ export const crewHandlers = [
 
     if (!crew) {
       return HttpResponse.json(
-        { message: '크루가 존재하지 않습니다.' },
+        errorResponse({
+          code: 'NOT_FOUND',
+          message: '크루가 존재하지 않습니다.',
+        }),
         { status: 404 }
       );
     }
 
-    const crewMemberships = memberships
-      .all()
-      .filter((m) => m.crew.id === crewId);
+    const data = {
+      leader: {
+        userId: 1,
+        name: '홍길동',
+        profileImage: 'https://.../leader.jpg',
+        role: 'LEADER',
+        joinedAt: '2025-11-10T12:00:00+09:00',
+      },
+      staff: [
+        {
+          userId: 2,
+          name: '김운영',
+          profileImage: null,
+          role: 'STAFF',
+          joinedAt: '2025-11-15T12:00:00+09:00',
+        },
+      ],
+      members: [
+        {
+          userId: 3,
+          name: '이멤버',
+          profileImage: 'https://.../member.jpg',
+          role: 'MEMBER',
+          joinedAt: '2025-11-20T12:00:00+09:00',
+        },
+      ],
+    };
 
-    const responseBody = crewMemberships.map((membership) => ({
-      id: membership.user.id,
-      username: membership.user.name,
-      role: membership.role,
-      joinedAt: membership.joinedAt,
-    }));
-
-    return HttpResponse.json(responseBody);
+    return HttpResponse.json(successResponse(data), { status: 200 });
   }),
 
   // 크루 멤버 역할별 카운트 조회
@@ -129,7 +265,10 @@ export const crewHandlers = [
 
     if (crewId === null) {
       return HttpResponse.json(
-        { message: '유효하지 않은 크루 ID입니다.' },
+        errorResponse({
+          code: 'BAD_REQUEST',
+          message: '유효하지 않은 크루 ID입니다.',
+        }),
         { status: 400 }
       );
     }
@@ -138,28 +277,21 @@ export const crewHandlers = [
 
     if (!crew) {
       return HttpResponse.json(
-        { message: '크루가 존재하지 않습니다.' },
+        errorResponse({
+          code: 'NOT_FOUND',
+          message: '크루가 존재하지 않습니다.',
+        }),
         { status: 404 }
       );
     }
 
-    const crewMemberships = memberships
-      .all()
-      .filter((m) => m.crew.id === crewId);
+    const data = {
+      leaderCount: 1,
+      staffCount: 3,
+      memberCount: 24,
+    };
 
-    const roleCounts = crewMemberships.reduce(
-      (acc, membership) => {
-        if (membership.role === 'LEADER') {
-          acc.leaders += 1;
-        } else if (membership.role === 'MEMBER') {
-          acc.members += 1;
-        }
-        return acc;
-      },
-      { leaders: 0, members: 0 }
-    );
-
-    return HttpResponse.json(roleCounts);
+    return HttpResponse.json(successResponse(data), { status: 200 });
   }),
 
   // 크루 내 특정 사용자 역할 조회
@@ -169,25 +301,20 @@ export const crewHandlers = [
 
     if (crewId === null || userId === null) {
       return HttpResponse.json(
-        { message: '유효하지 않은 크루 ID 또는 사용자 ID입니다.' },
+        errorResponse({
+          code: 'BAD_REQUEST',
+          message: '유효하지 않은 크루 ID 또는 사용자 ID입니다.',
+        }),
         { status: 400 }
       );
     }
-    const membership = memberships.findFirst((q) =>
-      q.where({
-        crew: { id: crewId },
-        user: { id: userId },
-      })
-    );
 
-    if (!membership) {
-      return HttpResponse.json(
-        { message: '해당 사용자는 크루의 멤버가 아닙니다.' },
-        { status: 404 }
-      );
-    }
+    const data = {
+      userId: 3,
+      role: 'MEMBER',
+    };
 
-    return HttpResponse.json({ role: membership.role });
+    return HttpResponse.json(successResponse(data), { status: 200 });
   }),
 
   // 크루장 변경 (리더 위임)
@@ -198,7 +325,10 @@ export const crewHandlers = [
 
     if (crewId === null || !newLeaderId) {
       return HttpResponse.json(
-        { message: '유효하지 않은 크루 ID 또는 사용자 ID입니다.' },
+        errorResponse({
+          code: 'BAD_REQUEST',
+          message: '유효하지 않은 크루 ID 또는 사용자 ID입니다.',
+        }),
         { status: 400 }
       );
     }
@@ -206,93 +336,35 @@ export const crewHandlers = [
     const crew = crews.findFirst((q) => q.where({ id: crewId }));
     if (!crew) {
       return HttpResponse.json(
-        { message: '크루가 존재하지 않습니다.' },
+        errorResponse({
+          code: 'NOT_FOUND',
+          message: '크루가 존재하지 않습니다.',
+        }),
         { status: 404 }
       );
     }
 
-    const newLeaderMembership = memberships.findFirst((q) =>
-      q.where({
-        crew: { id: crewId },
-        user: { id: newLeaderId },
-      })
-    );
+    const data = { oldLeaderId: 1, newLeaderId: 2 };
 
-    if (!newLeaderMembership) {
-      return HttpResponse.json(
-        { message: '해당 사용자는 크루의 멤버가 아닙니다.' },
-        { status: 404 }
-      );
-    }
-
-    const currentLeaderMembership = memberships.findFirst((q) =>
-      q.where({
-        crew: { id: crewId },
-        role: 'LEADER',
-      })
-    );
-
-    if (currentLeaderMembership) {
-      memberships.update((q) => q.where({ id: currentLeaderMembership.id }), {
-        data(membership) {
-          membership.role = 'MEMBER';
-        },
-      });
-
-      memberships.update(
-        (q) => q.where({ user: { id: newLeaderMembership.id } }),
-        {
-          data(membership) {
-            membership.role = 'LEADER';
-          },
-        }
-      );
-    }
-
-    return HttpResponse.json({
-      message: '크루장이 성공적으로 변경되었습니다.',
-    });
+    return HttpResponse.json(successResponse(data), { status: 200 });
   }),
 
   // 운영진(Staff) 등록/해제
   http.patch(
     path('/api/crews/:crewId/members/:userId/role'),
     async ({ params, request }) => {
-      const crewId = parseIdParam(params.crewId);
       const userId = parseIdParam(params.userId);
       const body = (await request.json()) as { role: 'STAFF' | 'MEMBER' };
       const newRole = body.role;
 
-      if (crewId === null || userId === null || !newRole) {
-        return HttpResponse.json(
-          { message: '유효하지 않은 크루 ID, 사용자 ID 또는 역할입니다.' },
-          { status: 400 }
-        );
-      }
+      const data = {
+        userId: userId,
+        previousRole: 'MEMBER',
+        newRole: newRole,
+        message: '운영진으로 등록되었습니다.',
+      };
 
-      const membership = memberships.findFirst((q) =>
-        q.where({
-          crew: { id: crewId },
-          user: { id: userId },
-        })
-      );
-
-      if (!membership) {
-        return HttpResponse.json(
-          { message: '해당 사용자는 크루의 멤버가 아닙니다.' },
-          { status: 404 }
-        );
-      }
-
-      memberships.update((q) => q.where({ id: membership.id }), {
-        data(membership) {
-          membership.role = newRole;
-        },
-      });
-
-      return HttpResponse.json({
-        message: '멤버 역할이 성공적으로 변경되었습니다.',
-      });
+      return HttpResponse.json(successResponse(data), { status: 200 });
     }
   ),
 
@@ -303,30 +375,19 @@ export const crewHandlers = [
 
     if (crewId === null || userId === null) {
       return HttpResponse.json(
-        { message: '유효하지 않은 크루 ID 또는 사용자 ID입니다.' },
+        errorResponse({
+          code: 'BAD_REQUEST',
+          message: '유효하지 않은 크루 ID 또는 사용자 ID입니다.',
+        }),
         { status: 400 }
       );
     }
+    const data = {
+      message: '해당 사용자가 크루에서 제거되었습니다.',
+      userId: 5,
+    };
 
-    const membership = memberships.findFirst((q) =>
-      q.where({
-        crew: { id: crewId },
-        user: { id: userId },
-      })
-    );
-
-    if (!membership) {
-      return HttpResponse.json(
-        { message: '해당 사용자는 크루의 멤버가 아닙니다.' },
-        { status: 404 }
-      );
-    }
-
-    memberships.delete((q) => q.where({ id: membership.id }));
-
-    return HttpResponse.json({
-      message: '멤버가 성공적으로 강퇴되었습니다.',
-    });
+    return HttpResponse.json(successResponse(data), { status: 200 });
   }),
 
   // 크루 정보 수정
@@ -336,7 +397,10 @@ export const crewHandlers = [
 
     if (crewId === null) {
       return HttpResponse.json(
-        { message: '유효하지 않은 크루 ID입니다.' },
+        errorResponse({
+          code: 'BAD_REQUEST',
+          message: '유효하지 않은 크루 ID입니다.',
+        }),
         { status: 400 }
       );
     }
@@ -345,7 +409,10 @@ export const crewHandlers = [
 
     if (!crew) {
       return HttpResponse.json(
-        { message: '크루가 존재하지 않습니다.' },
+        errorResponse({
+          code: 'NOT_FOUND',
+          message: '크루가 존재하지 않습니다.',
+        }),
         { status: 404 }
       );
     }
@@ -361,7 +428,16 @@ export const crewHandlers = [
 
     const updatedCrew = crews.findFirst((q) => q.where({ id: crewId }));
 
-    return HttpResponse.json(updatedCrew);
+    const data = {
+      id: updatedCrew!.id,
+      name: updatedCrew!.name,
+      description: updatedCrew!.description,
+      city: updatedCrew!.city,
+      image: updatedCrew!.image,
+      createdAt: updatedCrew!.createdAt,
+    };
+
+    return HttpResponse.json(successResponse(data), { status: 200 });
   }),
 
   // 크루 삭제
@@ -370,7 +446,10 @@ export const crewHandlers = [
 
     if (crewId === null) {
       return HttpResponse.json(
-        { message: '유효하지 않은 크루 ID입니다.' },
+        errorResponse({
+          code: 'BAD_REQUEST',
+          message: '유효하지 않은 크루 ID입니다.',
+        }),
         { status: 400 }
       );
     }
@@ -378,14 +457,21 @@ export const crewHandlers = [
 
     if (!crew) {
       return HttpResponse.json(
-        { message: '크루가 존재하지 않습니다.' },
+        errorResponse({
+          code: 'NOT_FOUND',
+          message: '크루가 존재하지 않습니다.',
+        }),
         { status: 404 }
       );
     }
 
     crews.delete((q) => q.where({ id: crewId }));
 
-    return HttpResponse.json({ message: '크루가 성공적으로 삭제되었습니다.' });
+    const data = {
+      message: '크루가 삭제되었습니다.',
+    };
+
+    return HttpResponse.json(successResponse(data), { status: 200 });
   }),
 
   // 크루 리뷰 목록 조회
@@ -394,7 +480,10 @@ export const crewHandlers = [
 
     if (crewId === null) {
       return HttpResponse.json(
-        { message: '유효하지 않은 크루 ID입니다.' },
+        errorResponse({
+          code: 'BAD_REQUEST',
+          message: '유효하지 않은 크루 ID입니다.',
+        }),
         { status: 400 }
       );
     }
@@ -402,12 +491,38 @@ export const crewHandlers = [
     const crew = crews.findFirst((q) => q.where({ id: crewId }));
     if (!crew) {
       return HttpResponse.json(
-        { message: '크루가 존재하지 않습니다.' },
+        errorResponse({
+          code: 'NOT_FOUND',
+          message: '크루가 존재하지 않습니다.',
+        }),
         { status: 404 }
       );
     }
 
-    // For simplicity, returning an empty list
-    return HttpResponse.json({ reviews: [] }, { status: 200 });
+    const data = {
+      content: [
+        {
+          id: 10,
+          sessionId: 12,
+          sessionName: '한강 야간 러닝',
+          crewId: 3,
+          userId: 1,
+          userName: '홍길동',
+          userImage: 'https://.../profile.jpg',
+          description: '분위기가 좋았어요!',
+          ranks: 5,
+          image: 'https://.../review1.jpg',
+          createdAt: '2025-11-20T12:00:00+09:00',
+        },
+      ],
+      page: 0,
+      size: 10,
+      totalElements: 25,
+      totalPages: 3,
+      hasNext: true,
+      hasPrevious: false,
+    };
+
+    return HttpResponse.json(successResponse(data), { status: 200 });
   }),
 ];
