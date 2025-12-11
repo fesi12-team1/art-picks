@@ -16,7 +16,7 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     variant: {
       control: { type: 'select' },
-      options: ['default', 'outlined', 'neutral'],
+      options: ['default', 'outlined', 'neutral', 'ghost'],
     },
     size: {
       control: { type: 'select' },
@@ -54,6 +54,9 @@ export const Variants: Story = {
       </Button>
       <Button {...args} variant="neutral">
         Neutral
+      </Button>
+      <Button {...args} variant="ghost">
+        Ghost
       </Button>
     </div>
   ),
