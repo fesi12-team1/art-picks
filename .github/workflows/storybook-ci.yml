@@ -40,10 +40,8 @@ jobs:
           filters: |
             ui:
               - 'src/components/**'
-              - 'src/ui/**'
-              - 'src/hooks/**'
+              - 'src/**/*.stories.@(ts|tsx|mdx)'
               - '.storybook/**'
-              - 'stories/**'
 
       - name: UI 변경 없음 → Chromatic 스킵
         if: steps.changes.outputs.ui == 'false'
