@@ -4,17 +4,20 @@ interface InputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   size?: 'lg' | 'sm';
   errorMessage?: string;
-  Icon?: React.ReactNode;
+  RightElement?: React.ReactNode;
 }
 
 export default function Input({
   size = 'lg',
-  disabled = false,
-  Icon,
-  className,
+  RightElement,
   ...props
 }: InputProps) {
-  const { 'aria-invalid': ariaInvalid, ...restProps } = props;
+  const {
+    'aria-invalid': ariaInvalid,
+    disabled,
+    className,
+    ...restProps
+  } = props;
 
   const hasError =
     !disabled && (ariaInvalid === true || ariaInvalid === 'true');
@@ -22,7 +25,7 @@ export default function Input({
   return (
     <div
       className={cn(
-        'relative flex items-center bg-gray-800',
+        'flex items-center bg-gray-800',
 
         // focus 상태 (disabled 제외)
         !disabled &&
@@ -33,7 +36,7 @@ export default function Input({
         hasError ? 'border-warning border' : 'border-transparent',
 
         // disabled
-        disabled && 'pointer-events-none opacity-50',
+        disabled && 'pointer-events-none text-gray-400 opacity-50',
 
         // 사이즈
         size === 'lg'
@@ -53,9 +56,9 @@ export default function Input({
         {...restProps}
       />
 
-      {Icon && (
+      {RightElement && (
         <span className="flex size-5 items-center justify-center text-gray-300">
-          {Icon}
+          {RightElement}
         </span>
       )}
     </div>
