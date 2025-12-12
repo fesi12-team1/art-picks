@@ -1,14 +1,13 @@
 import { queryOptions } from '@tanstack/react-query';
 import {
-  CrewListFilters,
   getCrewDetail,
   getCrewMemberCount,
   getCrewMemberDetailById,
   getCrewMembers,
   getCrews,
-  MemberRoleFilters,
 } from '@/api/fetch/crews';
 import { normalizeParams } from '@/lib/utils';
+import { CrewListFilters, MemberRoleFilters } from '@/types';
 
 export const crewQueries = {
   all: () => ['crews'],

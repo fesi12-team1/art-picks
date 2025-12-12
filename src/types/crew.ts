@@ -10,8 +10,18 @@ export interface Crew {
 }
 
 export type CrewListFilters = PaginationQueryParams & {
-  region?: string;
-  sort?: string;
+  city?: string;
+  keyword?: string;
+  sort?:
+    | 'memberCountDesc'
+    | 'lastSessionDesc'
+    | 'createdAtDesc'
+    | 'nameAsc'
+    | 'nameDesc';
+};
+
+export type MemberRoleFilters = {
+  role?: 'leader' | 'staff' | 'general';
 };
 
 export interface CrewMember {

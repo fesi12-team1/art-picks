@@ -1,8 +1,9 @@
 import {
   Crew,
+  CrewListFilters,
   CrewMember,
   CrewMemberRoleData,
-  PaginationQueryParams,
+  MemberRoleFilters,
   ResponseData,
   Role,
   SliceData,
@@ -32,17 +33,6 @@ export async function createCrew(body: CrewRequestBody) {
   const { data }: ResponseData<Crew> = await response.json();
   return data;
 }
-
-export type CrewListFilters = {
-  city?: string;
-  keyword?: string;
-  sort?:
-    | 'memberCountDesc'
-    | 'lastSessionDesc'
-    | 'createdAtDesc'
-    | 'nameAsc'
-    | 'nameDesc';
-} & PaginationQueryParams;
 
 export async function getCrews(queryParams?: CrewListFilters) {
   const query = new URLSearchParams(
@@ -78,10 +68,6 @@ export async function getCrewDetail(crewId: number) {
   const { data }: ResponseData<Crew> = await response.json();
   return data;
 }
-
-export type MemberRoleFilters = {
-  role?: 'leader' | 'staff' | 'general';
-};
 
 export async function getCrewMembers(
   crewId: number,
