@@ -29,6 +29,12 @@ export async function POST(request: NextRequest) {
     }
 
     const { message, data } = await proxyResponse.json();
+    if (!data?.token) {
+      return NextResponse.json(
+        { code: 'INVALID_RESPONSE', message: '서버 응답에 토큰이 없습니다.' },
+        { status: 500 }
+      );
+    }
     const { token } = data;
 
     const response = NextResponse.json({ message, data });
