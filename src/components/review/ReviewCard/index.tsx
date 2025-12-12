@@ -2,9 +2,9 @@
 
 import { mockProfiles, mockSessions } from '@/mocks/data';
 import { Review } from '@/types';
-import SessionInfo from '../session/SessionInfo';
-import Rating from '../ui/Rating';
-import UserAvatar from '../ui/UserAvatar';
+import SessionInfo from '../../session/SessionInfo';
+import Rating from '../../ui/Rating';
+import UserAvatar from '../../ui/UserAvatar';
 
 interface ReviewCardProps {
   data: Review;
