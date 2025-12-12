@@ -1,6 +1,13 @@
 import { CrewListFilters } from '@/types/crew';
 import { SessionListFilters } from '@/types/session';
 
+const serverUrl =
+  process.env.NODE_ENV === 'production'
+    ? process.env.NEXT_PUBLIC_API_URL
+    : 'http://localhost:8080';
+export const proxyUrl = (pathname: string) =>
+  new URL(`/api${pathname}`, serverUrl);
+
 const QUERY_KEY = {
   crews: 'crews',
   sessions: 'sessions',
