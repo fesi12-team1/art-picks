@@ -1,28 +1,14 @@
 import { queryOptions } from '@tanstack/react-query';
 import {
+  CrewListFilters,
   getCrewDetail,
   getCrewMemberCount,
   getCrewMemberDetailById,
   getCrewMembers,
   getCrews,
+  MemberRoleFilters,
 } from '@/api/fetch/crews';
 import { normalizeParams } from '@/lib/utils';
-import { PaginationQueryParams } from '@/types';
-
-type CrewListFilters = {
-  city?: string;
-  keyword?: string;
-  sort?:
-    | 'memberCountDesc'
-    | 'lastSessionDesc'
-    | 'createdAtDesc'
-    | 'nameAsc'
-    | 'nameDesc';
-} & PaginationQueryParams;
-
-type MemberRoleFilters = {
-  role?: 'leader' | 'staff' | 'general';
-};
 
 export const crewQueries = {
   all: () => ['crews'],
