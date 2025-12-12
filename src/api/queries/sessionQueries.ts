@@ -13,10 +13,10 @@ export const sessionQueries = {
   // 세션 목록 조회
   lists: () => [...sessionQueries.all(), 'list'],
   list: (filters: SessionListFilters) => {
-    const cleanFiters = normalizeParams(filters);
+    const cleanFilters = normalizeParams(filters);
     return queryOptions({
       queryKey: [...sessionQueries.lists(), cleanFilters],
-      queryFn: () => getSessions(cleanFiters),
+      queryFn: () => getSessions(cleanFilters),
       placeholderData: (previousData) => previousData, // 필터가 변경되어 데이터를 새로 불러올 때 화면이 깜빡이는 현상 방지
       staleTime: 1000 * 60, // 1분동안 fresh 상태
     });
