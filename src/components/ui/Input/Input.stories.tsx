@@ -29,11 +29,7 @@ export const States: Story = {
     <div className="flex flex-col gap-4">
       <Input placeholder="Normal" />
       <Input placeholder="Disabled" disabled />
-      <Input
-        placeholder="Invalid"
-        aria-invalid
-        errorMessage="올바르지 않은 형식입니다"
-      />
+      <Input placeholder="Invalid" aria-invalid />
     </div>
   ),
 };
@@ -74,6 +70,6 @@ export const Password: Story = {
 export const WithIcon: Story = {
   args: {
     placeholder: '날짜를 입력하세요',
-    Icon: <Calendar className="size-4" />,
+    RightElement: <Calendar className="size-4" />,
   },
 };

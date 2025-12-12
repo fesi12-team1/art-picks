@@ -3,7 +3,6 @@ import { cn } from '@/lib/utils';
 interface InputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   size?: 'lg' | 'sm';
-  errorMessage?: string;
   RightElement?: React.ReactNode;
 }
 
