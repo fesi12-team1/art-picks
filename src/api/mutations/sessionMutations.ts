@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   createSession,
+  deleteSession,
   registerForSession,
   unregisterFromSession,
   updateSessionDetail,
@@ -73,3 +74,18 @@ export const useUnregisterSession = (sessionId: number) => {
     },
   });
 };
+
+// 세션 삭제
+export function useDeleteSession() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteSession,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: sessionQueries.lists() });
+      queryClient.invalidateQueries({
+        queryKey: sessionQueries.mine().all(),
+      });
+    },
+  });
+}
