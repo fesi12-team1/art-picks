@@ -60,7 +60,7 @@ export default function Rating({
                 index <= value
                   ? 'var(--color-gray-100)'
                   : hoveredRating >= index
-                    ? 'var(--color-gray-400)'
+                    ? 'var(--color-gray-300)'
                     : 'var(--color-gray-600)'
               }
             />
