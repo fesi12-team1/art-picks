@@ -28,7 +28,7 @@ export const userQueries = {
     const cleanParams = normalizeParams(params);
     return queryOptions({
       queryKey: [...userQueries.all(), 'reviews', cleanParams],
-      queryFn: () => getMyReviews(params),
+      queryFn: () => getMyReviews(cleanParams),
       placeholderData: (previousData) => previousData,
     });
   },
