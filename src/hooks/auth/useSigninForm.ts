@@ -4,12 +4,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { postSignin } from '@/api/auth';
+import { postSignin, SigninRequestBody } from '@/api/auth';
 import {
   SigninFormValues,
   signinSchema,
 } from '@/lib/validations/auth/signinSchema';
-import type { ResponseErrorData } from '@/types';
+import type { ResponseErrorData, SigninResponse } from '@/types';
 
 export function useSigninForm() {
   const router = useRouter();
@@ -20,29 +20,40 @@ export function useSigninForm() {
   });
 
   // const signinMutation = useSigninMutation();
-  const mutation = useMutation({
+  const mutation = useMutation<
+    SigninResponse,
+    ResponseErrorData,
+    SigninRequestBody
+  >({
     mutationFn: postSignin,
-    onSuccess: () => {
-      router.push('/');
-    },
-    onError: ({ error }: ResponseErrorData) => {
-      switch (error.code) {
-        case 'INVALID_CREDENTIALS':
-          form.setError('root', {
-            message: '이메일 또는 비밀번호가 올바르지 않습니다.',
-          });
-          break;
-
-        default:
-          form.setError('root', {
-            message: '로그인 중 오류가 발생했습니다.',
-          });
-      }
-    },
   });
 
   const submit = form.handleSubmit((values) => {
-    mutation.mutate(values);
+    mutation.mutate(
+      {
+        email: values.email,
+        password: values.password,
+      },
+      {
+        onSuccess: () => {
+          router.push('/');
+        },
+        onError: ({ error }: ResponseErrorData) => {
+          switch (error.code) {
+            case 'INVALID_CREDENTIALS':
+              form.setError('root', {
+                message: '이메일 또는 비밀번호가 올바르지 않습니다.',
+              });
+              break;
+
+            default:
+              form.setError('root', {
+                message: '로그인 중 오류가 발생했습니다.',
+              });
+          }
+        },
+      }
+    );
   });
 
   return {

@@ -8,7 +8,7 @@ import { postSignup, SignupRequestBody } from '@/api/auth';
 import {
   SignupFormValues,
   signupSchema,
-} from '@/lib/validations/auth/signoutSchema';
+} from '@/lib/validations/auth/signupSchema';
 import type { ResponseErrorData, User } from '@/types';
 
 /**
