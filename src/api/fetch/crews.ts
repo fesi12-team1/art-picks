@@ -22,9 +22,9 @@ export async function createCrew(body: CrewRequestBody) {
   });
 
   if (!response.ok) {
-    const { error } = await response.json();
-    if (!error.success) {
-      throw new Error(error.message);
+    const resData = await response.json();
+    if (resData.error) {
+      throw new Error(resData.error.message);
     } else {
       throw new Error('서버에 연결할 수 없습니다.');
     }
@@ -41,9 +41,9 @@ export async function getCrews(queryParams?: CrewListFilters) {
   const response = await fetch(`/api/crews?${query}`);
 
   if (!response.ok) {
-    const { error } = await response.json();
-    if (!error.success) {
-      throw new Error(error.message);
+    const resData = await response.json();
+    if (resData.error) {
+      throw new Error(resData.error.message);
     } else {
       throw new Error('서버에 연결할 수 없습니다.');
     }
@@ -57,9 +57,9 @@ export async function getCrewDetail(crewId: number) {
   const response = await fetch(`/api/crews/${crewId}`);
 
   if (!response.ok) {
-    const { error } = await response.json();
-    if (!error.success) {
-      throw new Error(error.message);
+    const resData = await response.json();
+    if (resData.error) {
+      throw new Error(resData.error.message);
     } else {
       throw new Error('서버에 연결할 수 없습니다.');
     }
@@ -79,9 +79,9 @@ export async function getCrewMembers(
   const response = await fetch(`/api/crews/${crewId}/members?${query}`);
 
   if (!response.ok) {
-    const { error } = await response.json();
-    if (!error.success) {
-      throw new Error(error.message);
+    const resData = await response.json();
+    if (resData.error) {
+      throw new Error(resData.error.message);
     } else {
       throw new Error('서버에 연결할 수 없습니다.');
     }
@@ -100,9 +100,9 @@ export async function getCrewMemberCount(crewId: number) {
   const response = await fetch(`/api/crews/${crewId}/members/count`);
 
   if (!response.ok) {
-    const { error } = await response.json();
-    if (!error.success) {
-      throw new Error(error.message);
+    const resData = await response.json();
+    if (resData.error) {
+      throw new Error(resData.error.message);
     } else {
       throw new Error('서버에 연결할 수 없습니다.');
     }
@@ -123,9 +123,9 @@ export async function getCrewMemberDetailById(crewId: number, userId: number) {
   const response = await fetch(`/api/crews/${crewId}/members/${userId}/role`);
 
   if (!response.ok) {
-    const { error } = await response.json();
-    if (!error.success) {
-      throw new Error(error.message);
+    const resData = await response.json();
+    if (resData.error) {
+      throw new Error(resData.error.message);
     } else {
       throw new Error('서버에 연결할 수 없습니다.');
     }
@@ -150,9 +150,9 @@ export async function delegateCrewLeader(
   });
 
   if (!response.ok) {
-    const { error } = await response.json();
-    if (!error.success) {
-      throw new Error(error.message);
+    const resData = await response.json();
+    if (resData.error) {
+      throw new Error(resData.error.message);
     } else {
       throw new Error('서버에 연결할 수 없습니다.');
     }
@@ -183,9 +183,9 @@ export async function updateMemberRole(
   });
 
   if (!response.ok) {
-    const { error } = await response.json();
-    if (!error.success) {
-      throw new Error(error.message);
+    const resData = await response.json();
+    if (resData.error) {
+      throw new Error(resData.error.message);
     } else {
       throw new Error('서버에 연결할 수 없습니다.');
     }
@@ -215,9 +215,9 @@ export async function expelMember(crewId: number, userId: number) {
   });
 
   if (!response.ok) {
-    const { error } = await response.json();
-    if (!error.success) {
-      throw new Error(error.message);
+    const resData = await response.json();
+    if (resData.error) {
+      throw new Error(resData.error.message);
     } else {
       throw new Error('서버에 연결할 수 없습니다.');
     }
@@ -248,9 +248,9 @@ export async function updateCrewDetail(
   });
 
   if (!response.ok) {
-    const { error } = await response.json();
-    if (!error.success) {
-      throw new Error(error.message);
+    const resData = await response.json();
+    if (resData.error) {
+      throw new Error(resData.error.message);
     } else {
       throw new Error('서버에 연결할 수 없습니다.');
     }
@@ -267,9 +267,9 @@ export async function deleteCrew(crewId: number) {
   });
 
   if (!response.ok) {
-    const { error } = await response.json();
-    if (!error.success) {
-      throw new Error(error.message);
+    const resData = await response.json();
+    if (resData.error) {
+      throw new Error(resData.error.message);
     } else {
       throw new Error('서버에 연결할 수 없습니다.');
     }

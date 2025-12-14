@@ -28,9 +28,9 @@ export async function getSessions(queryParams?: SessionListFilters) {
   const response = await fetch(`/api/sessions?${query}`);
 
   if (!response.ok) {
-    const { error } = await response.json();
-    if (!error.success) {
-      throw new Error(error.message);
+    const resData = await response.json();
+    if (resData.error) {
+      throw new Error(resData.error.message);
     } else {
       throw new Error('서버에 연결할 수 없습니다.');
     }
@@ -65,9 +65,9 @@ export async function createSession(body: CreateSessionRequestBody) {
   });
 
   if (!response.ok) {
-    const { error } = await response.json();
-    if (!error.success) {
-      throw new Error(error.message);
+    const resData = await response.json();
+    if (resData.error) {
+      throw new Error(resData.error.message);
     } else {
       throw new Error('서버에 연결할 수 없습니다.');
     }
@@ -81,9 +81,9 @@ export async function getSessionDetail(sessionId: number) {
   const response = await fetch(`/api/sessions/${sessionId}`);
 
   if (!response.ok) {
-    const { error } = await response.json();
-    if (!error.success) {
-      throw new Error(error.message);
+    const resData = await response.json();
+    if (resData.error) {
+      throw new Error(resData.error.message);
     } else {
       throw new Error('서버에 연결할 수 없습니다.');
     }
@@ -100,9 +100,9 @@ export async function registerForSession(sessionId: number) {
   });
 
   if (!response.ok) {
-    const { error } = await response.json();
-    if (!error.success) {
-      throw new Error(error.message);
+    const resData = await response.json();
+    if (resData.error) {
+      throw new Error(resData.error.message);
     } else {
       throw new Error('서버에 연결할 수 없습니다.');
     }
@@ -125,9 +125,9 @@ export async function unregisterFromSession(sessionId: number) {
   });
 
   if (!response.ok) {
-    const { error } = await response.json();
-    if (!error.success) {
-      throw new Error(error.message);
+    const resData = await response.json();
+    if (resData.error) {
+      throw new Error(resData.error.message);
     } else {
       throw new Error('서버에 연결할 수 없습니다.');
     }
@@ -147,9 +147,9 @@ export async function getSessionParticipants(sessionId: number) {
   const response = await fetch(`/api/sessions/${sessionId}/participants`);
 
   if (!response.ok) {
-    const { error } = await response.json();
-    if (!error.success) {
-      throw new Error(error.message);
+    const resData = await response.json();
+    if (resData.error) {
+      throw new Error(resData.error.message);
     } else {
       throw new Error('서버에 연결할 수 없습니다.');
     }
@@ -181,9 +181,9 @@ export async function updateSessionDetail(
   });
 
   if (!response.ok) {
-    const { error } = await response.json();
-    if (!error.success) {
-      throw new Error(error.message);
+    const resData = await response.json();
+    if (resData.error) {
+      throw new Error(resData.error.message);
     } else {
       throw new Error('서버에 연결할 수 없습니다.');
     }
@@ -208,9 +208,9 @@ export async function getMySessions(queryParams?: PaginationQueryParams) {
   const response = await fetch(`/api/user/me/sessions?${query}`);
 
   if (!response.ok) {
-    const { error } = await response.json();
-    if (!error.success) {
-      throw new Error(error.message);
+    const resData = await response.json();
+    if (resData.error) {
+      throw new Error(resData.error.message);
     } else {
       throw new Error('서버에 연결할 수 없습니다.');
     }
@@ -228,9 +228,9 @@ export async function deleteSession(sessionId: number) {
   });
 
   if (!response.ok) {
-    const { error } = await response.json();
-    if (!error.success) {
-      throw new Error(error.message);
+    const resData = await response.json();
+    if (resData.error) {
+      throw new Error(resData.error.message);
     } else {
       throw new Error('서버에 연결할 수 없습니다.');
     }
