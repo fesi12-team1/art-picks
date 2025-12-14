@@ -15,6 +15,7 @@ export default function SignupForm() {
     <form onSubmit={submit} className="flex flex-col gap-4">
       <Input
         label="이메일"
+        aria-invalid={!!errors.email}
         {...register('email')}
         errorMessage={errors.email?.message}
       />
@@ -26,6 +27,7 @@ export default function SignupForm() {
       />
       <Input
         label="비밀번호 확인"
+        aria-invalid={!!errors.passwordConfirm}
         type="password"
         {...register('passwordConfirm')}
         errorMessage={errors.passwordConfirm?.message}

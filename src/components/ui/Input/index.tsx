@@ -109,7 +109,7 @@ export default function Input({
         )}
       </div>
 
-      {hasError && errorMessage && (
+      {errorMessage && (
         <p id={errorId} className="text-warning mt-0.5 text-xs">
           {errorMessage}
         </p>
