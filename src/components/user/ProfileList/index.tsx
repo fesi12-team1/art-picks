@@ -1,4 +1,4 @@
-import UserAvatar from '@/components/ui/UserAvatar/UserAvatar';
+import UserAvatar from '@/components/ui/UserAvatar';
 import { cn } from '@/lib/utils';
 import { Profile } from '@/types';
 
