@@ -40,7 +40,7 @@ export default function SessionCard({
   const timeDiff = registerByDate.getTime() - today.getTime();
   const dayDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
   const ddayText =
-    dayDiff > 0 ? `마감 D-${dayDiff}` : dayDiff === 0 ? '마감 D-Day' : '마감됨';
+    timeDiff < 0 ? '마감됨' : dayDiff > 0 ? `마감 D-${dayDiff}` : '마감 D-Day';
 
   const sessionAtDate = new Date(sessionAt);
   const sessionDate = `${sessionAtDate.getMonth() + 1}월 ${sessionAtDate.getDate()}일`;
@@ -109,7 +109,9 @@ export default function SessionCard({
       <section className="desktop:gap-2 flex items-center gap-1">
         <ProfileList data={participantsData?.participants || []} />
         <div className="text-caption-regular laptop:text-body3-regular pointer-events-none text-gray-300">
-          {`${currentParticipantCount}/${maxParticipantCount}명 • ${crewData?.name}`}
+          {crewData?.name
+            ? `${currentParticipantCount}/${maxParticipantCount}명 • ${crewData.name}`
+            : `${currentParticipantCount}/${maxParticipantCount}명`}
         </div>
       </section>
     </div>
