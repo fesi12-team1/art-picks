@@ -34,13 +34,7 @@ export async function POST() {
 
     const response = NextResponse.json({ message, data });
 
-    response.cookies.set('accessToken', '', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
-      path: '/api/auth',
-      maxAge: 0,
-    });
+    response.cookies.delete('accessToken');
 
     const proxySetCookies = proxyResponse.headers.getSetCookie();
     proxySetCookies.forEach((cookie) => {
