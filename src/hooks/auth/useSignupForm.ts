@@ -35,24 +35,27 @@ export function useSignupForm() {
           router.push('/signin');
         },
         onError: ({ error }) => {
-          switch (error.code) {
-            case 'ALREADY_EXISTS_EMAIL':
-              form.setError('email', {
-                message: error.message,
-              });
-              break;
+          form.setError('root', {
+            message: error.message,
+          });
+          // switch (error.code) {
+          //   case 'ALREADY_EXISTS_EMAIL':
+          //     form.setError('email', {
+          //       message: error.message,
+          //     });
+          //     break;
 
-            case 'VALIDATION_ERROR':
-              form.setError('root', {
-                message: error.message,
-              });
-              break;
+          //   case 'VALIDATION_ERROR':
+          //     form.setError('root', {
+          //       message: error.message,
+          //     });
+          //     break;
 
-            default:
-              form.setError('root', {
-                message: '회원가입 중 오류가 발생했습니다.',
-              });
-          }
+          //   default:
+          //     form.setError('root', {
+          //       message: '회원가입 중 오류가 발생했습니다.',
+          //     });
+          // }
         },
       }
     );
