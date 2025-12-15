@@ -2,7 +2,6 @@ import Image from 'next/image';
 import Liked from '@/assets/icons/liked.svg';
 import Location from '@/assets/icons/location.svg';
 import { formatTimeToKorean } from '@/lib/time';
-import { mockSessionParticipants } from '@/mocks/data';
 import { Session } from '@/types';
 import { DdayBadge, LevelBadge, PaceBadge } from '../../ui/Badge';
 import ProfileList from '../../user/ProfileList';
@@ -36,7 +35,6 @@ export default function SessionCard({ data }: SessionCardProps) {
   // TODO: 추후에는 실제 데이터 전달
   // const { data: crewData } = useCrewDetail(data.crewId); // tanstack-query hook
   const crewData = { name: '달리는 거북이' };
-  const participantList = mockSessionParticipants.participants;
 
   return (
     <li className="flex w-full flex-col">
@@ -59,7 +57,7 @@ export default function SessionCard({ data }: SessionCardProps) {
         <div className="absolute bottom-3 left-3 flex items-center gap-0.5 md:gap-1">
           <Location className="size-4 fill-gray-200" />
           <div className="text-caption-medium laptop:text-body3-medium font-medium text-gray-200">
-            {data.location}
+            {data.city}
           </div>
         </div>
       </div>
@@ -79,7 +77,7 @@ export default function SessionCard({ data }: SessionCardProps) {
           <LevelBadge level={level} size="lg" className="hidden laptop:inline-flex" />
       </div>
       <div className="flex gap-1">
-        <ProfileList data={participantList} />
+        <ProfileList data={[]} />
         <div className="text-caption-regular laptop:text-body3-regular text-gray-300">
           {`${data.currentParticipantCount}/${data.maxParticipantCount}명 • ${crewData.name}`}
         </div>
