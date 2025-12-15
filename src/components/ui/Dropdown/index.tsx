@@ -2,7 +2,7 @@
 
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import * as React from 'react';
-import ArrowDown from '@/assets/icons/arrow-down.svg';
+import ArrowDown from '@/assets/icons/arrow-down.svg?react';
 import { cn } from '@/lib/utils';
 
 type DropdownSize = 'sm' | 'lg';
