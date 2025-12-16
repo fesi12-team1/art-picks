@@ -1,12 +1,11 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
-import LevelIcon from '@/assets/icons/level.svg?react';
+import Level from '@/assets/icons/level.svg?react';
 import { formatPaceText, secondsToMinutes } from '@/lib/pace';
 import { cn } from '@/lib/utils';
-import { type Level } from '@/types';
 
 export const badgeVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap shrink-0 [&>svg]:size-3 [&>svg]:pointer-events-none overflow-hidden font-semibold',
+  'inline-flex items-center justify-center whitespace-nowrap shrink-0 [&>svg]:size-3 [&>svg]:pointer-events-none overflow-hidden font-semibold pointer-events-none',
   {
     variants: {
       variant: {
@@ -35,7 +34,7 @@ type BaseBadgeProps = React.ComponentProps<'div'> & {
 
 type LevelBadgeProps = BaseBadgeProps & {
   variant: 'level';
-  level: Level;
+  level: 'easy' | 'medium' | 'hard';
   pace?: never;
 };
 
@@ -94,24 +93,23 @@ export function LevelBadge({
     lg: 'size-4',
   };
   const fillColor = {
-    BEGINNER: 'fill-gray-200',
-    INTERMEDIATE: 'fill-[#F2B48A]',
-    ADVANCED: 'fill-[#FF819E]',
+    easy: 'fill-gray-200',
+    medium: 'fill-[#F2B48A]',
+    hard: 'fill-[#FF819E]',
   };
   const textColor = {
-    BEGINNER: 'text-gray-200',
-    INTERMEDIATE: 'text-[#F2B48A]',
-    ADVANCED: 'text-[#FF819E]',
+    easy: 'text-gray-200',
+    medium: 'text-[#F2B48A]',
+    hard: 'text-[#FF819E]',
   };
   const text = {
-    BEGINNER: '초급',
-    INTERMEDIATE: '중급',
-    ADVANCED: '고급',
+    easy: '초급',
+    medium: '중급',
+    hard: '고급',
   };
-
   return (
     <Badge variant="level" level={level} size={size} className={className}>
-      <LevelIcon className={cn(iconSize[size], fillColor[level])} />
+      <Level className={cn(iconSize[size], fillColor[level])} />
       <span className={textColor[level]}>{text[level]}</span>
     </Badge>
   );
