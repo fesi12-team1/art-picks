@@ -8,17 +8,19 @@ export default function SignupPage() {
       <section className="relative flex h-[calc(100vh-56px)] w-1/2 items-center justify-center">
         <Image
           src="/assets/bg/pc.png"
-          alt="Background"
+          alt="배경 이미지"
           fill
           className="object-cover"
+          priority
         />
         <div className="absolute inset-0 flex items-center justify-center">
           <Image
             src="/assets/banner.png"
-            alt="Background"
-            className="absolute bottom-30 z-0 -translate-y-30"
+            alt="런핏 배너"
+            className="absolute bottom-30 z-0 pb-20"
             width={600}
             height={400}
+            priority
           />
         </div>
       </section>
