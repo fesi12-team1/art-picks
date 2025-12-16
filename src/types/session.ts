@@ -1,7 +1,8 @@
 import { PaginationQueryParams } from './api';
 import { Sido, Sigungu } from './region';
 
-export interface Session<City extends Sido = Sido> {
+type City = Sido;
+export interface Session {
   id: number;
   crewId: number;
   hostUserId: number;
