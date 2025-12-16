@@ -2,6 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
+import Link from 'next/link';
 import { crewQueries } from '@/api/queries/crewQueries';
 import { sessionQueries } from '@/api/queries/sessionQueries';
 import Liked from '@/assets/icons/liked.svg';
@@ -12,9 +13,7 @@ import type { Session } from '@/types';
 import { DdayBadge, LevelBadge, PaceBadge } from '../../ui/Badge';
 import ProfileList from '../../user/ProfileList';
 
-interface SessionCardProps extends Session {
-  onClick?: () => void;
-}
+type SessionCardProps = Session;
 
 export default function SessionCard({
   crewId,
@@ -28,7 +27,6 @@ export default function SessionCard({
   level,
   currentParticipantCount,
   maxParticipantCount,
-  onClick,
 }: SessionCardProps) {
   const { data: crewData } = useQuery(crewQueries.detail(crewId));
   const { data: participantsData } = useQuery(
@@ -58,8 +56,8 @@ export default function SessionCard({
 
   return (
     <div className="flex w-full flex-col">
-      <section
-        onClick={onClick}
+      <Link
+        href={`/sessions/${sessionId}`}
         className="tablet:aspect-video relative aspect-165/185 w-full cursor-pointer self-stretch overflow-hidden rounded-lg"
       >
         <Image
@@ -86,8 +84,7 @@ export default function SessionCard({
             {city}
           </div>
         </div>
-      </section>
-
+      </Link>
       <section className="mobile:mb-2 desktop:mt-[18px] pointer-events-none my-3">
         <span className="text-body3-semibold tablet:text-body2-semibold laptop:text-title3-semibold mb-0.5 line-clamp-1 text-gray-50">
           {name}

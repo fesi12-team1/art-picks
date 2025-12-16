@@ -1,7 +1,6 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
 import { sessionQueries } from '@/api/queries/sessionQueries';
 import Banner from '@/assets/banner-pc.svg';
 import SessionCard from '@/components/session/SessionCard';
@@ -10,8 +9,6 @@ import FilterButton from '@/components/ui/FilterButton';
 import { Session } from '@/types';
 
 export default function SessionPage() {
-  const router = useRouter();
-
   const { data } = useQuery(
     sessionQueries.list({
       page: 0,
@@ -63,11 +60,7 @@ export default function SessionPage() {
         </div>
         <div className="grid w-full grid-cols-3 gap-6">
           {data?.content?.map((session: Session) => (
-            <SessionCard
-              key={session.id}
-              {...session}
-              onClick={() => router.push(`/sessions/${session.id}`)}
-            />
+            <SessionCard key={session.id} {...session} />
           ))}
         </div>
       </section>
