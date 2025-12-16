@@ -17,16 +17,14 @@ export async function POST(request: NextRequest) {
       const errorData = await proxyResponse.json();
       const response = NextResponse.json(
         { ...errorData },
-        {
-          status: proxyResponse.status,
-        }
+        { status: proxyResponse.status }
       );
 
       return response;
     }
 
     const data = await proxyResponse.json();
-    const response = NextResponse.json({ ...data });
+    const response = NextResponse.json(data, { status: proxyResponse.status });
 
     return response;
   } catch (error) {

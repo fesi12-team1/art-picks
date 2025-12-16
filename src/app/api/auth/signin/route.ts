@@ -17,9 +17,7 @@ export async function POST(request: NextRequest) {
       const errorData = await proxyResponse.json();
       const response = NextResponse.json(
         { ...errorData },
-        {
-          status: proxyResponse.status,
-        }
+        { status: proxyResponse.status }
       );
 
       return response;

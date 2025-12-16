@@ -3,12 +3,9 @@ import { proxyUrl } from '@/lib/api';
 import { getRefreshToken } from '@/lib/auth';
 
 export async function POST() {
-  const apiUrl = proxyUrl('/api/auth/refresh');
-
-  const refreshToken = await getRefreshToken();
-
   try {
-    const proxyResponse = await fetch(apiUrl, {
+    const refreshToken = await getRefreshToken();
+    const proxyResponse = await fetch(proxyUrl('/api/auth/refresh'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
@@ -21,9 +18,7 @@ export async function POST() {
       const errorData = await proxyResponse.json();
       const response = NextResponse.json(
         { ...errorData },
-        {
-          status: proxyResponse.status,
-        }
+        { status: proxyResponse.status }
       );
 
       return response;
