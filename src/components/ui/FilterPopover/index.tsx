@@ -11,14 +11,21 @@ export default function Popover(
   return <PopoverPrimitive.Root {...props} />;
 }
 
+interface PopoverTriggerProps
+  extends React.ComponentProps<typeof PopoverPrimitive.Trigger> {
+  size?: 'sm' | 'lg';
+  hasSelected?: boolean;
+}
+
 function PopoverTrigger({
   className,
   children,
   size = 'sm',
-  hasSelected = 'false',
+  hasSelected = false,
   ...props
-}: React.ComponentProps<typeof PopoverPrimitive.Trigger>) {
+}: PopoverTriggerProps) {
   const isLarge = size === 'lg';
+
   return (
     <PopoverPrimitive.Trigger
       className={cn(
@@ -28,7 +35,9 @@ function PopoverTrigger({
         'group flex w-auto items-center justify-between truncate rounded-lg px-3 py-2',
         'bg-gray-800 text-gray-200',
         'border border-transparent',
+        // data-[state=open]은 팝오버가 열렸을 때 스타일
         'data-[state=open]:border-brand-500 data-[state=open]:bg-brand-950 data-[state=open]:text-brand-200',
+        // hasSelected가 true일 때 스타일 (boolean 체크)
         hasSelected && 'border-brand-500 bg-brand-950 text-brand-200',
         className
       )}
