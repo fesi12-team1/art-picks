@@ -2,11 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { proxyUrl } from '@/lib/api';
 
 export async function POST(request: NextRequest) {
-  const apiUrl = proxyUrl('/auth/signup');
-
   try {
     const body = await request.json();
-    const proxyResponse = await fetch(apiUrl, {
+    const proxyResponse = await fetch(proxyUrl('/auth/signup'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
@@ -16,20 +14,19 @@ export async function POST(request: NextRequest) {
     });
 
     if (!proxyResponse.ok) {
-      if (proxyResponse.status >= 400 && proxyResponse.status < 500) {
-        const errorData = await proxyResponse.json();
-        return NextResponse.json(
-          { ...errorData },
-          {
-            status: proxyResponse.status,
-          }
-        );
-      }
-      throw new Error('서버에 연결할 수 없습니다.');
+      const errorData = await proxyResponse.json();
+      const response = NextResponse.json(
+        { ...errorData },
+        {
+          status: proxyResponse.status,
+        }
+      );
+
+      return response;
     }
 
-    const { message, data } = await proxyResponse.json();
-    const response = NextResponse.json({ message, data });
+    const data = await proxyResponse.json();
+    const response = NextResponse.json({ ...data });
 
     return response;
   } catch (error) {
