@@ -15,7 +15,6 @@ import ProgressBar from '@/components/ui/ProgressBar';
 import Rating from '@/components/ui/Rating';
 import TimeSlider from '@/components/ui/TimeSlider';
 import UserAvatar from '@/components/ui/UserAvatar';
-import { Level } from '@/types';
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
@@ -267,7 +266,7 @@ export default function Page() {
           </div>
           <div className="mb-6 flex items-center gap-1">
             <PaceBadge size="sm" pace={pace} />
-            <LevelBadge size="sm" level={level as Level} />
+            {/* <LevelBadge size="sm" level={} /> */}
           </div>
           <ProgressBar
             value={currentParticipantCount}
