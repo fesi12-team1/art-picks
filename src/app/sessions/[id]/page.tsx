@@ -5,10 +5,14 @@ import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { sessionQueries } from '@/api/queries/sessionQueries';
 import VerticalEllipsisIcon from '@/assets/icons/vertical-ellipsis.svg?react';
+import FixedBottomBar, {
+  useFixedBottomBar,
+} from '@/components/layout/FixedBottomBar';
 import KakaoMap from '@/components/session/KakaoMap';
 import Badge, { LevelBadge, PaceBadge } from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import ProgressBar from '@/components/ui/ProgressBar';
+import Rating from '@/components/ui/Rating';
 import TimeSlider from '@/components/ui/TimeSlider';
 import UserAvatar from '@/components/ui/UserAvatar';
 import { Level } from '@/types';
@@ -205,7 +209,7 @@ export default function Page() {
 
   const crew = {
     id: 0,
-    name: '크루짱',
+    name: '달리는 거북이 크루',
     description: '엄청난 크루',
     city: '서울',
     image: 'string',
@@ -220,11 +224,14 @@ export default function Page() {
     userId: 0,
     userName: '하이',
     userImage: 'string',
-    description: '와 대박',
+    description:
+      '러닝 너무 재미있었어요 :) 평소에 이용해보고 싶었는데 이렇게 러닝 세션 생기니까 너무 좋아요! 프로그램이 더 많이 늘어났으면 좋겠어요.',
     ranks: 0,
     image: 'string',
     createdAt: '2025-12-16T07:30:41.004Z',
   };
+
+  const { ref, height } = useFixedBottomBar();
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -267,6 +274,7 @@ export default function Page() {
             max={maxParticipantCount}
           />
         </div>
+
         <hr className="mb-6 text-gray-700" />
 
         <div className="mb-6 flex flex-col gap-1">
@@ -305,43 +313,71 @@ export default function Page() {
           </div>
         </div>
         <div className="mb-6 flex flex-col gap-1">
-          <h2 className="text-body2-semibold text-gray-50">
-            참여 멤버 {participants.length}
+          <h2 className="text-body2-semibold inline-flex items-center gap-1 text-gray-50">
+            참여 멤버
+            <span className="text-body1-semibold text-brand-300">
+              {currentParticipantCount}
+            </span>
           </h2>
-          {participants.map((participant) => (
-            <div key={participant.userId}>
-              <div>{participant.name}</div>
-              <UserAvatar src={participant.profileImage} className="size-12" />
-              <Badge size="sm" variant="dday">
-                {participant.role}
-              </Badge>
-              {/* {participant.introduction} */}
-            </div>
-          ))}
+          <ul className="mb-3 flex flex-col gap-2">
+            {participants.map((participant) => (
+              <li key={participant.userId} className="flex items-center gap-3">
+                <UserAvatar
+                  src={participant.profileImage}
+                  className="size-12 shrink-0"
+                />
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-body3-semibold">
+                      {participant.name}
+                    </span>
+                    <Badge size="sm" variant="dday">
+                      {participant.role}
+                    </Badge>
+                  </div>
+                  <p className="text-caption-regular line-clamp-1 text-gray-200">
+                    {/* {participant.introduction} */}
+                    안녕하세요, 잘 부탁드립니다. 안녕하세요, 잘 부탁드립니다.
+                    안녕하세요, 잘 부탁드립니다. 안녕하세요, 잘 부탁드립니다.
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ul>
           <Button variant="neutral" size="sm" className="w-full">
             더보기
           </Button>
         </div>
-        <div>
-          <div>
+        <div className="flex flex-col gap-4 rounded-xl border-gray-600 bg-gray-700 p-3">
+          <div className="flex gap-3">
             <Image
               src={
                 'https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
               }
               alt={crew.name}
-              height={200}
-              width={300}
+              height={44}
+              width={66}
+              className="rounded-lg"
             />
-            {crew.name}
-            {crew.city}
-            {/* {crew.membersCount}
-          {crew.description} */}
+            <div>
+              <div className="text-caption-semibold mb-0.5">{crew.name}</div>
+              <div className="text-caption-regular">
+                {`${crew.city} • 멤버 64명`}
+                {/* {`${crew.city} • 멤버 ${crew.membersCount}명`} */}
+              </div>
+            </div>
           </div>
-          <div>
-            {review.ranks} {review.description}
+          <hr className="text-gray-600" />
+
+          <div className="gap">
+            <Rating value={review.ranks} onChange={() => 1} className="mb-2" />
+            <p className="text-caption-regular text-gray-200">
+              {review.description}
+            </p>
           </div>
         </div>
       </div>
+      <FixedBottomBar ref={ref}>hellowolrd</FixedBottomBar>
     </main>
   );
 }
