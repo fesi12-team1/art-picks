@@ -3,7 +3,7 @@ import { proxyUrl } from '@/lib/api';
 import { getRefreshToken } from '@/lib/auth';
 
 export async function POST() {
-  const apiUrl = proxyUrl('/auth/refresh');
+  const apiUrl = proxyUrl('/api/auth/refresh');
 
   const refreshToken = await getRefreshToken();
 

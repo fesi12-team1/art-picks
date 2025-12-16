@@ -4,7 +4,7 @@ import { proxyUrl } from '@/lib/api';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const proxyResponse = await fetch(proxyUrl('/auth/signup'), {
+    const proxyResponse = await fetch(proxyUrl('/api/auth/signup'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',

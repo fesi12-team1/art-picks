@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAccessToken, getRefreshToken } from './auth';
 
 export const proxyUrl = (pathname: string) =>
-  new URL(`/api${pathname}`, process.env.NEXT_PUBLIC_API_URL);
+  new URL(`${pathname}`, process.env.NEXT_PUBLIC_API_URL);
 
 export async function handleRequest(
   request: NextRequest,
@@ -21,52 +21,56 @@ export async function handleRequest(
 
   if (requiresAuth) {
     accessToken = await getAccessToken();
-
     if (!accessToken) {
       const refreshToken = await getRefreshToken();
       if (!refreshToken) {
         return NextResponse.redirect(new URL('/signin', request.url));
       }
 
-      const refreshResponse = await fetch(proxyUrl('/auth/refresh'));
-      if (!refreshResponse.ok) {
-        return NextResponse.redirect(new URL('/signin', request.url));
-      }
+      try {
+        const refreshResponse = await fetch('/api/auth/refresh', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            'Cookie': `refreshToken=${refreshToken}`,
+          },
+          cache: 'no-cache',
+        });
 
-      accessToken = await getAccessToken();
-      if (!accessToken) {
+        if (!refreshResponse.ok) {
+          return NextResponse.redirect(new URL('/signin', request.url));
+        }
+
+        const { data } = await refreshResponse.json();
+        if (!data?.token) {
+          return NextResponse.redirect(new URL('/signin', request.url));
+        }
+
+        accessToken = data.token;
+      } catch (error) {
+        console.error('Token refresh failed:', error);
         return NextResponse.redirect(new URL('/signin', request.url));
       }
     }
   }
-  // if (proxyResponse.status === 401) {
-  //   response.cookies.set('accessToken', '', {
-  //     httpOnly: true,
-  //     secure: process.env.NODE_ENV === 'production',
-  //     sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
-  //     path: '/api',
-  //     maxAge: 0,
-  //   });
-  // }
 
   try {
-    const proxyResponse = await fetch(
-      proxyUrl(`/${pathname}?${searchParams}`),
-      {
-        method: request.method,
-        headers: {
-          ...Object.fromEntries(request.headers),
-          accept: 'application/json;charset=UTF-8',
-          ...(requiresAuth &&
-            accessToken && { Authorization: `Bearer ${accessToken}` }),
-        },
-        body:
-          request.method !== 'GET' && request.method !== 'HEAD'
-            ? request.body
-            : undefined,
-        cache: requiresAuth ? 'no-cache' : 'default',
-      }
-    );
+    const requestPath = proxyUrl(`/api/${pathname}?${searchParams}`);
+    console.log('requestPath', requestPath);
+    const proxyResponse = await fetch(requestPath, {
+      method: request.method,
+      headers: {
+        ...Object.fromEntries(request.headers),
+        accept: 'application/json;charset=UTF-8',
+        ...(requiresAuth &&
+          accessToken && { Authorization: `Bearer ${accessToken}` }),
+      },
+      body:
+        request.method !== 'GET' && request.method !== 'HEAD'
+          ? request.body
+          : undefined,
+      cache: requiresAuth ? 'no-cache' : 'default',
+    });
 
     if (!proxyResponse.ok) {
       const errorData = await proxyResponse.json();

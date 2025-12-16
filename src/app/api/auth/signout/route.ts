@@ -5,7 +5,7 @@ import { getAccessToken } from '@/lib/auth';
 export async function POST() {
   try {
     const accessToken = await getAccessToken();
-    const proxyResponse = await fetch(proxyUrl('/auth/signout'), {
+    const proxyResponse = await fetch(proxyUrl('/api/auth/signout'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
