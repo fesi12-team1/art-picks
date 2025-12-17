@@ -3,6 +3,7 @@
 import { Eye, EyeOff } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import { useSignupForm } from '@/hooks/auth/useSignupForm';
@@ -12,11 +13,11 @@ export default function SignupForm() {
 
   const { form, submit, isPending } = useSignupForm({
     onSuccess: () => {
-      alert('회원가입 성공!');
+      toast.success('회원가입 성공!');
       router.push('/signin');
     },
     onError: (message) => {
-      alert(`회원가입 실패: ${message}`);
+      toast.error(`회원가입 실패: ${message}`);
     },
   });
 

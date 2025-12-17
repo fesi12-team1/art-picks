@@ -28,8 +28,6 @@ export function useSigninForm(options: UseAuthFormOptions) {
         form.setError('root', {
           message: error.message,
         });
-
-        form.reset();
       },
     });
   });
