@@ -7,11 +7,11 @@ import {
 } from '@/api/fetch/auth';
 import { userQueries } from '@/api/queries/userQueries';
 import type { SigninFormValues } from '@/lib/validations/auth/signinSchema';
-import type { ErrorResponse, SigninResponse, User } from '@/types';
+import type { SigninResponse, User } from '@/types';
 
 // 회원가입
 export function useSignup() {
-  return useMutation<User | null, ErrorResponse, SignupRequestBody>({
+  return useMutation<User | null, Error, SignupRequestBody>({
     mutationFn: postSignup,
   });
 }
@@ -20,7 +20,7 @@ export function useSignup() {
 export function useSignin() {
   const queryClient = useQueryClient();
 
-  return useMutation<SigninResponse | null, ErrorResponse, SigninFormValues>({
+  return useMutation<SigninResponse | null, Error, SigninFormValues>({
     mutationFn: postSignin,
     onSuccess: () => {
       queryClient.invalidateQueries({
