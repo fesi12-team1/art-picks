@@ -5,15 +5,12 @@ export type AuthMode = 'off' | 'bypass' | 'strict';
 
 export const sessions = new Map<string, number>(); // token -> userId
 
-function getBearerToken(request: Request) {
-  const auth = request.headers.get('authorization') ?? '';
-  const m = auth.match(/^Bearer\s+(.+)$/i);
-  return m?.[1] ?? null;
+export function setAuth() {
+  sessions.set('userId', 2);
 }
 
-export function isAuthed(request: Request) {
-  const token = getBearerToken(request);
-  return token ? sessions.has(token) : false;
+export function isAuthed() {
+  return sessions.has('userId');
 }
 
 export function unauthorized() {
@@ -35,7 +32,7 @@ export function requireAuth(mode: AuthMode, resolver: Resolver): Resolver {
     if (mode === 'off') return resolver(args); // 인증 시스템 자체를 끔
     if (mode === 'bypass') return resolver(args); // 보호 라우트도 통과
     // strict
-    if (!isAuthed(args.request)) return unauthorized();
+    if (!isAuthed()) return unauthorized();
     return resolver(args);
   };
 }

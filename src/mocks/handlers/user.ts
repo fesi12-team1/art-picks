@@ -11,7 +11,7 @@ export function createUserHandlers(p: PathFn, authMode: AuthMode) {
     http.get(
       p('/api/user'),
       requireAuth(authMode, () => {
-        const user = users[0];
+        const user = users[1];
 
         return HttpResponse.json(successResponse(user), { status: 200 });
       })

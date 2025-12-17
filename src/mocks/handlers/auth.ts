@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import { SignupRequestBody } from '@/api/fetch/auth';
-import { AuthMode, requireAuth } from '../core/auth';
+import { AuthMode, requireAuth, setAuth } from '../core/auth';
 import { PathFn } from '../core/path';
 import { users } from '../data';
 import { successResponse } from '../utils';
@@ -26,6 +26,8 @@ export function createAuthHandlers(p: PathFn, authMode: AuthMode) {
 
     // 로그인
     http.post(p('/api/auth/signin'), async () => {
+      setAuth();
+
       const data = {
         token: MOCK_ACCESS_TOKEN,
       };
@@ -47,9 +49,10 @@ export function createAuthHandlers(p: PathFn, authMode: AuthMode) {
     http.post(
       p('/api/auth/signout'),
       requireAuth(authMode, () => {
-        const responseData = { message: 'Logged out successfully' };
+        setAuth();
+        const data = { message: 'Logged out successfully' };
 
-        return HttpResponse.json(successResponse(responseData), {
+        return HttpResponse.json(successResponse(data), {
           status: 200,
           headers: {
             'Set-Cookie': 'refreshToken=; Max-Age=0; Path=/;',
