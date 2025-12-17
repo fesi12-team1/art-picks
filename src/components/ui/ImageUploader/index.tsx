@@ -73,8 +73,7 @@ export function useImagePicker({
       return merged;
     });
 
-    // 같은 파일 다시 선택 가능하게
-    if (inputRef.current) inputRef.current.value = '';
+    // if (inputRef.current) inputRef.current.value = '';
   };
 
   const remove = (id: string) => {

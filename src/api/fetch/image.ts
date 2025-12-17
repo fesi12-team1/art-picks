@@ -10,13 +10,19 @@ export type getPresignedUrlResponse = {
 };
 
 export async function getPresignedUrl(body: getPresignedUrlRequest) {
-  const response = await fetch(`/api/images/presigned-url`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  });
+  const response = await fetch(
+    `https://run-fit.store/api/images/presigned-url`,
+    {
+      method: 'POST',
+      // auth 헤더 붙여줘야 함.
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization':
+          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJSdW4tRml0Iiwic3ViIjoiNyIsInRva2VuVHlwZSI6ImFjY2VzcyIsInVzZXJuYW1lIjoi7YWM7Iqk7Yq4Iiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NjU5ODg0MTQsImV4cCI6MTc2NTk5MjAxNH0.NaBgzKTh2cuf7ExeJKsNsK4rKq5ZXkj7CI1mRY_1RA0',
+      },
+      body: JSON.stringify(body),
+    }
+  );
 
   if (!response.ok) {
     const resData = await response.json();
@@ -30,4 +36,37 @@ export async function getPresignedUrl(body: getPresignedUrlRequest) {
   const { data }: SuccessResponse<getPresignedUrlResponse> =
     await response.json();
   return data;
+}
+
+type UploadToPresignedUrlParams = {
+  uploadUrl: string;
+  file: File | Blob;
+  contentType?: string;
+};
+
+export async function uploadToPresignedUrl({
+  uploadUrl,
+  file,
+  contentType,
+}: UploadToPresignedUrlParams) {
+  const response = await fetch(uploadUrl, {
+    method: 'PUT',
+    headers: {
+      // auth 헤더를 붙이면 안 됨.
+      'Content-Type':
+        contentType ??
+        (file instanceof File ? file.type : 'application/octet-stream'),
+    },
+    body: file,
+  });
+
+  if (!response.ok) {
+    throw new Error('이미지 업로드에 실패했습니다.');
+  }
+
+  const etag = response.headers.get('ETag');
+  const data = await response.text(); // S3는 빈 응답 바디를 반환함
+  const body = await response.body?.getReader().read(); // 스트리밍 소비
+
+  return { etag, data, body };
 }

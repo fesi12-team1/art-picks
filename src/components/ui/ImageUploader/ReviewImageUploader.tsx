@@ -3,7 +3,6 @@ import XIcon from '@/assets/icons/x.svg?react';
 import { useImagePicker } from '.';
 
 export default function ReviewImagesUploader({
-  maxFiles = 6,
   maxSizeMB = 5,
   onChange,
 }: {
@@ -13,7 +12,7 @@ export default function ReviewImagesUploader({
 }) {
   const { inputRef, items, errors, open, addFiles, remove, acceptAttr } =
     useImagePicker({
-      maxFiles,
+      maxFiles: 1,
       maxSizeMB,
     });
 
@@ -27,8 +26,14 @@ export default function ReviewImagesUploader({
         accept={acceptAttr}
         className="hidden"
         onChange={(e) => {
+          // debug: log incoming FileList and the file forwarded to parent
+          console.log(
+            '[ReviewImagesUploader] input onChange files:',
+            e.target.files
+          );
           addFiles(e.target.files, 'replace');
           const f = e.target.files?.[0] ?? null;
+          console.log('[ReviewImagesUploader] calling onChange with:', f);
           onChange?.(f);
         }}
       />
