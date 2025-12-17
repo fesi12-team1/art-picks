@@ -7,17 +7,13 @@ import { sessionQueries } from '@/api/queries/sessionQueries';
 import ProfileList from '@/components/user/ProfileList';
 import type { Crew } from '@/types';
 
-type CrewCardProps = Crew;
+interface CrewCardProps {
+  crew: Crew;
+}
 
 export default function CrewCard({
-  id: crewId,
-  name,
-  description,
-  city,
-  image,
-  memberCount,
+  crew: { id: crewId, name, description, city, image, memberCount },
 }: CrewCardProps) {
-  // TODO: 크루 멤버 역할 구분X API 타입 수정되면 반영
   const { data: crewMembers } = useQuery(crewQueries.members(crewId).list());
 
   const { data: crewSessionData } = useQuery(
@@ -60,7 +56,7 @@ export default function CrewCard({
             <span className="text-caption-medium tablet:text-body3-medium rounded-lg bg-gray-500 px-2 py-1 text-gray-100">{`${city}`}</span>
             <Dot color="var(--color-gray-300)" />
             <span className="text-caption-regular tablet:text-body3-regular mr-1 text-gray-300">{`멤버 ${memberCount}명`}</span>
-            <ProfileList data={crewMembers?.members} />
+            <ProfileList member={crewMembers?.members} />
           </div>
         </div>
       </div>

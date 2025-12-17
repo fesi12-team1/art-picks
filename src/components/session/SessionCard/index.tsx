@@ -13,20 +13,24 @@ import type { Session } from '@/types';
 import { DdayBadge, LevelBadge, PaceBadge } from '../../ui/Badge';
 import ProfileList from '../../user/ProfileList';
 
-type SessionCardProps = Session;
+interface SessionCardProps {
+  session: Session;
+}
 
 export default function SessionCard({
-  crewId,
-  id: sessionId,
-  registerBy,
-  sessionAt,
-  image,
-  city,
-  name,
-  pace,
-  level,
-  currentParticipantCount,
-  maxParticipantCount,
+  session: {
+    crewId,
+    id: sessionId,
+    registerBy,
+    sessionAt,
+    image,
+    city,
+    name,
+    pace,
+    level,
+    currentParticipantCount,
+    maxParticipantCount,
+  },
 }: SessionCardProps) {
   const { data: crewData } = useQuery(crewQueries.detail(crewId));
   const { data: participantsData } = useQuery(
@@ -103,7 +107,7 @@ export default function SessionCard({
       </div>
       </div>
       <div className="desktop:gap-2 flex items-center gap-1">
-        <ProfileList data={participantsData?.participants || []} />
+        <ProfileList member={participantsData?.participants || []} />
         <div className="text-caption-regular laptop:text-body3-regular pointer-events-none text-gray-300">
           {crewData?.name
             ? `${currentParticipantCount}/${maxParticipantCount}명 • ${crewData.name}`

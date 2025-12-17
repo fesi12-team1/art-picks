@@ -47,38 +47,10 @@ export default function Page() {
         </div>
         <div className="grid w-full grid-cols-1 gap-6">
           {data?.content?.map((crew: Crew) => (
-            <CrewCard key={crew.id} {...crew} />
+            <CrewCard key={crew.id} crew={crew} />
           ))}
         </div>
       </section>
     </main>
   );
-}
-
-{
-  /* <div
-        className="tablet:mx-8 h-main mx-4 flex flex-col items-center gap-12"
-        style={{ paddingBottom: height }}
-      >
-        <ul className="tablet:divide-y laptop:w-auto flex w-full flex-col divide-gray-700">
-
-        </ul>
-      </div>
-      <FixedBottomBar ref={ref}>
-        <button
-          type="button"
-          aria-label="크루 링크 공유하기"
-          onClick={handleShare}
-        >
-          <Share className="size-6 stroke-[#9CA3AF]" />
-        </button>
-        <Button
-          type="button"
-          className="bg-brand-500 text-body2-semibold flex-1 px-6 py-3"
-          onClick={handleClick}
-        >
-          가입하기
-        </Button>
-      </FixedBottomBar>
-    </> */
 }
