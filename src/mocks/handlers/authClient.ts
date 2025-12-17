@@ -8,7 +8,7 @@ import { successResponse } from '../utils';
 const MOCK_ACCESS_TOKEN = 'mock-access-token';
 const MOCK_REFRESH_TOKEN = 'mock-refresh-token';
 
-export function createAuthHandlers(p: PathFn, authMode: AuthMode) {
+export function createAuthClientHandlers(p: PathFn, authMode: AuthMode) {
   return [
     // 회원가입
     http.post(p('/api/auth/signup'), async ({ request }) => {
