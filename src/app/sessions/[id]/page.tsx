@@ -1,19 +1,19 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+// import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
-import { sessionQueries } from '@/api/queries/sessionQueries';
+// import { sessionQueries } from '@/api/queries/sessionQueries';
 import VerticalEllipsisIcon from '@/assets/icons/vertical-ellipsis.svg?react';
 import FixedBottomBar, {
   useFixedBottomBar,
 } from '@/components/layout/FixedBottomBar';
 import KakaoMap from '@/components/session/KakaoMap';
-import Badge, { LevelBadge, PaceBadge } from '@/components/ui/Badge';
+import Badge, { PaceBadge } from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import ProgressBar from '@/components/ui/ProgressBar';
 import Rating from '@/components/ui/Rating';
-import TimeSlider from '@/components/ui/TimeSlider';
+// import TimeSlider from '@/components/ui/TimeSlider';
 import UserAvatar from '@/components/ui/UserAvatar';
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
