@@ -249,3 +249,51 @@ export async function deleteSession(sessionId: number) {
     await response.json();
   return data;
 }
+
+// 세션 찜
+export async function postLikeSession(sessionId: number) {
+  const response = await fetch(`/api/sessions/${sessionId}/like`, {
+    method: 'POST',
+  });
+
+  if (!response.ok) {
+    const resData = await response.json();
+    if (resData.error) {
+      throw new Error(resData.error.message);
+    } else {
+      throw new Error('서버에 연결할 수 없습니다.');
+    }
+  }
+
+  type PostLikeSessionResponseData = {
+    message: string;
+  };
+
+  const { data }: ResponseData<PostLikeSessionResponseData> =
+    await response.json();
+  return data;
+}
+
+// 세션 찜 취소
+export async function deleteLikeSession(sessionId: number) {
+  const response = await fetch(`/api/sessions/${sessionId}/like`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    const resData = await response.json();
+    if (resData.error) {
+      throw new Error(resData.error.message);
+    } else {
+      throw new Error('서버에 연결할 수 없습니다.');
+    }
+  }
+
+  type DeleteLikeSessionResponseData = {
+    message: string;
+  };
+
+  const { data }: ResponseData<DeleteLikeSessionResponseData> =
+    await response.json();
+  return data;
+}
