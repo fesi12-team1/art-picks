@@ -4,6 +4,7 @@
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
+import { crewQueries } from '@/api/queries/crewQueries';
 import { sessionQueries } from '@/api/queries/sessionQueries';
 // import { sessionQueries } from '@/api/queries/sessionQueries';
 import VerticalEllipsisIcon from '@/assets/icons/vertical-ellipsis.svg?react';
@@ -30,29 +31,45 @@ export default function Page() {
     error,
     isLoading,
   } = useQuery(sessionQueries.detail(Number(id)));
+  const crewId = session?.crewId;
+
+  // const { data: participants } = useQuery(
+  //   sessionQueries.participants(Number(id))
+  // );
+
+  const participants = [
+    {
+      userId: 1,
+      name: '홍길동',
+      profileImage:
+        'https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      role: '운영자',
+    },
+    {
+      userId: 2,
+      name: '김철수',
+      profileImage:
+        'https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMj A3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      role: '멤버',
+    },
+  ];
+
+  const { data: crew } = useQuery({
+    ...crewQueries.detail(Number(crewId)),
+  });
+
+  const { data: reviews } = useQuery(
+    crewQueries.reviews(Number(crewId)).list({ page: 0, size: 1 })
+  );
   const { ref, height } = useFixedBottomBar();
 
   if (isLoading) return null;
   if (error) return null;
   if (!session) return null;
 
-  const participants = [
-    {
-      userId: 2,
-      name: '김철수',
-      profileImage: null,
-      role: 'MEMBER',
-      joinedAt: '2025-12-15T23:07:29.253478',
-    },
-    {
-      userId: 4,
-      name: '김길동',
-      profileImage:
-        'https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      role: 'MEMBER',
-      joinedAt: '2025-12-15T23:52:19.581889',
-    },
-  ];
+  if (!participants) return null;
+  if (!crew) return null;
+  if (!reviews) return null;
 
   const {
     name,
@@ -72,29 +89,7 @@ export default function Page() {
     liked,
   } = session;
 
-  const crew = {
-    id: 0,
-    name: '달리는 거북이 크루',
-    description: '엄청난 크루',
-    city: '서울',
-    image: 'string',
-    createdAt: '2025-12-16T07:28:11.912Z',
-  };
-
-  const review = {
-    id: 0,
-    sessionId: 0,
-    sessionName: '엄청난 세션',
-    crewId: 0,
-    userId: 0,
-    userName: '하이',
-    userImage: 'string',
-    description:
-      '러닝 너무 재미있었어요 :) 평소에 이용해보고 싶었는데 이렇게 러닝 세션 생기니까 너무 좋아요! 프로그램이 더 많이 늘어났으면 좋겠어요.',
-    ranks: 0,
-    image: 'string',
-    createdAt: '2025-12-16T07:30:41.004Z',
-  };
+  const review = reviews?.content[0];
 
   return (
     <main className="h-main relative w-full">
@@ -217,8 +212,7 @@ export default function Page() {
             <div>
               <div className="text-caption-semibold mb-0.5">{crew.name}</div>
               <div className="text-caption-regular">
-                {`${crew.city} • 멤버 64명`}
-                {/* {`${crew.city} • 멤버 ${crew.membersCount}명`} */}
+                {`${crew.city} • 멤버 ${crew.memberCount}명`}
               </div>
             </div>
           </div>
