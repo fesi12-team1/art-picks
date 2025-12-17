@@ -15,123 +15,11 @@ import ProgressBar from '@/components/ui/ProgressBar';
 import Rating from '@/components/ui/Rating';
 // import TimeSlider from '@/components/ui/TimeSlider';
 import UserAvatar from '@/components/ui/UserAvatar';
-
-const MS_PER_DAY = 24 * 60 * 60 * 1000;
-
-function utcMidnightTime(d: Date) {
-  return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate());
-}
-
-/**
- * target: 목표 일시(ISO string 또는 Date)
- * base: 기준 일시(기본값: 현재)
- *
- * diff > 0 : D-남은일
- * diff = 0 : D-Day
- * diff < 0 : D+지난일
- */
-export function formatDDay(target: string | Date, base: Date = new Date()) {
-  const t = typeof target === 'string' ? new Date(target) : target;
-
-  const diffDays = Math.floor(
-    (utcMidnightTime(t) - utcMidnightTime(base)) / MS_PER_DAY
-  );
-
-  if (diffDays === 0) return 'D-Day';
-  if (diffDays > 0) return `D-${diffDays}`;
-  return `D+${Math.abs(diffDays)}`;
-}
-
-type FormatOptions = {
-  timeZone?: string; // 기본: Asia/Seoul
-  bullet?: string; // 기본: " • "
-};
-
-/**
- * "2025-12-17T09:39:44.324" -> "12월 17일 • 오전 9:39"
- * - 기본 타임존: Asia/Seoul
- * - 입력 문자열에 타임존(Z, +09:00 등)이 없으면 "해당 타임존의 로컬 시간"으로 해석(Seoul만 안전 지원)
- */
-export function formatKoMonthDayTime(
-  input: string | Date,
-  opts: FormatOptions = {}
-) {
-  const timeZone = opts.timeZone ?? 'Asia/Seoul';
-  const bullet = opts.bullet ?? ' • ';
-
-  const date = toDateWithAssumedTZ(input, timeZone);
-
-  const parts = new Intl.DateTimeFormat('ko-KR', {
-    timeZone,
-    month: 'numeric',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-  })
-    .formatToParts(date)
-    .reduce<Record<string, string>>((acc, p) => {
-      if (p.type !== 'literal') acc[p.type] = p.value;
-      return acc;
-    }, {});
-
-  // ko-KR에서 dayPeriod는 "오전"/"오후"로 나옴
-  return `${parts.month}월 ${parts.day}일${bullet}${parts.dayPeriod} ${parts.hour}:${parts.minute}`;
-}
-
-function toDateWithAssumedTZ(input: string | Date, timeZone: string): Date {
-  if (input instanceof Date) return input;
-
-  // 타임존 정보가 들어있으면 그대로 파싱
-  const hasTZ = /([zZ]|[+\-]\d{2}:\d{2})$/.test(input);
-  if (hasTZ) return new Date(input);
-
-  // 타임존 정보가 없으면 "해당 타임존의 로컬 시간"로 해석하고 싶은 경우
-  // (일반적으로 서버(Node)는 UTC일 수 있어서 명시적으로 처리)
-  const m = input.match(
-    /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{1,3}))?)?$/
-  );
-  if (!m) return new Date(input);
-
-  const [, yy, mo, dd, hh, mm, ss = '0', ms = '0'] = m;
-  const y = Number(yy);
-  const mon = Number(mo) - 1;
-  const d = Number(dd);
-  const h = Number(hh);
-  const mi = Number(mm);
-  const s = Number(ss);
-  const milli = Number(ms.padEnd(3, '0'));
-
-  // ✅ Asia/Seoul은 UTC+9 (DST 없음)이라 안전하게 처리 가능
-  if (timeZone === 'Asia/Seoul') {
-    return new Date(Date.UTC(y, mon, d, h - 9, mi, s, milli));
-  }
-
-  // 그 외 타임존은(서머타임 등) 라이브러리 없이는 안전한 “가정 파싱”이 어려워서 로컬 파싱으로 fallback
-  return new Date(input);
-}
-
-/**
- * "2025-12-17T09:39:44.324" -> "2025년 12월 17일"
- */
-export function formatKoYmd(input: string | Date, opts: FormatOptions = {}) {
-  const timeZone = opts.timeZone ?? 'Asia/Seoul';
-  const date = toDateWithAssumedTZ(input, timeZone);
-
-  const parts = new Intl.DateTimeFormat('ko-KR', {
-    timeZone,
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
-  })
-    .formatToParts(date)
-    .reduce<Record<string, string>>((acc, p) => {
-      if (p.type !== 'literal') acc[p.type] = p.value;
-      return acc;
-    }, {});
-
-  return `${parts.year}년 ${parts.month}월 ${parts.day}일`;
-}
+import {
+  formatDDay,
+  formatKoMonthDayTime,
+  formatKoYearMonthDay,
+} from '@/lib/time';
 
 export default function Page() {
   const { id } = useParams();
@@ -280,14 +168,14 @@ export default function Page() {
           <h2 className="text-body2-semibold text-gray-50">세션 소개</h2>
           <p className="text-body3-regular text-gray-200">{description}</p>
           <div className="text-body3-regular text-gray-300">
-            {formatKoYmd(createdAt)}
+            {formatKoYearMonthDay(createdAt)}
           </div>
         </div>
 
         <div className="mb-6 flex flex-col gap-1">
           <h2 className="text-body2-semibold text-gray-50">일정</h2>
           <ul>
-            <li>&nbsp;{`• 모임 일시: ${formatKoYmd(sessionAt)}`}</li>{' '}
+            <li>&nbsp;{`• 모임 일시: ${formatKoYearMonthDay(sessionAt)}`}</li>{' '}
             <li>
               &nbsp;{`• 모집 일정: ~ ${formatKoMonthDayTime(registerBy)} 마감`}
             </li>
