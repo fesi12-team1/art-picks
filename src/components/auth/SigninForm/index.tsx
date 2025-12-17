@@ -1,13 +1,25 @@
 'use client';
 
 import { Eye, EyeOff } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import { useSigninForm } from '@/hooks/auth/useSigninForm';
 
 export default function SigninForm() {
-  const { form, submit, isPending } = useSigninForm();
+  const router = useRouter();
+
+  const { form, submit, isPending } = useSigninForm({
+    onSuccess: () => {
+      alert('로그인 성공!');
+      router.push('/signin');
+    },
+    onError: (message) => {
+      alert(`로그인 실패: ${message}`);
+    },
+  });
+
   const {
     register,
     formState: { errors, isValid },
@@ -33,9 +45,6 @@ export default function SigninForm() {
           </button>
         }
       />
-      {errors.root && (
-        <p className="text-sm text-red-500">{errors.root.message}</p>
-      )}
       <Button type="submit" disabled={isPending || !isValid}>
         로그인
       </Button>
