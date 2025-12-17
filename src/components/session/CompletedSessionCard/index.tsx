@@ -96,6 +96,11 @@ export default function CompletedSessionCard({
           <span className="text-caption-medium text-gray-100">
             {'5.0 session.avgRank'}
           </span>
+          {/*
+          TODO:
+          - Session 데이터에 세션 평점이 누락되어 있음
+          - 전체적인 DTO 정리 후 수정 요청 필요
+          */}
         </div>
       </div>
     </div>

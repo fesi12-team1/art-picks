@@ -81,7 +81,14 @@ export default function SessionCard({
           <DdayBadge className="hidden tablet:inline-flex laptop:hidden" size="md">{ddayText}</DdayBadge>
           <DdayBadge className="hidden laptop:inline-flex" size="lg">{ddayText}</DdayBadge>
         </div>
-          <button onClick={() => {}} className="absolute top-3 right-3">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              // TODO: 좋아요 기능 구현
+            }}
+            className="absolute top-3 right-3"
+          >
             <Liked className="stroke-offset-[-0.50px] size-6 fill-neutral-900/50 stroke-sky-100 stroke-1" />
           </button>
           <div className="absolute bottom-3 left-3 flex items-center gap-0.5 md:gap-1">
