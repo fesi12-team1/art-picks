@@ -3,13 +3,13 @@ import { cn } from '@/lib/utils';
 import type { CrewMember } from '@/types';
 
 interface ProfileListProps {
-  member?: CrewMember[];
+  members?: CrewMember[];
 }
 
-export default function ProfileList({ member }: ProfileListProps) {
+export default function ProfileList({ members }: ProfileListProps) {
   return (
     <div className={cn('flex -space-x-1')}>
-      {member?.map((member: CrewMember) => (
+      {members?.map((member: CrewMember) => (
         <UserAvatar
           key={member.userId}
           src={member.profileImage || '/assets/profile-default.png'}

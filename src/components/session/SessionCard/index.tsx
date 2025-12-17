@@ -107,7 +107,7 @@ export default function SessionCard({
       </div>
       </div>
       <div className="desktop:gap-2 flex items-center gap-1">
-        <ProfileList member={participantsData?.participants || []} />
+        <ProfileList members={participantsData?.participants || []} />
         <div className="text-caption-regular laptop:text-body3-regular pointer-events-none text-gray-300">
           {crewData?.name
             ? `${currentParticipantCount}/${maxParticipantCount}명 • ${crewData.name}`
