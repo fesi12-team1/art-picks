@@ -23,7 +23,7 @@ export function createUserHandlers(p: PathFn, authMode: AuthMode) {
       requireAuth(authMode, async ({ request }) => {
         const { name, image, introduction, city, pace, styles } =
           (await request.json()) as UpdateMyProfileRequestBody;
-        const user = users[0];
+        const user = users[1];
 
         const data = {
           id: 1,
@@ -48,7 +48,7 @@ export function createUserHandlers(p: PathFn, authMode: AuthMode) {
       requireAuth(authMode, ({ params }) => {
         const userId = parseIdParam(params.id);
 
-        const ret = {
+        const data = {
           id: userId,
           name: faker.person.fullName(),
           image: faker.image.avatar(),
@@ -59,7 +59,7 @@ export function createUserHandlers(p: PathFn, authMode: AuthMode) {
           createdAt: new Date().toISOString(),
         };
 
-        return HttpResponse.json(ret, { status: 200 });
+        return HttpResponse.json(successResponse(data), { status: 200 });
       })
     ),
   ];

@@ -53,11 +53,11 @@ const sessionSchema = z.object({
   crewId: z.number(),
   hostUserId: z.number(),
   name: z.string(),
-  description: z.string().nullable().optional(),
+  description: z.string(),
   image: z.string().nullable().optional(),
-  location: z.string().nullable().optional(),
-  city: z.string().nullable().optional(),
-  district: z.string().nullable().optional(),
+  location: z.string(),
+  city: z.string(),
+  district: z.string(),
   coords: z.object({
     lat: z.number(),
     lng: z.number(),
@@ -66,7 +66,7 @@ const sessionSchema = z.object({
   registerBy: z.iso.datetime(),
   level: z.enum(['BEGINNER', 'INTERMEDIATE', 'ADVANCED']),
   status: z.enum(['OPEN', 'CLOSED']),
-  pace: z.number().int().nullable().optional(),
+  pace: z.number().int().nullable(),
   maxParticipantCount: z.number().int(),
   ...baseSchema,
 });
@@ -164,8 +164,7 @@ type Session = z.infer<typeof sessionSchema>;
 export const sessions: Session[] = Array.from({ length: 101 }, (_, i) => {
   const city = faker.helpers.arrayElement(SIDO_LIST);
   const districts = SIGUNGU_MAP[city] || [];
-  const district =
-    districts.length > 0 ? faker.helpers.arrayElement(districts) : null;
+  const district = faker.helpers.arrayElement(districts);
 
   return {
     id: i + 1,

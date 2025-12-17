@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import { SignupRequestBody } from '@/api/fetch/auth';
-import { AuthMode, requireAuth, setAuth } from '../core/auth';
+import { AuthMode, requireAuth, resetAuth, setAuth } from '../core/auth';
 import { PathFn } from '../core/path';
 import { users } from '../data';
 import { successResponse } from '../utils';
@@ -49,7 +49,7 @@ export function createAuthHandlers(p: PathFn, authMode: AuthMode) {
     http.post(
       p('/api/auth/signout'),
       requireAuth(authMode, () => {
-        setAuth();
+        resetAuth();
         const data = { message: 'Logged out successfully' };
 
         return HttpResponse.json(successResponse(data), {

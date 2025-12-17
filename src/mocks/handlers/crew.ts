@@ -43,7 +43,7 @@ export function createCrewHandlers(p: PathFn, authMode: AuthMode) {
       const keyword = url.searchParams.get('keyword') || '';
       const sort = url.searchParams.get('sort') || 'createdAtDesc'; // createdAtDesc, lastSessionDesc, memberCountDesc, nameAsc, nameDesc
 
-      let filteredCrews = crews;
+      let filteredCrews = [...crews];
 
       if (city) {
         filteredCrews = filteredCrews.filter((c) => c.city === city);

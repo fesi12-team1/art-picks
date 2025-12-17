@@ -50,8 +50,8 @@ export function createSessionHandlers(p: PathFn, authMode: AuthMode) {
       })
     ),
 
-    // 세션 목록 조회  @TODO
-    http.get('/api/sessions', ({ request }) => {
+    // 세션 목록 조회
+    http.get(p('/api/sessions'), ({ request }) => {
       const url = new URL(request.url);
       const page = parseInt(url.searchParams.get('page') || '0', 10);
       const size = parseInt(url.searchParams.get('size') || '20', 10);
@@ -65,7 +65,7 @@ export function createSessionHandlers(p: PathFn, authMode: AuthMode) {
       const timeTo = url.searchParams.get('timeTo'); // 14:30
       const sort = url.searchParams.get('sort') || 'createdAtDesc'; // createdAtDesc, sessionAtAsc, registerByAsc
 
-      let filteredSessions = sessions;
+      let filteredSessions = [...sessions];
 
       if (city) {
         filteredSessions = filteredSessions.filter((s) => s.city === city);
@@ -141,6 +141,7 @@ export function createSessionHandlers(p: PathFn, authMode: AuthMode) {
       const content = paginatedSessions.map(
         ({ maxParticipantCount, ...rest }) => ({
           ...rest,
+          liked: faker.datatype.boolean(),
           currentParticipantCount: faker.number.int({
             min: 0,
             max: maxParticipantCount,
@@ -178,7 +179,7 @@ export function createSessionHandlers(p: PathFn, authMode: AuthMode) {
       return HttpResponse.json(successResponse(data), { status: 200 });
     }),
 
-    // 세션 상세 조회 @TODO
+    // 세션 상세 조회
     http.get(p('/api/sessions/:id'), ({ params }) => {
       const sessionId = parseIdParam(params.id);
 
@@ -211,42 +212,54 @@ export function createSessionHandlers(p: PathFn, authMode: AuthMode) {
     }),
 
     // 세션 참가 신청
-    http.post(p('/api/sessions/:id/join'), () => {
-      const data = {
-        message: '참가 신청 성공',
-        currentParticipantCount: 3,
-        maxParticipantCount: 10,
-      };
+    http.post(
+      p('/api/sessions/:id/join'),
+      requireAuth(authMode, () => {
+        const data = {
+          message: '참가 신청 성공',
+          currentParticipantCount: 3,
+          maxParticipantCount: 10,
+        };
 
-      return HttpResponse.json(successResponse(data), { status: 200 });
-    }),
+        return HttpResponse.json(successResponse(data), { status: 200 });
+      })
+    ),
 
     // 세션 참가 취소
-    http.delete(p('/api/sessions/:id/leave'), () => {
-      const data = {
-        message: '참가 취소 성공',
-        currentParticipantCount: 2,
-        maxParticipantCount: 10,
-      };
+    http.delete(
+      p('/api/sessions/:id/leave'),
+      requireAuth(authMode, () => {
+        const data = {
+          message: '참가 취소 성공',
+          currentParticipantCount: 2,
+          maxParticipantCount: 10,
+        };
 
-      return HttpResponse.json(successResponse(data), { status: 200 });
-    }),
+        return HttpResponse.json(successResponse(data), { status: 200 });
+      })
+    ),
 
     // 세션 찜(좋아요) 추가
-    http.post(p('/api/sessions/:id/like'), () => {
-      const data = {
-        message: '찜 등록 성공',
-      };
-      return HttpResponse.json(successResponse(data), { status: 200 });
-    }),
+    http.post(
+      p('/api/sessions/:id/like'),
+      requireAuth(authMode, () => {
+        const data = {
+          message: '찜 등록 성공',
+        };
+        return HttpResponse.json(successResponse(data), { status: 200 });
+      })
+    ),
 
     // 세션 찜(좋아요) 취소
-    http.delete(p('/api/sessions/:id/like'), () => {
-      const data = {
-        message: '찜 취소 성공',
-      };
-      return HttpResponse.json(successResponse(data), { status: 200 });
-    }),
+    http.delete(
+      p('/api/sessions/:id/like'),
+      requireAuth(authMode, () => {
+        const data = {
+          message: '찜 취소 성공',
+        };
+        return HttpResponse.json(successResponse(data), { status: 200 });
+      })
+    ),
 
     // 세션 참가자 목록 조회
     http.get(p('/api/sessions/:id/participants'), () => {
@@ -274,41 +287,44 @@ export function createSessionHandlers(p: PathFn, authMode: AuthMode) {
             joinedAt: '2025-12-13T02:49:35.793Z',
           },
         ],
-        toatalCount: 3,
+        totalCount: 3,
       };
       return HttpResponse.json(successResponse(data), { status: 200 });
     }),
 
-    // 세션 정보 수정 @TODO
-    http.put(p('/api/sessions/:id'), async ({ request }) => {
-      const { name, description, image } =
-        (await request.json()) as UpdateSessionDetailRequestBody;
+    // 세션 정보 수정
+    http.put(
+      p('/api/sessions/:id'),
+      requireAuth(authMode, async ({ request }) => {
+        const { name, description, image } =
+          (await request.json()) as UpdateSessionDetailRequestBody;
 
-      const data = {
-        id: 0,
-        crewId: 0,
-        hostUserId: 0,
-        name: name,
-        description: description,
-        image: image || faker.image.urlPicsumPhotos(),
-        city: '서울',
-        district: '영등포구',
-        location: '서울특별시 영등포구 여의동로 330',
-        coords: {
-          lat: 37.566826,
-          lng: 126.9786567,
-        },
-        sessionAt: '2025-12-20T02:52:24.951Z',
-        registerBy: '2025-12-19T02:52:24.951Z',
-        level: 'BEGINNER',
-        status: 'OPEN',
-        pace: 400,
-        maxParticipantCount: 10,
-        currentParticipantCount: 2,
-        createdAt: '2025-12-17T02:52:24.951Z',
-      };
+        const data = {
+          id: 0,
+          crewId: 0,
+          hostUserId: 0,
+          name: name,
+          description: description,
+          image: image || faker.image.urlPicsumPhotos(),
+          city: '서울',
+          district: '영등포구',
+          location: '서울특별시 영등포구 여의동로 330',
+          coords: {
+            lat: 37.566826,
+            lng: 126.9786567,
+          },
+          sessionAt: '2025-12-20T02:52:24.951Z',
+          registerBy: '2025-12-19T02:52:24.951Z',
+          level: 'BEGINNER',
+          status: 'OPEN',
+          pace: 400,
+          maxParticipantCount: 10,
+          currentParticipantCount: 2,
+          createdAt: '2025-12-17T02:52:24.951Z',
+        };
 
-      return HttpResponse.json(successResponse(data), { status: 200 });
-    }),
+        return HttpResponse.json(successResponse(data), { status: 200 });
+      })
+    ),
   ];
 }
