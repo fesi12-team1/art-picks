@@ -1,6 +1,6 @@
 import { setupWorker } from 'msw/browser';
 import { createPath } from '../core/path';
-import { authHandlers } from '../handlers/auth';
+import { createAuthHandlers } from '../handlers/auth';
 import { bypassHandlers } from '../handlers/bypass';
 import { createCrewHandlers } from '../handlers/crew';
 import { createReviewHandlers } from '../handlers/review';
@@ -11,10 +11,9 @@ const layer = 'proxy' as const;
 const authMode = 'bypass' as const;
 const p = createPath(layer, '');
 
-// export const worker = setupWorker(...createMembershipHandlers(p, authMode));
 export const worker = setupWorker(
-  ...authHandlers,
   ...bypassHandlers,
+  ...createAuthHandlers(p, authMode),
   ...createCrewHandlers(p, authMode),
   ...createReviewHandlers(p, authMode),
   ...createSessionHandlers(p, authMode),

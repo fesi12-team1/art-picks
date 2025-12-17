@@ -1,6 +1,6 @@
 import { setupServer } from 'msw/node';
 import { createPath } from '../core/path';
-import { authHandlers } from '../handlers/auth';
+import { createAuthHandlers } from '../handlers/auth';
 import { bypassHandlers } from '../handlers/bypass';
 import { createCrewHandlers } from '../handlers/crew';
 import { createReviewHandlers } from '../handlers/review';
@@ -15,8 +15,8 @@ const backendBaseUrl =
 const p = createPath(layer, backendBaseUrl);
 
 export const server = setupServer(
-  ...authHandlers,
   ...bypassHandlers,
+  ...createAuthHandlers(p, authMode),
   ...createCrewHandlers(p, authMode),
   ...createReviewHandlers(p, authMode),
   ...createSessionHandlers(p, authMode),
