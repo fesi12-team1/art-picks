@@ -7,28 +7,26 @@ import Dropdown from '@/components/ui/Dropdown';
 import FilterButton from '@/components/ui/FilterButton';
 import RegionFilter from '@/components/ui/RegionFilter';
 import TimeFilter from '@/components/ui/TimeFilter';
+import {
+  LEVEL_OPTIONS,
+  LevelValue,
+  SORT_OPTIONS,
+  SortValue,
+} from '@/constants/session/sessionFilters';
 
-const LEVEL_OPTIONS = [
-  { label: '초급', value: 'BEGINNER' },
-  { label: '중급', value: 'INTERMEDIATE' },
-  { label: '고급', value: 'ADVANCED' },
-] as const;
-const SORT_OPTIONS = [
-  { label: '최신 생성순', value: 'createdAtDesc' },
-  { label: '모임 시작일순', value: 'sessionAtAsc' },
-  { label: '마감 임박순', value: 'registerByAsc' },
-] as const;
+function getOptionLabel<T extends readonly { label: string; value: string }[]>(
+  options: T,
+  value?: T[number]['value']
+) {
+  return options.find((option) => option.value === value)?.label;
+}
 
 export default function SessionFilterBar() {
   const [region, setRegion] = useState<Record<string, string[]> | undefined>();
   const [date, setDate] = useState<DateRange | undefined>();
   const [time, setTime] = useState<[number, number] | undefined>();
-  const [level, setLevel] = useState<
-    (typeof LEVEL_OPTIONS)[number]['value'] | undefined
-  >();
-  const [sort, setSort] = useState<
-    (typeof SORT_OPTIONS)[number]['value'] | undefined
-  >();
+  const [level, setLevel] = useState<LevelValue | undefined>();
+  const [sort, setSort] = useState<SortValue | undefined>();
 
   return (
     <div className="mb-6 flex w-full items-center justify-between gap-2">
@@ -36,38 +34,40 @@ export default function SessionFilterBar() {
         <RegionFilter value={region} onChange={setRegion} />
         <DateFilter value={date} onChange={setDate} />
         <TimeFilter value={time} onChange={setTime} />
+
+        {/** 난이도 */}
         <Dropdown size="lg" hasSelected={Boolean(level)}>
           <Dropdown.Trigger>
-            {LEVEL_OPTIONS.find((option) => option.value === level)?.label ||
-              '난이도'}
+            {getOptionLabel(LEVEL_OPTIONS, level) || '난이도'}
           </Dropdown.Trigger>
           <Dropdown.Content>
-            {LEVEL_OPTIONS.map((option) => (
+            {LEVEL_OPTIONS.map(({ label, value }) => (
               <Dropdown.Item
-                key={option.value}
-                selected={level === option.value}
-                onSelect={() => setLevel(option.value)}
+                key={value}
+                selected={level === value}
+                onSelect={() => setLevel(value)}
               >
-                {option.label}
+                {label}
               </Dropdown.Item>
             ))}
           </Dropdown.Content>
         </Dropdown>
         <FilterButton className="pl-2" />
       </div>
+
+      {/** 정렬 */}
       <Dropdown size="lg">
         <Dropdown.Trigger className="bg-transparent">
-          {SORT_OPTIONS.find((option) => option.value === sort)?.label ||
-            SORT_OPTIONS[0].label}
+          {getOptionLabel(SORT_OPTIONS, sort)}
         </Dropdown.Trigger>
         <Dropdown.Content>
-          {SORT_OPTIONS.map((option) => (
+          {SORT_OPTIONS.map(({ label, value }) => (
             <Dropdown.Item
-              key={option.value}
-              selected={sort === option.value}
-              onSelect={() => setSort(option.value)}
+              key={value}
+              selected={sort === value}
+              onSelect={() => setSort(value)}
             >
-              {option.label}
+              {label}
             </Dropdown.Item>
           ))}
         </Dropdown.Content>
