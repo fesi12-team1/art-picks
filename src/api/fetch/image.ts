@@ -58,8 +58,7 @@ export async function uploadToPresignedUrl({
   }
 
   const etag = response.headers.get('ETag');
-  const data = await response.text(); // S3는 빈 응답 바디를 반환함
-  const body = await response.body?.getReader().read(); // 스트리밍 소비
+  const status = response.status;
 
-  return { etag, data, body };
+  return { etag, status };
 }

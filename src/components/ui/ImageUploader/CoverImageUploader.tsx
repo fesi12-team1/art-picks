@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils';
-import { useImagePicker } from '.';
+import useImageUploader from './useImageUploader';
 
 export default function CoverImageUploader({
   label = '크루의 대표 이미지를 설정해주세요',
@@ -11,7 +11,7 @@ export default function CoverImageUploader({
   onChange?: (file: File | null) => void;
 }) {
   const { inputRef, items, errors, open, addFiles, acceptAttr } =
-    useImagePicker({
+    useImageUploader({
       maxFiles: 1,
       maxSizeMB,
     });

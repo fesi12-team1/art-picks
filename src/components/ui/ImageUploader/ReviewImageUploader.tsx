@@ -1,6 +1,6 @@
 import Camera from '@/assets/icons/camera.svg?react';
 import XIcon from '@/assets/icons/x.svg?react';
-import { useImagePicker } from '.';
+import useImageUploader from './useImageUploader';
 
 export default function ReviewImagesUploader({
   maxSizeMB = 5,
@@ -11,7 +11,7 @@ export default function ReviewImagesUploader({
   onChange?: (file: File | null) => void;
 }) {
   const { inputRef, items, errors, open, addFiles, remove, acceptAttr } =
-    useImagePicker({
+    useImageUploader({
       maxFiles: 1,
       maxSizeMB,
     });
@@ -26,14 +26,8 @@ export default function ReviewImagesUploader({
         accept={acceptAttr}
         className="hidden"
         onChange={(e) => {
-          // debug: log incoming FileList and the file forwarded to parent
-          console.log(
-            '[ReviewImagesUploader] input onChange files:',
-            e.target.files
-          );
           addFiles(e.target.files, 'replace');
           const f = e.target.files?.[0] ?? null;
-          console.log('[ReviewImagesUploader] calling onChange with:', f);
           onChange?.(f);
         }}
       />
