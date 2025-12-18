@@ -10,19 +10,13 @@ export type getPresignedUrlResponse = {
 };
 
 export async function getPresignedUrl(body: getPresignedUrlRequest) {
-  const response = await fetch(
-    `https://run-fit.store/api/images/presigned-url`,
-    {
-      method: 'POST',
-      // auth 헤더 붙여줘야 함.
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization':
-          'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJSdW4tRml0Iiwic3ViIjoiNyIsInRva2VuVHlwZSI6ImFjY2VzcyIsInVzZXJuYW1lIjoi7YWM7Iqk7Yq4Iiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NjU5ODg0MTQsImV4cCI6MTc2NTk5MjAxNH0.NaBgzKTh2cuf7ExeJKsNsK4rKq5ZXkj7CI1mRY_1RA0',
-      },
-      body: JSON.stringify(body),
-    }
-  );
+  const response = await fetch(`/api/images/presigned-url`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
 
   if (!response.ok) {
     const resData = await response.json();
@@ -52,7 +46,6 @@ export async function uploadToPresignedUrl({
   const response = await fetch(uploadUrl, {
     method: 'PUT',
     headers: {
-      // auth 헤더를 붙이면 안 됨.
       'Content-Type':
         contentType ??
         (file instanceof File ? file.type : 'application/octet-stream'),
