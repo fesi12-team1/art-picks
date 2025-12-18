@@ -23,7 +23,7 @@ type BreakpointQuery =
  * @returns 뷰포트가 media query와 일치하면 `true`, 그렇지 않으면 `false`.
  *
  * @example
- * const isTabletAndAbove = useMediaQuery({ min: 'tablet' });
+ * const isTabletUp = useMediaQuery({ min: 'tablet' });
  * const isTabletOnly = useMediaQuery({ min: 'tablet', max: 'laptop' });
  */
 export function useMediaQuery(input: BreakpointQuery) {
