@@ -1,10 +1,14 @@
 'use client';
 
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import { useState } from 'react';
 import { crewQueries } from '@/api/queries/crewQueries';
 import { sessionQueries } from '@/api/queries/sessionQueries';
+import { userQueries } from '@/api/queries/userQueries';
 import VerticalEllipsisIcon from '@/assets/icons/vertical-ellipsis.svg?react';
 import FixedBottomBar, {
   useFixedBottomBar,
@@ -12,6 +16,8 @@ import FixedBottomBar, {
 import KakaoMap from '@/components/session/KakaoMap';
 import Badge, { LevelBadge, PaceBadge } from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
+import Dropdown from '@/components/ui/Dropdown';
+import Modal from '@/components/ui/Modal';
 import ProgressBar from '@/components/ui/ProgressBar';
 import Rating from '@/components/ui/Rating';
 import UserAvatar from '@/components/ui/UserAvatar';
@@ -64,7 +70,7 @@ export default function Page() {
     <main className="h-main laptop:pt-10 relative">
       <div className="laptop:grid-cols-2 mx-auto grid max-w-[1120px] grid-cols-1 items-start gap-4">
         <SessionImage image={image} name={name} />
-        <SessionShortInfo session={session} />
+        <SessionShortInfo session={session} crewId={crew.id} />
         <hr className="tablet:mx-12 laptop:hidden mx-6 text-gray-700" />
         <SessionDetailInfo session={session} participants={participants} />
         <CrewShortInfo crew={crew} review={review} />
@@ -86,7 +92,13 @@ function SessionImage({ image, name }: { image: string; name: string }) {
   );
 }
 
-function SessionShortInfo({ session }: { session: Session }) {
+function SessionShortInfo({
+  session,
+  crewId,
+}: {
+  session: Session;
+  crewId: number;
+}) {
   const {
     registerBy,
     name,
@@ -96,14 +108,42 @@ function SessionShortInfo({ session }: { session: Session }) {
     currentParticipantCount,
     maxParticipantCount,
   } = session;
+  const { data: profile } = useQuery(userQueries.me.info());
+  const profileId = profile?.id;
+
+  const { data: memberRole } = useQuery({
+    ...crewQueries.members(crewId).detail(profileId!),
+    enabled: !!profileId,
+  });
+
+  // const isManager =
+  //   memberRole?.role === 'LEADER' || memberRole?.role === 'STAFF';
+  const isManager = true;
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   return (
-    <div className="laptop:px-7 laptop:py-6 laptop:mt-0 laptop:max-w-[360px] tablet:p-12 tablet:py-10 relative z-100 -mt-5 rounded-t-[20px] bg-gray-800 px-7 py-6">
+    <div className="laptop:px-7 laptop:py-6 laptop:mt-0 laptop:max-w-[360px] tablet:p-12 tablet:py-10 relative z-10 -mt-5 rounded-t-[20px] bg-gray-800 px-7 py-6">
       <div className="mb-1 flex w-full items-center justify-between gap-2">
         <Badge variant="dday" size="sm">
           마감 {formatDDay(registerBy)}
         </Badge>
-        <VerticalEllipsisIcon className="size-6" />
+        {isManager && (
+          <Dropdown>
+            <Dropdown.TriggerNoArrow>
+              <VerticalEllipsisIcon className="size-6" />
+            </Dropdown.TriggerNoArrow>
+            <Dropdown.Content className="z-100">
+              <Dropdown.Item>
+                <Link href={`/sessions/${session.id}/edit`}>수정하기</Link>
+              </Dropdown.Item>
+              <Dropdown.Item onClick={() => setIsDeleteModalOpen(true)}>
+                삭제하기
+              </Dropdown.Item>
+            </Dropdown.Content>
+          </Dropdown>
+        )}
       </div>
       <div className="mb-2">
         <h1 className="text-title3-semibold text-gray-50">{name}</h1>
@@ -116,6 +156,27 @@ function SessionShortInfo({ session }: { session: Session }) {
         <LevelBadge size="sm" level={level} />
       </div>
       <ProgressBar value={currentParticipantCount} max={maxParticipantCount} />
+      <Modal open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
+        <Modal.Content className="z-999">
+          <Modal.Header>
+            <VisuallyHidden asChild>
+              <Modal.Title>세션을 삭제하시겠습니까?</Modal.Title>
+            </VisuallyHidden>
+          </Modal.Header>
+          <Modal.Description>
+            삭제 후에는 되돌릴 수 없어요 정말 삭제하시겠어요?
+          </Modal.Description>
+          <Modal.Footer>
+            <Button
+              variant="neutral"
+              onClick={() => setIsDeleteModalOpen(false)}
+            >
+              취소
+            </Button>
+            <Button onClick={() => setIsDeleteModalOpen(false)}>확인</Button>
+          </Modal.Footer>
+        </Modal.Content>
+      </Modal>
     </div>
   );
 }
