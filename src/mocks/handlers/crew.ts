@@ -115,6 +115,7 @@ export function createCrewHandlers(p: PathFn, authMode: AuthMode) {
         description: faker.lorem.paragraph(),
         city: '서울',
         image: faker.image.avatar(),
+        memberCount: faker.number.int({ min: 2, max: 100 }),
         createdAt: new Date().toISOString(),
       };
 
@@ -124,28 +125,30 @@ export function createCrewHandlers(p: PathFn, authMode: AuthMode) {
     // 크루 멤버 목록 조회
     http.get(p('/api/crews/:id/members'), () => {
       const data = {
-        leader: {
-          userId: 1,
-          name: '홍길동',
-          profileImage: faker.image.avatar(),
-          role: 'LEADER',
-          joinedAt: '2025-11-10T12:00:00+09:00',
-        },
-        staff: [
-          {
-            userId: 2,
-            name: '김운영',
-            profileImage: null,
-            role: 'STAFF',
-            joinedAt: '2025-11-15T12:00:00+09:00',
-          },
-        ],
         members: [
           {
-            userId: 3,
+            userId: 1,
+            name: '이멤버',
+            profileImage: faker.image.avatar(),
+            role: 'LEADER',
+            introduction: faker.lorem.sentence(),
+            joinedAt: '2025-11-20T12:00:00+09:00',
+          },
+          {
+            userId: 1,
+            name: '이멤버',
+            profileImage: faker.image.avatar(),
+            role: 'STAFF',
+            introduction: faker.lorem.sentence(),
+
+            joinedAt: '2025-11-20T12:00:00+09:00',
+          },
+          {
+            userId: 1,
             name: '이멤버',
             profileImage: faker.image.avatar(),
             role: 'MEMBER',
+            introduction: faker.lorem.sentence(),
             joinedAt: '2025-11-20T12:00:00+09:00',
           },
         ],
