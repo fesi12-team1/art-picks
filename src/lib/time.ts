@@ -38,6 +38,7 @@ export function formatTimeToKorean(hour: number, minute: number): string {
  */
 export function formatDDay(target: string, base: Date = new Date()) {
   const t = new Date(target);
+  if (Number.isNaN(t.getTime())) throw new Error(`Invalid date: ${target}`);
 
   const diffDays = Math.floor(
     (utcMidnightTime(t) - utcMidnightTime(base)) / MS_PER_DAY
