@@ -40,7 +40,8 @@ export default function CrewCard({
             fill
             className={cn(
               'rounded-lg object-cover transition-opacity duration-300 hover:opacity-80',
-              image ? 'shadow-sm' : 'border border-gray-500'
+              'border-gray-500' // Figma 디자인 시안 변경 여부에 따라 결정
+              // image ? 'shadow-sm' : 'border border-gray-500'
             )}
           />
         </Link>

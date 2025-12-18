@@ -22,7 +22,7 @@ export default function Page() {
           <h2 className="text-title2-semibold mb-4">
             나와 FIT한 러닝 메이트를 찾다
           </h2>
-          <span className="text-body3-regular text-gray-300">
+          <span className="text-body3-regular text-gray-200">
             러닝 페이스와 선호하는 스타일에 딱 맞는 크루를 찾아보세요!
           </span>
         </div>
@@ -30,12 +30,14 @@ export default function Page() {
       <section className="flex w-full flex-col items-center">
         <div className="mb-6 flex w-full items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <Dropdown>
+            <Dropdown size="lg">
               <Dropdown.Trigger>지역 전체</Dropdown.Trigger>
             </Dropdown>
           </div>
-          <Dropdown>
-            <Dropdown.Trigger>최근 생성순</Dropdown.Trigger>
+          <Dropdown size="lg">
+            <Dropdown.Trigger className="bg-transparent">
+              최근 생성순
+            </Dropdown.Trigger>
             <Dropdown.Content>
               {['최근 생성순', '이름 오름차순', '이름 내림차순'].map((item) => (
                 <Dropdown.Item key={item}>{item}</Dropdown.Item>
