@@ -2,7 +2,7 @@ import Camera from '@/assets/icons/camera.svg?react';
 import XIcon from '@/assets/icons/x.svg?react';
 import useImageUploader from './useImageUploader';
 
-export default function ReviewImagesUploader({
+export default function ReviewImageUploader({
   maxSizeMB = 5,
   onChange,
 }: {
