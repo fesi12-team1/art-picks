@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { QueryProvider } from '@/provider/QueryProvider';
 import './globals.css';
 import Header from '@/components/layout/Header';
-import MockProvider from '@/mocks/worker/Provider';
+import MockProvider from '@/mocks/browser/Provider';
 import ToastProvider from '@/provider/ToastProvider';
 
 export const metadata: Metadata = {
