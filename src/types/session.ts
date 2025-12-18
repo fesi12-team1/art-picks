@@ -2,6 +2,21 @@ import { PaginationQueryParams } from './api';
 import { CrewMember } from './crew';
 import { Sido, Sigungu } from './region';
 
+export const LEVEL_OPTIONS = [
+  { label: '초급', value: 'BEGINNER' },
+  { label: '중급', value: 'INTERMEDIATE' },
+  { label: '고급', value: 'ADVANCED' },
+] as const;
+
+export const SORT_OPTIONS = [
+  { label: '최신 생성순', value: 'createdAtDesc' },
+  { label: '모임 시작일순', value: 'sessionAtAsc' },
+  { label: '마감 임박순', value: 'registerByAsc' },
+] as const;
+
+export type LevelValue = (typeof LEVEL_OPTIONS)[number]['value'];
+export type SortValue = (typeof SORT_OPTIONS)[number]['value'];
+
 export interface Session<City extends Sido = Sido> {
   id: number;
   crewId: number;
@@ -18,7 +33,7 @@ export interface Session<City extends Sido = Sido> {
   };
   sessionAt: string;
   registerBy: string;
-  level: 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
+  level: LevelValue;
   status: 'OPEN' | 'CLOSED';
   pace: number;
   maxParticipantCount: number;
@@ -32,10 +47,10 @@ export type SessionListFilters = PaginationQueryParams & {
   city?: string[];
   district?: string[];
   crewId?: number;
-  level?: 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
+  level?: LevelValue;
   dateFrom?: string;
   dateTo?: string;
   timeFrom?: string;
   timeTo?: string;
-  sort: 'createdAtDesc' | 'sessionAtAsc' | 'registerByAsc';
+  sort: SortValue;
 };

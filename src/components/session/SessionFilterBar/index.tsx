@@ -1,33 +1,23 @@
 'use client';
 
-import { useState } from 'react';
-import { DateRange } from 'react-day-picker';
 import DateFilter from '@/components/ui/DateFilter';
 import Dropdown from '@/components/ui/Dropdown';
 import FilterButton from '@/components/ui/FilterButton';
 import RegionFilter from '@/components/ui/RegionFilter';
 import TimeFilter from '@/components/ui/TimeFilter';
-import {
-  LEVEL_OPTIONS,
-  LevelValue,
-  SORT_OPTIONS,
-  SortValue,
-} from '@/constants/session/sessionFilters';
+import { useSessionFilters } from '@/hooks/session/useSessionFilters';
+import { getOptionLabel } from '@/lib/utils';
+import { LEVEL_OPTIONS, SORT_OPTIONS } from '@/types';
 
-function getOptionLabel<T extends readonly { label: string; value: string }[]>(
-  options: T,
-  value?: T[number]['value']
-) {
-  return options.find((option) => option.value === value)?.label;
-}
-
-export default function SessionFilterBar() {
-  const [region, setRegion] = useState<Record<string, string[]> | undefined>();
-  const [date, setDate] = useState<DateRange | undefined>();
-  const [time, setTime] = useState<[number, number] | undefined>();
-  const [level, setLevel] = useState<LevelValue | undefined>();
-  const [sort, setSort] = useState<SortValue | undefined>();
-
+export default function SessionFilterBar({
+  uiFilters: { region, date, time, level },
+  queryFilters: { sort },
+  setRegion,
+  setDate,
+  setTime,
+  setLevel,
+  setSort,
+}: ReturnType<typeof useSessionFilters>) {
   return (
     <div className="mb-6 flex w-full items-center justify-between gap-2">
       <div className="flex items-center gap-2">
