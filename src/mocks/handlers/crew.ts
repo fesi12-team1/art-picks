@@ -128,14 +128,14 @@ export function createCrewHandlers(p: PathFn, authMode: AuthMode) {
         members: [
           {
             userId: 1,
-            name: '이멤버',
+            name: '일멤버',
             profileImage: faker.image.avatar(),
             role: 'LEADER',
             introduction: faker.lorem.sentence(),
             joinedAt: '2025-11-20T12:00:00+09:00',
           },
           {
-            userId: 1,
+            userId: 2,
             name: '이멤버',
             profileImage: faker.image.avatar(),
             role: 'STAFF',
@@ -144,8 +144,24 @@ export function createCrewHandlers(p: PathFn, authMode: AuthMode) {
             joinedAt: '2025-11-20T12:00:00+09:00',
           },
           {
-            userId: 1,
-            name: '이멤버',
+            userId: 3,
+            name: '삼멤버',
+            profileImage: faker.image.avatar(),
+            role: 'MEMBER',
+            introduction: faker.lorem.sentence(),
+            joinedAt: '2025-11-20T12:00:00+09:00',
+          },
+          {
+            userId: 4,
+            name: '사멤버',
+            profileImage: faker.image.avatar(),
+            role: 'MEMBER',
+            introduction: faker.lorem.sentence(),
+            joinedAt: '2025-11-20T12:00:00+09:00',
+          },
+          {
+            userId: 5,
+            name: '오멤버',
             profileImage: faker.image.avatar(),
             role: 'MEMBER',
             introduction: faker.lorem.sentence(),
