@@ -3,6 +3,7 @@ import { CrewMember } from './crew';
 import { Sido, Sigungu } from './region';
 
 export const LEVEL_OPTIONS = [
+  { label: '전체', value: undefined },
   { label: '초급', value: 'BEGINNER' },
   { label: '중급', value: 'INTERMEDIATE' },
   { label: '고급', value: 'ADVANCED' },

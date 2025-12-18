@@ -4,16 +4,17 @@ import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { sessionQueries } from '@/api/queries/sessionQueries';
 import SessionCard from '@/components/session/SessionCard';
-import Dropdown from '@/components/ui/Dropdown';
-import FilterButton from '@/components/ui/FilterButton';
-import { Session } from '@/types';
+import SessionFilterBar from '@/components/session/SessionFilterBar';
+import { useSessionFilters } from '@/hooks/session/useSessionFilters';
 
 export default function SessionPage() {
+  const filters = useSessionFilters();
+
   const { data: sessions } = useQuery(
     sessionQueries.list({
       page: 0,
       size: 10,
-      sort: 'createdAtDesc',
+      ...filters.queryFilters,
     })
   );
 
@@ -42,33 +43,9 @@ export default function SessionPage() {
         </div>
       </div>
       <div className="flex w-full flex-col items-center">
-        <div className="mb-6 flex w-full items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <Dropdown>
-              <Dropdown.Trigger>지역 전체</Dropdown.Trigger>
-            </Dropdown>
-            <Dropdown>
-              <Dropdown.Trigger>날짜 전체</Dropdown.Trigger>
-            </Dropdown>
-            <Dropdown>
-              <Dropdown.Trigger>시간</Dropdown.Trigger>
-            </Dropdown>
-            <Dropdown>
-              <Dropdown.Trigger>난이도</Dropdown.Trigger>
-              <Dropdown.Content>
-                {['초급', '중급', '상급'].map((item) => (
-                  <Dropdown.Item key={item}>{item}</Dropdown.Item>
-                ))}
-              </Dropdown.Content>
-            </Dropdown>
-            <FilterButton className="pl-2" />
-          </div>
-          <Dropdown>
-            <Dropdown.Trigger>최근 생성순</Dropdown.Trigger>
-          </Dropdown>
-        </div>
+        <SessionFilterBar {...filters} />
         <div className="grid w-full grid-cols-3 gap-6">
-          {sessions?.content?.map((session: Session) => (
+          {sessions?.content?.map((session) => (
             <SessionCard key={session.id} session={session} />
           ))}
         </div>
