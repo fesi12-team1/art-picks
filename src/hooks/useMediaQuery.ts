@@ -11,10 +11,8 @@ export type Breakpoint = keyof typeof BREAKPOINTS;
 
 type BreakpointQuery =
   | { min: Exclude<Breakpoint, 'mobile'>; max?: never }
-  | {
-      min: Exclude<Breakpoint, 'mobile' | 'desktop'>;
-      max: Exclude<Breakpoint, 'mobile'>;
-    };
+  | { min: 'tablet'; max: 'laptop' | 'desktop' }
+  | { min: 'laptop'; max: 'desktop' };
 
 /**
  * 현재 뷰포트가 설정한 media query와 일치하는지 여부를 반환하는 훅입니다.
