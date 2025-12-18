@@ -60,8 +60,8 @@ export default function Profile() {
           러닝 스타일
         </p>
         <div className="flex flex-wrap gap-2">
-          {data?.styles.length !== 0 ? (
-            data?.styles.map((style) => (
+          {data?.styles?.length !== 0 ? (
+            data?.styles?.map((style) => (
               <span
                 key={style}
                 className="border-brand-700 text-caption-medium text-brand-200 tablet:px-3 tablet:py-2 tablet:text-body3-medium rounded-xl border bg-gray-800 px-2 py-1.5"

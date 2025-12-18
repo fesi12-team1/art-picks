@@ -1,17 +1,25 @@
 'use client';
 
+import { Route } from 'next';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
-export const DESKTOP_TABS = [
+type Tab = {
+  label: string;
+  href: Route;
+};
+export const DESKTOP_TABS: Tab[] = [
   { label: '참여 세션', href: '/my/sessions' },
   { label: '나의 리뷰', href: '/my/reviews' },
   { label: '소속 크루', href: '/my/crews' },
   { label: '세션 관리', href: '/my/manage' },
 ];
 
-export const MOBILE_TABS = [{ label: 'My 홈', href: '/my' }, ...DESKTOP_TABS];
+export const MOBILE_TABS: Tab[] = [
+  { label: 'My 홈', href: '/my' },
+  ...DESKTOP_TABS,
+];
 
 interface MyTabsProps {
   isSmallDevice: boolean;
