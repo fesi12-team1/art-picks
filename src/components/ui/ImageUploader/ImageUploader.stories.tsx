@@ -15,10 +15,10 @@ export default meta;
 
 type Story = StoryObj;
 
-export const Cover: Story = {
+export const CoverImage: Story = {
   render: () => <CoverImageUploader />,
 };
 
-export const ReviewImages: Story = {
+export const ReviewImage: Story = {
   render: () => <ReviewImageUploader />,
 };
