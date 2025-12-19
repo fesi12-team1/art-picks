@@ -1,8 +1,10 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
+import { useState } from 'react';
+import { getCrewReviews } from '@/api/fetch/crews';
 import { crewQueries } from '@/api/queries/crewQueries';
 import { sessionQueries } from '@/api/queries/sessionQueries';
 import { userQueries } from '@/api/queries/userQueries';
@@ -15,6 +17,7 @@ import FixedBottomBar, {
 import CompletedSessionCard from '@/components/session/CompletedSessionCard';
 import SessionCard from '@/components/session/SessionCard';
 import Button from '@/components/ui/Button';
+import Pagination from '@/components/ui/Pagination';
 import Tabs from '@/components/ui/Tabs';
 import { cn } from '@/lib/utils';
 import { CrewMember } from '@/types';
@@ -55,6 +58,8 @@ export default function Page() {
   const params = useParams<{ id: string }>();
   const crewId = Number(params.id);
 
+  const today = new Date().toISOString().split('T')[0];
+
   // fetch queries
   const { data: crew } = useQuery(crewQueries.detail(crewId));
   const { data: crewMembers } = useQuery(
@@ -65,10 +70,7 @@ export default function Page() {
   const { data: crewSessions } = useQuery(
     sessionQueries.list({ crewId, sort: 'registerByAsc' })
   );
-  // const { data: crewReviews } = useQuery(crewQueries.reviews(crewId).list({}));
-  // TODO:
-  // crewReview는 Slice에서 Page로 바뀌어야함
-  // pagination 컴포넌트 및 총 review 개수를 위해서 totalElements 필요
+
   const { data: myProfile } = useQuery(userQueries.me.info());
   const { data: myRole } = useQuery({
     ...crewQueries.members(crewId).detail(myProfile?.id ?? 0),
@@ -113,7 +115,7 @@ export default function Page() {
                   <Tabs.Trigger value="3">후기</Tabs.Trigger>
                 </Tabs.List>
               </Tabs>
-              <div className="flex flex-col gap-2">
+              <div id="detail" className="flex flex-col gap-2">
                 <span className="text-title3-semibold text-gray-50">
                   크루 소개
                 </span>
@@ -121,7 +123,7 @@ export default function Page() {
                   {crew?.description}
                 </div>
               </div>
-              <div className="flex flex-col gap-4">
+              <div id="sessions" className="flex flex-col gap-4">
                 <span className="text-title3-semibold text-gray-50">
                   모집중인 세션
                 </span>
@@ -145,7 +147,10 @@ export default function Page() {
                   ))}
                 </div>
               </div>
-              <div className="flex flex-col gap-3 border-t border-t-gray-700 py-5">
+              <div
+                id="review"
+                className="flex flex-col gap-3 border-t border-t-gray-700 py-5"
+              >
                 <div className="flex gap-2">
                   <span className="text-title3-semibold text-gray-50">
                     후기
@@ -155,8 +160,7 @@ export default function Page() {
                     24
                   </span>
                 </div>
-                <div className="not-first:*:bt-2 flex flex-col divide-y divide-dotted *:pb-2">
-                  {/* 위 수정 사항 반영 전까지 임시 데이터 사용 */}
+                <div className="flex flex-col divide-y divide-dashed divide-gray-500 *:pb-2 not-first:*:pt-2">
                   {/* {crewReviews?.content.map((review) => (
                     <ReviewCard key={review.id} data={review} />
                   ))} */}
@@ -190,10 +194,8 @@ export default function Page() {
                       createdAt: '2024-08-15T09:30:00.000Z',
                     }}
                   />
-                  <div className="flex justify-center">
-                    Pagination Component
-                  </div>
                 </div>
+                <div className="tablet:mt-4 mt-3 flex justify-center"></div>
               </div>
             </div>
             {/* Crew Title */}
