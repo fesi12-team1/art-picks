@@ -1,19 +1,21 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import MyInfo from '@/components/my/MyInfo';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 export default function MyPage() {
   const router = useRouter();
-  const isLaptop = useMediaQuery('laptop');
-  const isDesktop = useMediaQuery('desktop');
-  const isPc = isLaptop || isDesktop;
+  const isPc = useMediaQuery({ min: 'laptop' });
 
-  if (isPc) {
-    router.replace('/my/sessions');
-    return null;
-  }
+  useEffect(() => {
+    if (isPc) {
+      router.replace('/my/sessions');
+    }
+  }, [isPc, router]);
+
+  if (isPc) return null;
 
   return <MyInfo />;
 }

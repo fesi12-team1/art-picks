@@ -5,9 +5,7 @@ import MyTabs from '@/components/my/MyTabs';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 export default function MyLayout({ children }: { children: React.ReactNode }) {
-  const isTablet = useMediaQuery('tablet');
-  const isMobile = useMediaQuery('mobile');
-  const isSmallDevice = isTablet || isMobile;
+  const isSmallDevice = useMediaQuery({ max: 'laptop' });
 
   return (
     <div className="tablet:pt-7.5 laptop:pt-[47px] tablet:mx-20 laptop:mx-auto mx-6 flex max-w-[1320px] gap-20 pt-3.5">
