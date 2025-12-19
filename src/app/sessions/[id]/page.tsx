@@ -63,7 +63,7 @@ export default function Page() {
   if (!reviews) return null;
 
   const { participants } = participantsResponse;
-  const review = reviews?.content[0];
+  const review = reviews?.content[0] || null;
 
   return (
     <main
@@ -131,10 +131,10 @@ function SessionDetailView({
 
 function SessionImage({ image, name }: { image: string; name: string }) {
   return (
-    <div className="tablet:aspect-744/313 laptop:aspect-680/374 laptop:rounded-[20px] aspect-375/267 w-full">
+    <div className="tablet:aspect-744/313 laptop:aspect-680/374 laptop:rounded-[20px] relative aspect-375/267 w-full overflow-hidden">
       <SafeImage
         src={image}
-        fallbackSrc="/assets/session-default"
+        fallbackSrc="/assets/session-default.png"
         alt={name}
         fill
         className="object-cover"
@@ -341,14 +341,19 @@ function SessionDetailInfo({
   );
 }
 
-function CrewShortInfo({ crew, review }: { crew: Crew; review: Review }) {
+function CrewShortInfo({
+  crew,
+  review,
+}: {
+  crew: Crew;
+  review: Review | null;
+}) {
   const { name, image } = crew;
-  const { ranks, description } = review;
 
   return (
     <div className="laptop:mx-0 tablet:mx-12 tablet:rounded-[20px] tablet:px-6 tablet:py-4 tablet:bg-gray-750 mx-6 flex flex-col gap-4 rounded-xl border-gray-700 bg-gray-700 p-3 px-3 py-3">
       <div className="flex items-center gap-3">
-        <div className="tablet:aspect-84/56 aspect-66/44">
+        <div className="tablet:aspect-84/56 relative aspect-66/44 w-20">
           <SafeImage
             src={image}
             alt={name}
@@ -372,9 +377,14 @@ function CrewShortInfo({ crew, review }: { crew: Crew; review: Review }) {
 
       {review && (
         <div>
-          <Rating value={ranks} onChange={() => {}} disabled className="mb-2" />
+          <Rating
+            value={review.ranks}
+            onChange={() => {}}
+            disabled
+            className="mb-2"
+          />
           <p className="text-caption-regular tablet-text-body3-regular laptop:max-w-[320px] line-clamp-2 text-gray-200">
-            {description}
+            {review.description}
           </p>
         </div>
       )}
