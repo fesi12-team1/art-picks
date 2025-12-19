@@ -8,14 +8,38 @@ import { userQueries } from '@/api/queries/userQueries';
 import LogoDefault from '@/assets/icons/logo-default.svg?react';
 import LogoLarge from '@/assets/icons/logo-large.svg?react';
 import Dropdown from '@/components/ui/Dropdown';
-import UserAvatar from '@/components/ui/UserAvatar';
+import SafeImage from '@/components/ui/SafeImage';
 import { cn } from '@/lib/utils';
 import { type Profile } from '@/types';
 
 export default function Header() {
-  const { data: user, isLoading } = useQuery(userQueries.me.info());
   const pathname = usePathname();
-  const isLoggedIn = !isLoading && !!user;
+  const {
+    data: user,
+    isLoading,
+    isError,
+  } = useQuery({
+    ...userQueries.me.info(),
+    retry: false,
+  });
+  const safeUser = (isError ? null : user) ?? null;
+
+  console.log(safeUser);
+  return (
+    <HeaderView pathname={pathname} user={safeUser} isLoading={isLoading} />
+  );
+}
+
+export function HeaderView({
+  pathname,
+  user,
+  isLoading,
+}: {
+  pathname: string;
+  user: Profile | null;
+  isLoading: boolean;
+}) {
+  const isLoggedIn = !!user;
 
   return (
     <header className="tablet:h-15 tablet:px-6 sticky top-0 z-50 h-14 w-full border-b border-b-gray-600 bg-gray-800 px-4">
@@ -55,7 +79,15 @@ export default function Header() {
             </Link>
           )}
         </nav>
-        <div>{isLoggedIn ? <UserMenu user={user} /> : <GuestMenu />}</div>
+        <div className="flex items-center">
+          {isLoading ? (
+            <div className="h-10 w-10 animate-pulse rounded-lg bg-gray-700" />
+          ) : isLoggedIn ? (
+            <UserMenu user={user} />
+          ) : (
+            <GuestMenu />
+          )}
+        </div>
       </div>
     </header>
   );
@@ -66,12 +98,16 @@ function UserMenu({ user }: { user: Profile }) {
 
   return (
     <Dropdown>
-      <Dropdown.TriggerNoArrow>
-        <UserAvatar
-          src={user.image || '/assets/profile-default.png'}
-          alt={user.name}
-          className="tablet:size-8 size-6 data-[slot=avatar]:ring-1 data-[slot=avatar]:ring-gray-900"
-        />
+      <Dropdown.TriggerNoArrow asChild>
+        <div className="relative size-10 overflow-hidden rounded-lg border border-gray-700">
+          <SafeImage
+            src={user.image}
+            fallbackSrc="/assets/profile-default.png"
+            alt={user.name}
+            fill
+            className="object-cover"
+          />
+        </div>
       </Dropdown.TriggerNoArrow>
       <Dropdown.Content>
         <Dropdown.Item asChild>
