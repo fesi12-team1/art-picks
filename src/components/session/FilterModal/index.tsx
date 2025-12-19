@@ -12,32 +12,30 @@ import {
   LEVEL_OPTIONS,
   type RegionFilterValue,
 } from '@/constants/session-filter';
+import { SessionFilterState } from '@/hooks/session/useSessionFilters';
 import { Level } from '@/types';
 
-interface SessionFilterModalProps {
+interface FilterModalProps {
   children: React.ReactNode;
-  uiFilters: {
+  filters: {
     region?: RegionFilterValue;
     date?: DateRange;
     time?: [number, number];
     level?: Level;
   };
-  changeRegion: (v?: RegionFilterValue) => void;
-  changeDate: (v?: DateRange) => void;
-  changeTime: (v?: [number, number]) => void;
-  changeLevel: (v?: Level) => void;
+  changeFilter: <K extends keyof SessionFilterState>(
+    key: K,
+    value: SessionFilterState[K]
+  ) => void;
   resetFilters: () => void;
 }
 
-export default function SessionFilterModal({
-  uiFilters,
-  changeDate,
-  changeRegion,
-  changeLevel,
-  changeTime,
+export default function FilterModal({
+  filters,
+  changeFilter,
   resetFilters,
   children,
-}: SessionFilterModalProps) {
+}: FilterModalProps) {
   return (
     <Modal>
       {/* Trigger */}
@@ -60,19 +58,19 @@ export default function SessionFilterModal({
             </Tabs.List>
             <div className="flex min-h-[120px] w-full flex-col items-center">
               <Tabs.Content value="region">
-                {/* <RegionFilter value={uiFilters.region} onChange={changeRegion} /> */}
+                {/* <RegionFilter value={filters.region} onChange={changeRegion} /> */}
               </Tabs.Content>
               <Tabs.Content value="date">
                 <Calendar.Range
                   className="w-[315px]"
-                  selected={uiFilters.date}
-                  onSelect={changeDate}
+                  selected={filters.date}
+                  onSelect={(value) => changeFilter('date', value)}
                 />
               </Tabs.Content>
               <Tabs.Content value="time" className="w-full px-[78px]">
                 <TimeSlider
-                  value={[uiFilters.time?.[0] || 0, uiFilters.time?.[1] || 720]}
-                  onValueChange={changeTime}
+                  value={[filters.time?.[0] || 0, filters.time?.[1] || 720]}
+                  onValueChange={(value) => changeFilter('time', value)}
                 />
               </Tabs.Content>
               <Tabs.Content value="level" className="flex w-full gap-2">
@@ -80,8 +78,8 @@ export default function SessionFilterModal({
                   <Chip
                     key={value ?? 'all'}
                     tone="secondary"
-                    state={uiFilters.level === value ? 'active' : 'default'}
-                    onClick={() => changeLevel(value)}
+                    state={filters.level === value ? 'active' : 'default'}
+                    onClick={() => changeFilter('level', value)}
                   >
                     {label}
                   </Chip>

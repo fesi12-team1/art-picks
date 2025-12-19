@@ -69,7 +69,7 @@ export default function SessionPage() {
               onChange={(value) => changeFilter('level', value)}
             />
             <FilterModal
-              uiFilters={filters}
+              filters={filters}
               changeFilter={changeFilter}
               resetFilters={resetFilters}
             >
