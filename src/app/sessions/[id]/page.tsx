@@ -21,6 +21,7 @@ import Modal from '@/components/ui/Modal';
 import ProgressBar from '@/components/ui/ProgressBar';
 import Rating from '@/components/ui/Rating';
 import UserAvatar from '@/components/ui/UserAvatar';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import {
   formatDDay,
   formatKoMonthDayTime,
@@ -38,7 +39,9 @@ export default function Page() {
   } = useQuery(sessionQueries.detail(Number(id)));
   const crewId = session?.crewId;
 
-  const { data } = useQuery(sessionQueries.participants(Number(id)));
+  const { data: participantsResponse } = useQuery(
+    sessionQueries.participants(Number(id))
+  );
 
   const { data: crew } = useQuery({
     ...crewQueries.detail(Number(crewId)),
@@ -56,27 +59,62 @@ export default function Page() {
   if (error) return null;
   if (!session) return null;
 
-  if (!data) return null;
+  if (!participantsResponse) return null;
   if (!crew) return null;
   if (!reviews) return null;
 
-  const { name, image } = session;
-
-  const { participants } = data;
-
+  const { participants } = participantsResponse;
   const review = reviews?.content[0];
 
   return (
-    <main className="h-main laptop:pt-10 relative">
-      <div className="laptop:grid-cols-2 mx-auto grid max-w-[1120px] grid-cols-1 items-start gap-4">
-        <SessionImage image={image} name={name} />
-        <SessionShortInfo session={session} crewId={crew.id} />
-        <hr className="tablet:mx-12 laptop:hidden mx-6 text-gray-700" />
-        <SessionDetailInfo session={session} participants={participants} />
-        <CrewShortInfo crew={crew} review={review} />
-      </div>
+    <main className="h-main relative">
+      <SessionDetailView
+        session={session}
+        crew={crew}
+        review={review}
+        participants={participants}
+      />
       <FixedBottomBar ref={ref}>Fixed Bottom Bar</FixedBottomBar>
     </main>
+  );
+}
+
+function SessionDetailView({
+  session,
+  crew,
+  review,
+  participants,
+}: {
+  session: Session;
+  crew: Crew;
+  review: Review;
+  participants: Session['participants'];
+}) {
+  const isLaptopUp = useMediaQuery({ min: 'laptop' });
+
+  if (isLaptopUp) {
+    return (
+      <div className="mx-auto flex max-w-[1120px] gap-10 bg-gray-900 py-10">
+        <div className="flex flex-1 flex-col gap-10 px-5">
+          <SessionImage image={session.image} name={session.name} />
+          <SessionDetailInfo session={session} participants={participants} />
+        </div>
+        <div className="flex flex-col gap-10">
+          <SessionShortInfo session={session} crewId={crew.id} />
+          <CrewShortInfo crew={crew} review={review} />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <SessionImage image={session.image} name={session.name} />
+      <SessionShortInfo session={session} crewId={crew.id} />
+      <hr className="tablet:mx-12 laptop:hidden mx-6 text-gray-700" />
+      <SessionDetailInfo session={session} participants={participants} />
+      <CrewShortInfo crew={crew} review={review} />
+    </>
   );
 }
 
@@ -199,7 +237,7 @@ function SessionDetailInfo({
   } = session;
 
   return (
-    <div className="laptop:px-0 laptop:mx-5 laptop:bg-gray-900 tablet:px-12 tablet:py-8 tablet:gap-8 flex flex-col gap-6 bg-gray-800 px-6 py-6">
+    <div className="tablet:px-12 laptop:px-3 laptop:py-0 tablet:py-8 tablet:gap-8 laptop:bg-gray-900 flex flex-col gap-6 bg-gray-800 px-6 py-6">
       <div className="tablet:gap-2 flex flex-col gap-1">
         <h2 className="text-body2-semibold tablet:text-title3-semibold text-gray-50">
           세션 소개
@@ -224,8 +262,9 @@ function SessionDetailInfo({
           </li>
         </ul>
       </div>
+
       <div className="tablet:gap-2 flex flex-col gap-1">
-        <h2 className="text-body2-semibold tablet:text-body3-semibold flex flex-col text-gray-50">
+        <h2 className="text-body2-semibold tablet:text-title3-semibold flex flex-col text-gray-50">
           장소
         </h2>
         <div className="tablet:h-[312px] flex h-[218px] flex-col overflow-hidden rounded-xl border border-gray-600">
@@ -242,12 +281,11 @@ function SessionDetailInfo({
           </div>
         </div>
       </div>
+
       <div className="tablet:gap-2 flex flex-col gap-1">
-        <h2 className="text-body2-semibold tablet:text-title3-semibold inline-flex items-center gap-1 text-gray-50">
-          참여 멤버
-          <span className="text-body1-semibold text-brand-300">
-            {currentParticipantCount}
-          </span>
+        <h2 className="text-body2-semibold tablet:text-title3-semibold text-gray-50">
+          참여 멤버&nbsp;
+          <span className="text-brand-300">{currentParticipantCount}</span>
         </h2>
         <ul className="tablet:gap-5 mb-3 flex flex-col gap-2">
           {participants.slice(0, 4).map((participant) => (
