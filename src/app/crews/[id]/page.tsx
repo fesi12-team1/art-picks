@@ -164,6 +164,7 @@ export default function Page() {
                     data={{
                       id: 1,
                       sessionId: 5,
+                      sessionName: 'blahb',
                       crewId: crew?.id as number,
                       userId: 5,
                       userName: myProfile?.name as string,
@@ -178,6 +179,7 @@ export default function Page() {
                     data={{
                       id: 2,
                       sessionId: 5,
+                      sessionName: 'blahb',
                       crewId: crew?.id as number,
                       userId: 5,
                       userName: myProfile?.name as string,
