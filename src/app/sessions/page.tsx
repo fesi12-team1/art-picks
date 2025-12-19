@@ -14,7 +14,8 @@ import FilterButton from '@/components/ui/FilterButton';
 import { useSessionFilters } from '@/hooks/session/useSessionFilters';
 
 export default function SessionPage() {
-  const { filters, changeFilter, resetFilters } = useSessionFilters();
+  const { filters, changeFilter, resetFilters, activeFilterCount } =
+    useSessionFilters();
 
   const { data: sessions } = useQuery(
     sessionQueries.list({
@@ -73,7 +74,7 @@ export default function SessionPage() {
               changeFilter={changeFilter}
               resetFilters={resetFilters}
             >
-              <FilterButton className="pl-2" count={1} />
+              <FilterButton className="pl-2" count={activeFilterCount} />
             </FilterModal>
           </div>
           <SortOptions

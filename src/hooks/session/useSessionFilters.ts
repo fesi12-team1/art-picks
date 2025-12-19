@@ -22,7 +22,7 @@ export const DEFAULT_SESSION_FILTER = {
   sort: 'createdAtDesc',
   region: undefined,
   date: undefined,
-  time: [0, 720],
+  time: undefined,
   level: undefined,
 } satisfies SessionFilterState;
 
@@ -63,10 +63,22 @@ export function useSessionFilters() {
     };
   }, [filters, page]);
 
+  const activeFilterCount = useMemo(() => {
+    let count = 0;
+
+    if (filters.region && Object.keys(filters.region).length > 0) count++;
+    if (filters.date?.from || filters.date?.to) count++;
+    if (filters.time) count++;
+    if (filters.level) count++;
+
+    return count;
+  }, [filters]);
+
   return {
     filters,
     queryFilters,
     changeFilter,
     resetFilters,
+    activeFilterCount,
   };
 }
