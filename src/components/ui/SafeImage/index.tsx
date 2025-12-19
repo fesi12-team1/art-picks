@@ -1,42 +1,33 @@
 import Image, { type ImageProps } from 'next/image';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { isValidImageUrl } from '@/lib/image';
 
 type SafeImageProps = Omit<ImageProps, 'src'> & {
   src?: string | null;
   fallbackSrc: string;
 };
 
-/**
- * 이미지 URL이 잘못되었거나, 로드를 실패한 경우 대체 이미지를 보여주는 컴포넌트
- */
 export default function SafeImage({
   src,
   fallbackSrc,
   alt,
   ...rest
 }: SafeImageProps) {
-  const [currentImgSrc, setCurrentImgSrc] = useState<string>(
-    isValidImageUrl(src) ? src : fallbackSrc
+  const initial = useMemo(
+    () => (isValidImageUrl(src) ? src! : fallbackSrc),
+    [src, fallbackSrc]
   );
+  const [currentSrc, setCurrentSrc] = useState<string>(initial);
 
   return (
     <Image
       {...rest}
-      src={currentImgSrc}
+      src={currentSrc}
       alt={alt}
-      onError={() => setCurrentImgSrc(fallbackSrc)}
+      onError={() => {
+        // 무한루프 방지
+        if (currentSrc !== fallbackSrc) setCurrentSrc(fallbackSrc);
+      }}
     />
-  );
-}
-
-function isValidImageUrl(url: string | null | undefined): url is string {
-  if (typeof url !== 'string') return false;
-
-  if (url.trim() === '') return false;
-
-  return (
-    url.startsWith('/') ||
-    url.startsWith('http://') ||
-    url.startsWith('https://')
   );
 }
