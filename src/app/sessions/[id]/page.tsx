@@ -111,7 +111,7 @@ function SessionDetailView({
           <SessionImage image={session.image} name={session.name} />
           <SessionDetailInfo session={session} participants={participants} />
         </div>
-        <div className="flex flex-col gap-10">
+        <div className="laptop:w-[360px] flex flex-col gap-10">
           <SessionShortInfo session={session} crewId={crew.id} />
           <CrewShortInfo crew={crew} review={review} />
         </div>
