@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useSignout } from '@/api/mutations/authMutations';
 import { userQueries } from '@/api/queries/userQueries';
 import LogoDefault from '@/assets/icons/logo-default.svg?react';
@@ -41,7 +41,7 @@ export function HeaderView({
   const isLoggedIn = !!user;
 
   return (
-    <header className="tablet:h-15 tablet:px-6 sticky top-0 z-50 h-14 w-full border-b border-b-gray-600 bg-gray-800 px-4">
+    <header className="tablet:h-15 tablet:px-6 sticky top-0 z-20 h-14 w-full border-b border-b-gray-600 bg-gray-800 px-4">
       <div className="tablet:gap-5 mx-auto flex h-full max-w-[1120px] items-center justify-between gap-3">
         <Link href="/" className="relative flex items-center justify-center">
           <LogoDefault className="tablet:hidden block" />
@@ -94,6 +94,7 @@ export function HeaderView({
 
 function UserMenu({ user }: { user: Profile }) {
   const signout = useSignout();
+  const router = useRouter();
 
   return (
     <Dropdown>
@@ -108,12 +109,19 @@ function UserMenu({ user }: { user: Profile }) {
           />
         </div>
       </Dropdown.TriggerNoArrow>
-      <Dropdown.Content>
+      <Dropdown.Content className="z-100 flex flex-col">
         <Dropdown.Item asChild>
           <Link href="/my">내 프로필</Link>
         </Dropdown.Item>
         <Dropdown.Item asChild>
-          <button onClick={() => signout.mutate()}>로그아웃</button>
+          <button
+            onClick={() => {
+              signout.mutate();
+              router.push('/');
+            }}
+          >
+            로그아웃
+          </button>
         </Dropdown.Item>
       </Dropdown.Content>
     </Dropdown>
