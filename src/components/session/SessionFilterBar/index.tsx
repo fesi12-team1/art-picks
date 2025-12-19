@@ -37,7 +37,7 @@ export default function SessionFilterBar({
           <Dropdown.Content>
             {LEVEL_OPTIONS.map(({ label, value }) => (
               <Dropdown.Item
-                key={value}
+                key={value ?? 'all'}
                 selected={uiFilters.level === value}
                 onSelect={() => changeLevel(value)}
               >

@@ -2,7 +2,7 @@ import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 export const chipVariants = cva(
-  'text-body3-regular h-[36px] w-[52px] inline-flex items-center justify-center whitespace-nowrap shrink-0 rounded-full font-semibold transition-colors rounded-xl cursor-pointer',
+  'text-body3-regular h-[36px] w-[52px] inline-flex items-center justify-center whitespace-nowrap shrink-0 font-semibold transition-colors rounded-xl cursor-pointer',
   {
     variants: {
       tone: {

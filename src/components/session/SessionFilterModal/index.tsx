@@ -78,7 +78,7 @@ export default function SessionFilterModal({
               <Tabs.Content value="level" className="flex w-full gap-2">
                 {LEVEL_OPTIONS.map(({ label, value }) => (
                   <Chip
-                    key={value}
+                    key={value ?? 'all'}
                     tone="secondary"
                     state={uiFilters.level === value ? 'active' : 'default'}
                     onClick={() => changeLevel(value)}
