@@ -24,7 +24,6 @@ export default function Header() {
   });
   const safeUser = (isError ? null : user) ?? null;
 
-  console.log(safeUser);
   return (
     <HeaderView pathname={pathname} user={safeUser} isLoading={isLoading} />
   );

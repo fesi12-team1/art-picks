@@ -84,17 +84,17 @@ export const GuestSessions: Story = {
   },
 };
 
-export const LoggedInLikes: Story = {
+export const LoggedInCrews: Story = {
   args: {
-    pathname: '/sessions/likes',
+    pathname: '/crews/123',
     user: mockUser,
     isLoading: false,
   },
 };
 
-export const LoggedInCrews: Story = {
+export const LoggedInLikes: Story = {
   args: {
-    pathname: '/crews/123',
+    pathname: '/sessions/likes',
     user: mockUser,
     isLoading: false,
   },
