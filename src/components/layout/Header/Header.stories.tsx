@@ -55,7 +55,6 @@ const mockUser = {
   introduction: '안녕하세요!',
   name: '관리자2',
   pace: 367,
-  password: 'admin1234!',
   styles: ['조깅', '인터벌'],
   updatedAt: '2025-12-19T09:05:36.463Z',
 } as Profile;
