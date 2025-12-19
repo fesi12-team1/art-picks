@@ -8,7 +8,7 @@ import UserAvatar from '@/components/ui/UserAvatar';
 import { Review } from '@/types';
 
 interface ReviewCardProps {
-  data: Review;
+  data: Review & { sessionName: string };
 }
 
 export default function ReviewCard({ data: review }: ReviewCardProps) {
@@ -22,7 +22,7 @@ export default function ReviewCard({ data: review }: ReviewCardProps) {
       <Rating value={review.ranks} disabled onChange={() => {}} />
       <div className="text-body3-regular">{review.description}</div>
       <div className="*:text-caption-regular flex items-center gap-2 *:text-gray-300">
-        <UserAvatar src={review.userImage} alt={review.userName} />
+        <UserAvatar src={review.userImage} alt={review.userName} className='size-6' />
         <div>{review.userName}</div>
         <div>|</div>
         <div>{createdAtText}</div>

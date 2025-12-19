@@ -1,5 +1,3 @@
-import { useQuery } from '@tanstack/react-query';
-import { userQueries } from '@/api/queries/userQueries';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import UserAvatar from '@/components/ui/UserAvatar';
@@ -21,18 +19,9 @@ function StaffTag() {
 }
 
 function CrewMemberListItem({ member }: { member: CrewMember }) {
-  const { data: user } = useQuery(userQueries.profile(member.userId));
-  {
-    /*
-    TODO:
-    - CrewMember를 받을 때 introduction도 같이 받아야함
-    - 전체적인 DTO 정리 후 수정 요청 필요
-    */
-  }
-
   return (
     <div className="mb-3 flex gap-3">
-      <UserAvatar src={member.profileImage} />
+      <UserAvatar src={member.profileImage} className="size-10" />
       <div className="flex flex-col gap-1">
         <div className="flex items-start gap-1.5">
           <span className="text-body3-semibold">{member.name}</span>
@@ -40,7 +29,7 @@ function CrewMemberListItem({ member }: { member: CrewMember }) {
           {member.role === 'LEADER' && <LeaderTag />}
         </div>
         <span className="text-caption-regular">
-          {user?.introduction || '안녕하세요:) 잘 부탁드립니다!'}
+          {member.introduction || '안녕하세요:) 잘 부탁드립니다!'}
         </span>
       </div>
     </div>
@@ -58,6 +47,10 @@ export default function CrewMemberList({
     <div className="flex flex-col">
       {children}
       <div className="flex flex-col">
+        {/*
+          최대 3명까지 데이터를 받아오고 있어서
+          컴포넌트 내부에서 slice 하지 않아도 될 것 같습니다 :)
+        */}
         {members.slice(0, 4).map((member) => {
           return <CrewMemberListItem key={member.userId} member={member} />;
         })}
