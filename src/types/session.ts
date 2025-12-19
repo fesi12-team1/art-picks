@@ -1,11 +1,6 @@
-import { LEVEL_OPTIONS, SORT_OPTIONS } from '@/constants/session-filter';
 import { PaginationQueryParams } from './api';
 import { CrewMember } from './crew';
 import { Sido, Sigungu } from './region';
-
-export type LevelValue = (typeof LEVEL_OPTIONS)[number]['value'];
-export type SortValue = (typeof SORT_OPTIONS)[number]['value'];
-export type RegionValue = Record<string, string[]>;
 
 export interface Session<City extends Sido = Sido> {
   id: number;
@@ -23,7 +18,7 @@ export interface Session<City extends Sido = Sido> {
   };
   sessionAt: string;
   registerBy: string;
-  level: LevelValue
+  level: Level;
   status: SessionStatus;
   pace: number;
   maxParticipantCount: number;
@@ -37,13 +32,14 @@ export type SessionListFilters = PaginationQueryParams & {
   city?: string[];
   district?: string[];
   crewId?: number;
-  level?: LevelValue;
+  level?: Level;
   dateFrom?: string;
   dateTo?: string;
   timeFrom?: string;
   timeTo?: string;
-  sort: SortValue;
+  sort: SessionSort;
 };
 
 export type Level = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
 export type SessionStatus = 'OPEN' | 'CLOSED';
+export type SessionSort = 'createdAtDesc' | 'sessionAtAsc' | 'registerByAsc';

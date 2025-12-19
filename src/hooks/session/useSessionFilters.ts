@@ -1,24 +1,20 @@
 import { format } from 'date-fns';
 import { useMemo, useState } from 'react';
 import { DateRange } from 'react-day-picker';
+import type { RegionFilterValue } from '@/constants/session-filter';
 import { formatMinutesToHHmm } from '@/lib/time';
-import type {
-  LevelValue,
-  RegionValue,
-  SessionListFilters,
-  SortValue,
-} from '@/types';
+import type { Level, SessionListFilters, SessionSort } from '@/types';
 
 export function useSessionFilters() {
   // UI 상태 관리용 필터들
-  const [region, setRegion] = useState<RegionValue | undefined>();
+  const [region, setRegion] = useState<RegionFilterValue | undefined>();
   const [date, setDate] = useState<DateRange | undefined>();
   const [time, setTime] = useState<[number, number] | undefined>();
-  const [level, setLevel] = useState<LevelValue | undefined>();
-  const [sort, setSort] = useState<SortValue>();
+  const [level, setLevel] = useState<Level | undefined>();
+  const [sort, setSort] = useState<SessionSort>();
   const [page, setPage] = useState(0);
 
-  const changeRegion = (next?: RegionValue) => {
+  const changeRegion = (next?: RegionFilterValue) => {
     setRegion(next);
     setPage(0);
   };
@@ -33,12 +29,12 @@ export function useSessionFilters() {
     setPage(0);
   };
 
-  const changeLevel = (next?: LevelValue) => {
+  const changeLevel = (next?: Level) => {
     setLevel(next);
     setPage(0);
   };
 
-  const changeSort = (next: SortValue) => {
+  const changeSort = (next: SessionSort) => {
     setSort(next);
     setPage(0);
   };

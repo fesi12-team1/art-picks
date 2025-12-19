@@ -7,21 +7,25 @@ import Chip from '@/components/ui/Chip';
 import Modal from '@/components/ui/Modal';
 import Tabs from '@/components/ui/Tabs';
 import TimeSlider from '@/components/ui/TimeSlider';
-import { FILTER_TABS, LEVEL_OPTIONS } from '@/constants/session-filter';
-import type { LevelValue, RegionValue } from '@/types';
+import {
+  FILTER_TABS,
+  LEVEL_OPTIONS,
+  type RegionFilterValue,
+} from '@/constants/session-filter';
+import { Level } from '@/types';
 
 interface SessionFilterModalProps {
   children: React.ReactNode;
   uiFilters: {
-    region?: RegionValue;
+    region?: RegionFilterValue;
     date?: DateRange;
     time?: [number, number];
-    level?: LevelValue;
+    level?: Level;
   };
-  changeRegion: (v?: RegionValue) => void;
+  changeRegion: (v?: RegionFilterValue) => void;
   changeDate: (v?: DateRange) => void;
   changeTime: (v?: [number, number]) => void;
-  changeLevel: (v?: LevelValue) => void;
+  changeLevel: (v?: Level) => void;
   resetFilters: () => void;
 }
 

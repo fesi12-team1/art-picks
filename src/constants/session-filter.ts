@@ -1,19 +1,48 @@
+import type { Level, SessionSort } from '@/types';
+
+/* ----------------------------------------------
+ * 타입 정의
+ * ---------------------------------------------- */
+export type FilterTabKey = 'region' | 'date' | 'time' | 'level';
+
+export type LevelFilterValue = Level | undefined;
+
+export type RegionFilterValue = Record<string, string[]> | undefined;
+
+export type LevelOption = {
+  label: string;
+  value: LevelFilterValue;
+};
+
+export type SortOption = {
+  label: string;
+  value: SessionSort;
+};
+
+export type FilterTab = {
+  key: FilterTabKey;
+  label: string;
+};
+
+/* ----------------------------------------------
+ * 상수 정의
+ * ---------------------------------------------- */
 export const LEVEL_OPTIONS = [
   { label: '전체', value: undefined },
   { label: '초급', value: 'BEGINNER' },
   { label: '중급', value: 'INTERMEDIATE' },
   { label: '고급', value: 'ADVANCED' },
-] as const;
+] as const satisfies readonly LevelOption[];
 
 export const SORT_OPTIONS = [
   { label: '최신 생성순', value: 'createdAtDesc' },
   { label: '모임 시작일순', value: 'sessionAtAsc' },
   { label: '마감 임박순', value: 'registerByAsc' },
-] as const;
+] as const satisfies readonly SortOption[];
 
 export const FILTER_TABS = [
   { key: 'region', label: '지역' },
   { key: 'date', label: '날짜' },
   { key: 'time', label: '시간' },
   { key: 'level', label: '난이도' },
-] as const;
+] as const satisfies readonly FilterTab[];
