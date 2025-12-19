@@ -51,7 +51,7 @@ export default function Page() {
     enabled: !!crewId,
   });
 
-  const { ref } = useFixedBottomBar();
+  const { ref, height } = useFixedBottomBar();
 
   if (isLoading) return null;
   if (error) return null;
@@ -65,14 +65,27 @@ export default function Page() {
   const review = reviews?.content[0];
 
   return (
-    <main className="h-main relative">
+    <main
+      className="h-main laptop:bg-gray-900 relative bg-gray-800"
+      style={{ paddingBottom: `${height}px` }}
+    >
       <SessionDetailView
         session={session}
         crew={crew}
         review={review}
         participants={participants}
       />
-      {/* <FixedBottomBar ref={ref}>Fixed Bottom Bar</FixedBottomBar> */}
+      <FixedBottomBar ref={ref}>
+        <div className="flex items-center gap-7">
+          <div className="flex items-center gap-4">
+            <Camera className="block size-6 text-white" />
+            <Share className="block size-6 text-white" />
+          </div>
+          <Button variant="default" className="flex-1">
+            참여하기
+          </Button>
+        </div>
+      </FixedBottomBar>
     </main>
   );
 }
@@ -151,11 +164,9 @@ function SessionShortInfo({
     enabled: !!profileId,
   });
 
-  // const isManager =
-  //   memberRole?.role === 'LEADER' || memberRole?.role === 'STAFF';
-  const isManager = true;
+  const isManager =
+    memberRole?.role === 'LEADER' || memberRole?.role === 'STAFF';
 
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   return (
@@ -264,7 +275,6 @@ function SessionDetailInfo({
           일정
         </h2>
         <ul className="text-body3-regular tablet:text-body2-regular text-gray-200">
-          {sessionAt}
           <li>&nbsp;{`• 모임 일시: ${formatKoYYMDMeridiemTime(sessionAt)}`}</li>
           <li>
             &nbsp;
