@@ -26,6 +26,7 @@ import SafeImage from '@/components/ui/SafeImage';
 import UserAvatar from '@/components/ui/UserAvatar';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { formatDDay, formatKoYMD, formatKoYYMDMeridiemTime } from '@/lib/time';
+import { cn } from '@/lib/utils';
 import { Crew, Review } from '@/types';
 import { Session } from '@/types/session';
 
@@ -66,16 +67,18 @@ export default function Page() {
   const review = reviews?.content[0] || null;
 
   return (
-    <main
-      className="h-main laptop:bg-gray-900 relative bg-gray-800"
-      style={{ paddingBottom: `${height}px` }}
-    >
-      <SessionDetailView
-        session={session}
-        crew={crew}
-        review={review}
-        participants={participants}
-      />
+    <>
+      <main
+        className="h-main laptop:bg-gray-900 bg-gray-800"
+        style={{ paddingBottom: 96 }}
+      >
+        <SessionDetailView
+          session={session}
+          crew={crew}
+          review={review}
+          participants={participants}
+        />
+      </main>
       <FixedBottomBar ref={ref}>
         <div className="flex items-center gap-7">
           <div className="flex items-center gap-4">
@@ -87,7 +90,7 @@ export default function Page() {
           </Button>
         </div>
       </FixedBottomBar>
-    </main>
+    </>
   );
 }
 
@@ -104,9 +107,26 @@ function SessionDetailView({
 }) {
   const isLaptopUp = useMediaQuery({ min: 'laptop' });
 
-  if (isLaptopUp) {
-    return (
-      <div className="mx-auto flex max-w-[1120px] gap-10 bg-gray-900 py-10">
+  return (
+    <>
+      <div
+        className={cn(
+          'flex flex-col bg-gray-800 py-10',
+          isLaptopUp && 'hidden'
+        )}
+      >
+        <SessionImage image={session.image} name={session.name} />
+        <SessionShortInfo session={session} crewId={crew.id} />
+        <SessionDetailInfo session={session} participants={participants} />
+        <CrewShortInfo crew={crew} review={review} />
+      </div>
+
+      <div
+        className={cn(
+          'mx-auto flex max-w-[1120px] gap-10 bg-gray-900 py-10',
+          !isLaptopUp && 'hidden'
+        )}
+      >
         <div className="flex flex-1 flex-col gap-10 px-5">
           <SessionImage image={session.image} name={session.name} />
           <SessionDetailInfo session={session} participants={participants} />
@@ -116,16 +136,7 @@ function SessionDetailView({
           <CrewShortInfo crew={crew} review={review} />
         </div>
       </div>
-    );
-  }
-
-  return (
-    <div className="bg-gray-800 py-10">
-      <SessionImage image={session.image} name={session.name} />
-      <SessionShortInfo session={session} crewId={crew.id} />
-      <SessionDetailInfo session={session} participants={participants} />
-      <CrewShortInfo crew={crew} review={review} />
-    </div>
+    </>
   );
 }
 
