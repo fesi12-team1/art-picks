@@ -38,7 +38,7 @@ export default function Page() {
   return (
     <>
       <main
-        className="h-main laptop:bg-gray-900 relative bg-gray-800"
+        className="h-main laptop:bg-gray-900 bg-gray-800"
         style={{ paddingBottom: height }}
       >
         <SessionDetailView id={sessionId} />
@@ -94,7 +94,7 @@ function SessionDetailView({ id }: { id: number }) {
   const review = reviews?.content[0] || null;
 
   return (
-    <div>
+    <>
       <div
         className={cn(
           'flex flex-col bg-gray-800 py-10',
@@ -122,7 +122,7 @@ function SessionDetailView({ id }: { id: number }) {
           <CrewShortInfo crew={crew} review={review} />
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
