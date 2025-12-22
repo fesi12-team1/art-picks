@@ -27,7 +27,15 @@ export default function Tag({
     >
       {children}
       {selected && (
-        <button onClick={onClick} type="button" className="ml-1">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onClick?.();
+          }}
+          type="button"
+          className="ml-1"
+          aria-label="태그 제거"
+        >
           <XIcon
             className={cn(
               size === 'sm' ? 'size-3' : 'size-4',

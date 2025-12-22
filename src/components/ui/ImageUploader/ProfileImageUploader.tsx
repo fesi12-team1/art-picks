@@ -32,7 +32,10 @@ export default function ProfileImageUploader({
         }}
       />
 
-      <div className="relative size-20 overflow-hidden rounded-full border-[1.5px] border-gray-700">
+      <div
+        className="relative overflow-hidden rounded-full border-[1.5px] border-gray-700"
+        style={{ width: size, height: size }}
+      >
         <Image src={displaySrc} alt="profile" fill className="object-cover" />
       </div>
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Tag from '@/components/ui/Tag';
 import { cn } from '@/lib/utils';
 
@@ -22,6 +22,7 @@ export default function TagInput({
   isPc = false,
 }: TagInputProps) {
   const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const isMax = value.length >= max;
 
@@ -34,10 +35,39 @@ export default function TagInput({
     }
   };
 
+  useEffect(() => {
+    if (!open) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [open]);
+
   return (
-    <div className="relative">
+    <div className="relative" ref={containerRef}>
       <div
+        role="combobox"
+        aria-expanded={open}
+        aria-haspopup="listbox"
+        aria-controls="tag-listbox"
+        tabIndex={0}
         onClick={() => setOpen((prev) => !prev)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setOpen((prev) => !prev);
+          } else if (e.key === 'Escape') {
+            setOpen(false);
+          }
+        }}
         className={cn(
           'tablet:rounded-xl tablet:px-4 flex h-10 cursor-pointer flex-wrap items-center gap-2 rounded-lg px-3',
           open ? 'border-brand-400 border' : 'border-none',
@@ -66,6 +96,9 @@ export default function TagInput({
 
       {open && (
         <div
+          id="tag-listbox"
+          role="listbox"
+          aria-label="태그 옵션"
           className={cn(
             'tablet:rounded-[20px] border-gray-750 tablet:p-3 mt-2.5 flex flex-col gap-2 rounded-lg border p-2',
             isPc ? 'bg-gray-750' : 'bg-gray-800'
@@ -79,6 +112,9 @@ export default function TagInput({
 
               return (
                 <button
+                  role="option"
+                  aria-selected={selected}
+                  aria-label={`${tag} ${selected ? '선택됨' : '선택 안됨'}`}
                   key={tag}
                   onClick={() => toggleTag(tag)}
                   disabled={!selected && isMax}

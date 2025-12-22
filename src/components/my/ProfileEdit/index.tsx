@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import { useUploadImage } from '@/api/mutations/imageMutations';
 import { useUpdateMyProfile } from '@/api/mutations/userMutations';
 import ChevronLeft from '@/assets/icons/chevron-left.svg?react';
@@ -57,7 +58,7 @@ export default function ProfileEdit({ open, setOpen, user }: ProfileEditProps) {
     if (!open || !user) return;
 
     setName(user.name ?? '');
-    setIntroduction(user.introduction ?? '');
+    setIntroduction(user.introduction ?? null);
     setPace(user.pace ?? null);
     setCity(user.city ?? null);
     setStyles(user.styles ?? []);
@@ -110,7 +111,7 @@ export default function ProfileEdit({ open, setOpen, user }: ProfileEditProps) {
                 자기소개
               </label>
               <Textarea
-                value={introduction ?? ''}
+                value={introduction || ''}
                 onChange={(e) => setIntroduction(e.target.value)}
                 placeholder="러닝을 하게 된 이유나 평소 러닝에 대한 생각을 적어주세요"
                 className={isPc ? 'bg-gray-750' : 'bg-gray-800'}
@@ -136,7 +137,7 @@ export default function ProfileEdit({ open, setOpen, user }: ProfileEditProps) {
                   <button
                     key={sido}
                     onClick={() =>
-                      setCity((prev) => (prev === sido ? '' : sido))
+                      setCity((prev) => (prev === sido ? null : sido))
                     }
                   >
                     <Chip
@@ -175,8 +176,12 @@ export default function ProfileEdit({ open, setOpen, user }: ProfileEditProps) {
                 let imageUrl = user?.image ?? null;
 
                 if (image) {
-                  const { url } = await uploadImage({ file: image });
-                  imageUrl = url;
+                  try {
+                    const { url } = await uploadImage({ file: image });
+                    imageUrl = url;
+                  } catch {
+                    toast.error('이미지 업로드 실패!');
+                  }
                 }
 
                 await updateProfile({
@@ -189,6 +194,8 @@ export default function ProfileEdit({ open, setOpen, user }: ProfileEditProps) {
                 });
 
                 setOpen(false);
+              } catch {
+                toast.error('프로필 업데이트 실패!');
               } finally {
                 setIsSubmitting(false);
               }
