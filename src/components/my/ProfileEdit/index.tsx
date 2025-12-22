@@ -140,8 +140,8 @@ export default function ProfileEdit({ open, setOpen, user }: ProfileEditProps) {
                     }
                   >
                     <Chip
-                      value={isPc ? 'secondary' : 'primary'}
-                      active={city === sido}
+                      tone={isPc ? 'secondary' : 'primary'}
+                      state={city === sido ? 'active' : 'default'}
                     >
                       {sido}
                     </Chip>
