@@ -121,7 +121,7 @@ export function useSessionFilters() {
 
     if (date?.from) {
       params.set('dateFrom', format(date.from, 'yyyy-MM-dd'));
-      params.set('dateTo', format(date.to!, 'yyyy-MM-dd'));
+      params.set('dateTo', format(date.to ?? date.from, 'yyyy-MM-dd'));
     }
 
     if (time) {
