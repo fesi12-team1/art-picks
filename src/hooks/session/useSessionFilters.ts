@@ -59,7 +59,9 @@ export function useSessionFilters() {
       date: searchParams.get('dateFrom')
         ? {
             from: new Date(searchParams.get('dateFrom')!),
-            to: new Date(searchParams.get('dateTo')!),
+            to: searchParams.get('dateTo')
+              ? new Date(searchParams.get('dateTo')!)
+              : new Date(searchParams.get('dateFrom')!),
           }
         : DEFAULT_SESSION_FILTER.date,
       time:
