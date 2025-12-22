@@ -15,7 +15,7 @@ export default function Profile() {
     data?.introduction === null &&
     data?.pace === null &&
     data?.city === null &&
-    data.styles.length === 0;
+    data?.styles?.length === 0;
 
   return (
     <>
@@ -95,7 +95,7 @@ export default function Profile() {
         )}
       </div>
 
-      <ProfileEdit open={open} setOpen={setOpen} user={data} />
+      <ProfileEdit open={open} setOpen={setOpen} user={data ?? undefined} />
     </>
   );
 }
