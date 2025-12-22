@@ -44,6 +44,15 @@ export default function ProfileEdit({ open, setOpen, user }: ProfileEditProps) {
   const [image, setImage] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // 하나라도 입력해야 버튼활성화
+  const hasAtLeastOneValue =
+    Boolean(introduction) ||
+    Boolean(pace) ||
+    Boolean(city) ||
+    styles.length > 0;
+
+  const isDisabled = isSubmitting || name.trim() === '' || !hasAtLeastOneValue;
+
   useEffect(() => {
     if (!open || !user) return;
 
@@ -184,7 +193,7 @@ export default function ProfileEdit({ open, setOpen, user }: ProfileEditProps) {
                 setIsSubmitting(false);
               }
             }}
-            disabled={isSubmitting}
+            disabled={isDisabled}
           >
             {isSubmitting ? '저장하는 중..' : '완료'}
             {isSubmitting && <Spinner className="ml-3" />}
