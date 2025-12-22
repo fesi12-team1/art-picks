@@ -181,6 +181,7 @@ export default function ProfileEdit({ open, setOpen, user }: ProfileEditProps) {
                     imageUrl = url;
                   } catch {
                     toast.error('이미지 업로드 실패!');
+                    return;
                   }
                 }
 
