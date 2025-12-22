@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import Tag from '@/components/ui/Tag';
 import { cn } from '@/lib/utils';
-import Tag from '../Tag';
 
 type TagInputProps = {
   value: string[];
