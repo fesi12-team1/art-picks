@@ -116,6 +116,7 @@ function ScrollFilterBar({
     >
       <div className="relative flex flex-1 items-center justify-between gap-2 overflow-hidden">
         <div className="relative flex items-center">
+          {/* <div className="scrollbar-hidden border-error-100 relative flex-1 overflow-x-auto border pr-6"> */}
           <div
             id="scrollable-filter-list"
             className="border-error-100 flex items-center gap-2 border"
@@ -136,14 +137,43 @@ function ScrollFilterBar({
               value={filters.level}
               onChange={(level) => applyFilters({ ...filters, level })}
             />
+
             {isDesktop && (
               <FilterModal>
                 <FilterButton count={activeFilterCount} />
               </FilterModal>
             )}
           </div>
+          {isMobile && (
+            <div className="ml-auto flex items-center">
+              <FilterModal>
+                <FilterButton count={activeFilterCount} />
+              </FilterModal>
+            </div>
+          )}
         </div>
+        {isTablet && (
+          <div
+            className={cn(
+              'pointer-events-none absolute top-0 right-0 h-full w-[54px] bg-gradient-to-l from-gray-900 to-transparent backdrop-blur-[0.5px]',
+              isMobile && 'right-[38px]'
+            )}
+          />
+        )}
       </div>
+      {isMobile && (
+        <div className="mt-2 flex w-full shrink-0 justify-end">
+          <SortOptions
+            value={filters.sort}
+            onChange={(sort) => applyFilters({ ...filters, sort })}
+          />
+        </div>
+      )}
+      {isTablet && (
+        <FilterModal>
+          <FilterButton count={activeFilterCount} />
+        </FilterModal>
+      )}
       <SortOptions
         value={filters.sort}
         onChange={(sort) => applyFilters({ ...filters, sort })}
