@@ -89,6 +89,51 @@ export default function Page() {
   const totalElements = currentPageData?.totalElements ?? 0;
   const totalPages = currentPageData?.totalPages ?? 0;
 
+  // Calculate actual navigation availability based on current page
+  const canGoPrevious = currentPage > 0;
+  const canGoNext = currentPage < totalPages - 1;
+
+  // Helper function to calculate which page numbers to display
+  const getDisplayedPages = (
+    current: number,
+    total: number,
+    maxDisplay: number = 5
+  ): number[] => {
+    if (total <= maxDisplay) {
+      return Array.from({ length: total }, (_, i) => i);
+    }
+
+    const pages: number[] = [];
+    const lastPage = total - 1;
+
+    // Always include first page
+    pages.push(0);
+
+    if (current <= 2) {
+      // Near the start: show 0, 1, 2, 3, lastPage
+      for (let i = 1; i < maxDisplay - 1; i++) {
+        pages.push(i);
+      }
+    } else if (current >= lastPage - 2) {
+      // Near the end: show 0, lastPage-3, lastPage-2, lastPage-1, lastPage
+      for (let i = lastPage - (maxDisplay - 2); i < lastPage; i++) {
+        if (i > 0) pages.push(i);
+      }
+    } else {
+      // In the middle: show 0, current-1, current, current+1, lastPage
+      pages.push(current - 1);
+      pages.push(current);
+      pages.push(current + 1);
+    }
+
+    // Always include last page (if not already included)
+    if (!pages.includes(lastPage)) {
+      pages.push(lastPage);
+    }
+
+    return [...new Set(pages)].sort((a, b) => a - b);
+  };
+
   // Helper function to navigate to a specific page
   const goToPage = async (targetPageIndex: number) => {
     // Check if the target page is already in pageParams
@@ -210,57 +255,81 @@ export default function Page() {
                           href="#"
                           onClick={(e) => {
                             e.preventDefault();
-                            if (currentPage > 0 && !isFetchingNextPage) {
+                            if (canGoPrevious && !isFetchingNextPage) {
                               goToPage(currentPage - 1);
                             }
                           }}
                           className={cn(
-                            currentPage === 0 || isFetchingNextPage
+                            !canGoPrevious || isFetchingNextPage
                               ? 'pointer-events-none opacity-50'
                               : ''
                           )}
+                          isActive={canGoPrevious}
                         />
                       </Pagination.Item>
-                      {/* Page Numbers */}
-                      {Array.from({ length: totalPages }).map((_, pageNum) => (
-                        <Pagination.Item key={pageNum}>
-                          <Pagination.Link
-                            href="#"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              if (!isFetchingNextPage) {
-                                goToPage(pageNum);
-                              }
-                            }}
-                            isActive={pageNum === currentPage}
-                            className={cn(
-                              isFetchingNextPage
-                                ? 'pointer-events-none opacity-50'
-                                : ''
-                            )}
-                          >
-                            {pageNum + 1}
-                          </Pagination.Link>
-                        </Pagination.Item>
-                      ))}
+                      {/* Page Numbers with Ellipsis */}
+                      {(() => {
+                        const displayedPages = getDisplayedPages(
+                          currentPage,
+                          totalPages
+                        );
+                        const items: React.ReactNode[] = [];
+
+                        displayedPages.forEach((pageNum, index) => {
+                          // Add ellipsis if there's a gap
+                          if (
+                            index > 0 &&
+                            pageNum - displayedPages[index - 1] > 1
+                          ) {
+                            items.push(
+                              <Pagination.Item key={`ellipsis-${pageNum}`}>
+                                <Pagination.Ellipsis />
+                              </Pagination.Item>
+                            );
+                          }
+
+                          // Add page number
+                          items.push(
+                            <Pagination.Item key={pageNum}>
+                              <Pagination.Link
+                                href="#"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  if (!isFetchingNextPage) {
+                                    goToPage(pageNum);
+                                  }
+                                }}
+                                isActive={pageNum === currentPage}
+                                className={cn(
+                                  isFetchingNextPage
+                                    ? 'pointer-events-none opacity-50'
+                                    : ''
+                                )}
+                              >
+                                {pageNum + 1}
+                              </Pagination.Link>
+                            </Pagination.Item>
+                          );
+                        });
+
+                        return items;
+                      })()}
                       {/* Next */}
                       <Pagination.Item>
                         <Pagination.Next
                           href="#"
                           onClick={(e) => {
                             e.preventDefault();
-                            if (
-                              currentPage < totalPages - 1 &&
-                              !isFetchingNextPage
-                            ) {
+                            if (canGoNext && !isFetchingNextPage) {
                               goToPage(currentPage + 1);
                             }
                           }}
                           className={cn(
-                            currentPage >= totalPages - 1 || isFetchingNextPage
+                            !canGoNext || isFetchingNextPage
                               ? 'pointer-events-none opacity-50'
                               : ''
                           )}
+                          isActive={canGoNext}
                         />
                       </Pagination.Item>
                     </Pagination.Content>
