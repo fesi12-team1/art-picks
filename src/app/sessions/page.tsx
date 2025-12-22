@@ -11,6 +11,7 @@ import SessionCard from '@/components/session/SessionCard';
 import SortOptions from '@/components/session/SortOptions';
 import TimeFilter from '@/components/session/TimeFilter';
 import FilterButton from '@/components/ui/FilterButton';
+import { SessionFilterState } from '@/constants/session-filter';
 import { useSessionFilters } from '@/hooks/session/useSessionFilters';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { cn } from '@/lib/utils';
@@ -51,9 +52,12 @@ export default function SessionPage() {
         >
           <div>
             <h2 className="text-title1-bold mb-4 italic">
-              나와 FIT한
-              <br />
-              러닝 메이트를 찾다
+              <Image
+                src="/assets/session-list-title.png"
+                alt="Sessions"
+                width={245.18}
+                height={70}
+              />
             </h2>
             <span className="text-body3-regular text-gray-200">
               러닝 페이스와 선호하는 스타일에 딱 맞는 세션을 찾아보세요!
@@ -63,82 +67,18 @@ export default function SessionPage() {
             <Image
               src="/assets/session-list.png"
               alt="Session List"
-              width={417}
-              height={235}
+              width={isDesktop ? 417 : 302}
+              height={isDesktop ? 235 : 170}
             />
           </div>
         </div>
-        <div className="mb-6 w-full">
-          <div className="flex w-full items-center justify-between gap-2">
-            <div
-              className={cn(
-                'flex items-center gap-2',
-                (isMobile || isTablet) &&
-                  'scrollbar-hidden w-full overflow-scroll'
-              )}
-            >
-              <div className="shrink-0">
-                <RegionFilter
-                  value={filters.region}
-                  onChange={(region) => applyFilters({ ...filters, region })}
-                />
-              </div>
-              <div className="shrink-0">
-                <DateFilter
-                  value={filters.date}
-                  onChange={(date) => applyFilters({ ...filters, date })}
-                />
-              </div>
-              <div className="shrink-0">
-                <TimeFilter
-                  value={filters.time}
-                  onChange={(time) => applyFilters({ ...filters, time })}
-                />
-              </div>
-              <div className="shrink-0">
-                <LevelFilter
-                  value={filters.level}
-                  onChange={(level) => applyFilters({ ...filters, level })}
-                />
-              </div>
-              {isDesktop && (
-                <FilterModal>
-                  <FilterButton count={activeFilterCount} />
-                </FilterModal>
-              )}
-            </div>
-            {(isTablet || isDesktop) && (
-              <div className="flex items-center gap-2">
-                {isTablet && (
-                  <FilterModal>
-                    <FilterButton count={activeFilterCount} />
-                  </FilterModal>
-                )}
-                <div className="shrink-0">
-                  <SortOptions
-                    value={filters.sort}
-                    onChange={(sort) => applyFilters({ ...filters, sort })}
-                  />
-                </div>
-              </div>
-            )}
-            {isMobile && (
-              <div className="ml-auto flex items-center">
-                <FilterModal>
-                  <FilterButton count={activeFilterCount} />
-                </FilterModal>
-              </div>
-            )}
-          </div>
-          {isMobile && (
-            <div className="mt-2 flex w-full shrink-0 justify-end">
-              <SortOptions
-                value={filters.sort}
-                onChange={(sort) => applyFilters({ ...filters, sort })}
-              />
-            </div>
-          )}
-        </div>
+
+        <ScrollFilterBar
+          filters={filters}
+          applyFilters={applyFilters}
+          activeFilterCount={activeFilterCount}
+        />
+
         <div
           className={cn(
             'grid w-full grid-cols-2 gap-6',
@@ -151,5 +91,63 @@ export default function SessionPage() {
         </div>
       </main>
     </SessionFilterProvider>
+  );
+}
+
+interface ScrollFilterBarProps {
+  filters: SessionFilterState;
+  applyFilters: (filters: SessionFilterState) => void;
+  activeFilterCount: number;
+}
+
+function ScrollFilterBar({
+  filters,
+  applyFilters,
+  activeFilterCount,
+}: ScrollFilterBarProps) {
+  const isDesktop = useMediaQuery({ min: 'laptop' });
+  const isTablet = useMediaQuery({ min: 'tablet', max: 'laptop' });
+  const isMobile = useMediaQuery({ max: 'tablet' });
+
+  return (
+    <div
+      id="scrollable-filter-list"
+      className="mb-6 flex w-full items-center justify-between border border-yellow-400"
+    >
+      <div className="relative flex flex-1 items-center justify-between gap-2 overflow-hidden">
+        <div className="relative flex items-center">
+          <div
+            id="scrollable-filter-list"
+            className="border-error-100 flex items-center gap-2 border"
+          >
+            <RegionFilter
+              value={filters.region}
+              onChange={(region) => applyFilters({ ...filters, region })}
+            />
+            <DateFilter
+              value={filters.date}
+              onChange={(date) => applyFilters({ ...filters, date })}
+            />
+            <TimeFilter
+              value={filters.time}
+              onChange={(time) => applyFilters({ ...filters, time })}
+            />
+            <LevelFilter
+              value={filters.level}
+              onChange={(level) => applyFilters({ ...filters, level })}
+            />
+            {isDesktop && (
+              <FilterModal>
+                <FilterButton count={activeFilterCount} />
+              </FilterModal>
+            )}
+          </div>
+        </div>
+      </div>
+      <SortOptions
+        value={filters.sort}
+        onChange={(sort) => applyFilters({ ...filters, sort })}
+      />
+    </div>
   );
 }
