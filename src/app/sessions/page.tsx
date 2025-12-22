@@ -106,78 +106,70 @@ function ScrollFilterBar({
   activeFilterCount,
 }: ScrollFilterBarProps) {
   const isDesktop = useMediaQuery({ min: 'laptop' });
-  const isTablet = useMediaQuery({ min: 'tablet', max: 'laptop' });
   const isMobile = useMediaQuery({ max: 'tablet' });
 
   return (
-    <div
-      id="scrollable-filter-list"
-      className="mb-6 flex w-full items-center justify-between border border-yellow-400"
-    >
-      <div className="relative flex flex-1 items-center justify-between gap-2 overflow-hidden">
-        <div className="relative flex items-center">
-          {/* <div className="scrollbar-hidden border-error-100 relative flex-1 overflow-x-auto border pr-6"> */}
-          <div
-            id="scrollable-filter-list"
-            className="border-error-100 flex items-center gap-2 border"
-          >
-            <RegionFilter
-              value={filters.region}
-              onChange={(region) => applyFilters({ ...filters, region })}
-            />
-            <DateFilter
-              value={filters.date}
-              onChange={(date) => applyFilters({ ...filters, date })}
-            />
-            <TimeFilter
-              value={filters.time}
-              onChange={(time) => applyFilters({ ...filters, time })}
-            />
-            <LevelFilter
-              value={filters.level}
-              onChange={(level) => applyFilters({ ...filters, level })}
-            />
-
-            {isDesktop && (
-              <FilterModal>
-                <FilterButton count={activeFilterCount} />
-              </FilterModal>
-            )}
+    <>
+      <div id="scrollable-filter-list" className="flex w-full items-center">
+        <div className="scrollbar-hide tablet:pt-5 relative flex flex-1 items-center gap-2 overflow-x-auto">
+          <div className="scrollbar-hide relative flex items-center overflow-x-auto">
+            <div
+              id="scrollable-filter-list"
+              className="flex w-max items-center gap-2"
+            >
+              <RegionFilter
+                value={filters.region}
+                onChange={(region) => applyFilters({ ...filters, region })}
+              />
+              <DateFilter
+                value={filters.date}
+                onChange={(date) => applyFilters({ ...filters, date })}
+              />
+              <TimeFilter
+                value={filters.time}
+                onChange={(time) => applyFilters({ ...filters, time })}
+              />
+              <LevelFilter
+                value={filters.level}
+                onChange={(level) => applyFilters({ ...filters, level })}
+              />
+            </div>
           </div>
-          {isMobile && (
-            <div className="ml-auto flex items-center">
+          {isDesktop && (
+            <div className="relative overflow-visible">
               <FilterModal>
                 <FilterButton count={activeFilterCount} />
               </FilterModal>
             </div>
           )}
-        </div>
-        {isTablet && (
           <div
-            className={cn(
-              'pointer-events-none absolute top-0 right-0 h-full w-[54px] bg-gradient-to-l from-gray-900 to-transparent backdrop-blur-[0.5px]',
-              isMobile && 'right-[38px]'
-            )}
+            className={
+              'pointer-events-none absolute top-0 right-0 h-full w-[54px] bg-gradient-to-l from-gray-900 to-transparent backdrop-blur-[0.5px]'
+            }
           />
-        )}
+        </div>
+        <div className="tablet:pt-5 flex items-center">
+          {!isDesktop && (
+            <FilterModal>
+              <FilterButton count={activeFilterCount} />
+            </FilterModal>
+          )}
+          {!isMobile && (
+            <SortOptions
+              value={filters.sort}
+              onChange={(sort) => applyFilters({ ...filters, sort })}
+            />
+          )}
+        </div>
       </div>
       {isMobile && (
-        <div className="mt-2 flex w-full shrink-0 justify-end">
+        <div className="mt-4 mb-2 flex w-full shrink-0 justify-end">
           <SortOptions
             value={filters.sort}
             onChange={(sort) => applyFilters({ ...filters, sort })}
           />
         </div>
       )}
-      {isTablet && (
-        <FilterModal>
-          <FilterButton count={activeFilterCount} />
-        </FilterModal>
-      )}
-      <SortOptions
-        value={filters.sort}
-        onChange={(sort) => applyFilters({ ...filters, sort })}
-      />
-    </div>
+    </>
   );
 }
