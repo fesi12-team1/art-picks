@@ -9,6 +9,7 @@ import Modal from '@/components/ui/Modal';
 import Tabs from '@/components/ui/Tabs';
 import TimeSlider from '@/components/ui/TimeSlider';
 import {
+  DEFAULT_SESSION_FILTER,
   FILTER_TABS,
   LEVEL_OPTIONS,
   SessionFilterState,
@@ -16,11 +17,11 @@ import {
 import { useSessionFilterContext } from '@/provider/SessionFilterProvider';
 import { Sido, SIDO_LIST, SIGUNGU_MAP } from '@/types/region';
 
-export default function FilterModal({
-  children,
-}: {
+interface FilterModalProps {
   children: React.ReactNode;
-}) {
+}
+
+export default function FilterModal({ children }: FilterModalProps) {
   const { draft, reset, apply } = useSessionFilterContext();
 
   // 모든 필터를 내부 임시 상태로 관리
@@ -57,18 +58,6 @@ export default function FilterModal({
     });
   };
 
-  // 모달 닫을 때 temp를 draft 값으로 복원
-  const initTempFromDraft = () => {
-    setTempRegion(draft.region);
-    setTempDate(draft.date);
-    setTempTime(draft.time);
-    setTempLevel(draft.level);
-
-    // 현재 active sido도 초기화
-    const initialSido = Object.keys(draft.region ?? {})[0] || '서울';
-    setActiveSido(initialSido as Sido);
-  };
-
   // 전체 draft 적용
   const applyAll = () => {
     apply({
@@ -82,13 +71,17 @@ export default function FilterModal({
 
   const resetAll = () => {
     reset();
-    initTempFromDraft();
+    setTempRegion(DEFAULT_SESSION_FILTER.region);
+    setTempDate(DEFAULT_SESSION_FILTER.date);
+    setTempTime(DEFAULT_SESSION_FILTER.time);
+    setTempLevel(DEFAULT_SESSION_FILTER.level);
+    setActiveSido('서울');
   };
 
   return (
     <Modal
       onOpenChange={(open) => {
-        if (open) initTempFromDraft();
+        if (open) resetAll();
       }}
     >
       <Modal.Trigger asChild>{children}</Modal.Trigger>
