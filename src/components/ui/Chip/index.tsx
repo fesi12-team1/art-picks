@@ -20,13 +20,10 @@ export const chipVariants = cva(
       {
         tone: 'primary',
         state: 'default',
-        className: 'border border-gray-700 bg-gray-800',
+        className:
+          'border border-gray-700 bg-gray-800 hover:border-2 hover:border-brand-800 hover:bg-gray-800',
       },
-      {
-        tone: 'primary',
-        state: 'hover',
-        className: 'border-2 border-brand-800 bg-gray-800',
-      },
+
       {
         tone: 'primary',
         state: 'active',
@@ -37,13 +34,10 @@ export const chipVariants = cva(
       {
         tone: 'secondary',
         state: 'default',
-        className: 'bg-gray-600 border-gray-500',
+        className:
+          'bg-gray-600 border-gray-500 hover:border-brand-800 hover:border-2 hover:bg-gray-600',
       },
-      {
-        tone: 'secondary',
-        state: 'hover',
-        className: 'border-brand-800 border-2 bg-gray-600',
-      },
+
       {
         tone: 'secondary',
         state: 'active',
@@ -60,7 +54,7 @@ export const chipVariants = cva(
 type BadgeProps = React.ComponentProps<'div'> & {
   children?: React.ReactNode;
   tone?: 'primary' | 'secondary';
-  state?: 'default' | 'hover' | 'active';
+  state?: 'default' | 'active';
 };
 
 export default function Chip({
