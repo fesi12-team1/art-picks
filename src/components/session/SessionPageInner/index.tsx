@@ -1,7 +1,8 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import Image from 'next/image';
+import { useEffect, useRef } from 'react';
 import { sessionQueries } from '@/api/queries/sessionQueries';
 import { useSessionFilters } from '@/hooks/session/useSessionFilters';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
@@ -11,6 +12,7 @@ import FilterBar from '../FilterBar';
 import SessionList from '../SessionList';
 
 export default function SessionPageInner() {
+  const bottomRef = useRef<HTMLDivElement>(null);
   const { filters, queryFilters, applyFilters, activeFilterCount } =
     useSessionFilters();
 
@@ -18,12 +20,28 @@ export default function SessionPageInner() {
     data: sessions,
     isLoading,
     isError,
-  } = useQuery(
-    sessionQueries.list({
-      size: 10,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery(
+    sessionQueries.listInfinite({
+      size: 20,
       ...queryFilters,
     })
   );
+
+  useEffect(() => {
+    if (!bottomRef.current) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && hasNextPage) {
+        fetchNextPage();
+      }
+    });
+
+    observer.observe(bottomRef.current);
+
+    return () => observer.disconnect();
+  }, [hasNextPage, fetchNextPage]);
 
   if (isLoading) {
     return (
@@ -49,7 +67,8 @@ export default function SessionPageInner() {
           applyFilters={applyFilters}
           activeFilterCount={activeFilterCount}
         />
-        <SessionList data={sessions?.content} />
+        <SessionList data={sessions?.pages.flatMap((page) => page.content)} />
+        <div ref={bottomRef} />
       </PageLayout>
     </SessionFilterProvider>
   );
