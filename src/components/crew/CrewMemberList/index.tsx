@@ -4,6 +4,7 @@ import {
   useUpdateMemberRole,
 } from '@/api/mutations/crewMutations';
 import Settings from '@/assets/icons/settings.svg?react';
+import VerticalEllipsis from '@/assets/icons/vertical-ellipsis.svg?react';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import Dropdown from '@/components/ui/Dropdown';
@@ -11,6 +12,118 @@ import Modal from '@/components/ui/Modal';
 import UserAvatar from '@/components/ui/UserAvatar';
 import { CrewDetailContext } from '@/context/CrewDetailContext';
 import { Crew, CrewMember } from '@/types';
+
+interface CrewMemberListProps {
+  crew: Crew;
+  members: CrewMember[];
+  children?: React.ReactNode;
+}
+export default function CrewMemberList({
+  crew,
+  members,
+  children,
+}: CrewMemberListProps) {
+  const { myRole } = useContext(CrewDetailContext);
+  const [editMode, setEditMode] = useState<'view' | 'edit'>('view');
+  return (
+    <div className="flex flex-col">
+      <div className="flex flex-col">
+        <div className="flex items-center justify-between">
+          <span className="text-title3-semibold line-clamp-1 text-gray-50">
+            {crew.name}
+          </span>
+          <CrewMenuActions />
+        </div>
+        <span className="text-body3-regular laptop:pb-0 pb-4 text-gray-200">
+          {crew.city} • 멤버 {members.length}명
+        </span>
+      </div>
+      {children}
+      <div className="flex flex-col">
+        {members.slice(0, 4).map((member) => {
+          return (
+            <CrewMemberListItem
+              key={member.userId}
+              member={member}
+              editMode="view"
+            />
+          );
+        })}
+      </div>
+      <Modal>
+        <Modal.Trigger aria-label="멤버 전체보기" asChild>
+          <Button variant="neutral" className="mt-8 w-full">
+            멤버 전체보기
+          </Button>
+        </Modal.Trigger>
+        <Modal.Content
+          className="tablet:h-[620px] flex h-full w-[400px] flex-col bg-gray-800"
+          onCloseAutoFocus={() => setEditMode('view')}
+        >
+          <Modal.Title className="self-start">
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2">
+                <span className="text-title3-semibold line-clamp-1 text-gray-50">
+                  {crew.name}
+                </span>
+                {myRole === 'LEADER' && (
+                  <Settings
+                    className="size-5 fill-gray-300"
+                    onClick={() => setEditMode('edit')}
+                  />
+                )}
+              </div>
+              <span className="text-body3-regular laptop:pb-0 pb-4 text-gray-200">
+                {crew.city} • 멤버 {members.length}명
+              </span>
+            </div>
+          </Modal.Title>
+          <Modal.CloseButton onClick={() => setEditMode('view')} />
+          <div className="h-0 self-stretch outline-1 outline-offset-[-0.50px] outline-gray-700" />
+          <Modal.Description className="flex w-full flex-col overflow-y-scroll [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-800">
+            {members.map((member) => (
+              <CrewMemberListItem
+                key={member.userId}
+                member={member}
+                editMode={editMode}
+              />
+            ))}
+          </Modal.Description>
+          {editMode === 'edit' && (
+            <Modal.Footer className="w-full">
+              <Button className="w-full" onClick={() => setEditMode('view')}>
+                완료
+              </Button>
+            </Modal.Footer>
+          )}
+        </Modal.Content>
+      </Modal>
+    </div>
+  );
+}
+
+function CrewMenuActions() {
+  const { myRole } = useContext(CrewDetailContext);
+
+  if (!myRole) return null;
+
+  return (
+    <Dropdown size="lg">
+      <Dropdown.TriggerNoArrow>
+        <VerticalEllipsis className="size-6" />
+      </Dropdown.TriggerNoArrow>
+      <Dropdown.Content className="z-60 *:w-[120px]">
+        {myRole !== 'LEADER' && <Dropdown.Item>크루 나가기</Dropdown.Item>}
+        {myRole === 'LEADER' && (
+          <>
+            <Dropdown.Item>수정하기</Dropdown.Item>
+            <Dropdown.Item className="text-error-100">삭제하기</Dropdown.Item>
+          </>
+        )}
+      </Dropdown.Content>
+    </Dropdown>
+  );
+}
 
 function LeaderTag() {
   return (
@@ -21,6 +134,7 @@ function LeaderTag() {
     </Badge>
   );
 }
+
 function StaffTag() {
   return (
     <Badge variant="none" size="md" className="bg-gray-700">
@@ -122,92 +236,6 @@ function CrewMemberListItem({
           </Modal>
         </div>
       )}
-    </div>
-  );
-}
-
-interface CrewMemberListProps {
-  crew: Crew;
-  members: CrewMember[];
-  children?: React.ReactNode;
-}
-export default function CrewMemberList({
-  crew,
-  members,
-  children,
-}: CrewMemberListProps) {
-  const { myRole } = useContext(CrewDetailContext);
-  const [editMode, setEditMode] = useState<'view' | 'edit'>('view');
-  return (
-    <div className="flex flex-col">
-      <div className="flex flex-col">
-        <span className="text-title3-semibold line-clamp-1 text-gray-50">
-          {crew.name}
-        </span>
-        <span className="text-body3-regular laptop:pb-0 pb-4 text-gray-200">
-          {crew.city} • 멤버 {members.length}명
-        </span>
-      </div>
-      {children}
-      <div className="flex flex-col">
-        {members.slice(0, 4).map((member) => {
-          return (
-            <CrewMemberListItem
-              key={member.userId}
-              member={member}
-              editMode="view"
-            />
-          );
-        })}
-      </div>
-      <Modal>
-        <Modal.Trigger aria-label="멤버 전체보기" asChild>
-          <Button variant="neutral" className="mt-8 w-full">
-            멤버 전체보기
-          </Button>
-        </Modal.Trigger>
-        <Modal.Content
-          className="tablet:h-[620px] flex h-full w-[400px] flex-col bg-gray-800"
-          onCloseAutoFocus={() => setEditMode('view')}
-        >
-          <Modal.Title className="self-start">
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2">
-                <span className="text-title3-semibold line-clamp-1 text-gray-50">
-                  {crew.name}
-                </span>
-                {myRole === 'LEADER' && (
-                  <Settings
-                    className="size-5 fill-gray-300"
-                    onClick={() => setEditMode('edit')}
-                  />
-                )}
-              </div>
-              <span className="text-body3-regular laptop:pb-0 pb-4 text-gray-200">
-                {crew.city} • 멤버 {members.length}명
-              </span>
-            </div>
-          </Modal.Title>
-          <Modal.CloseButton onClick={() => setEditMode('view')} />
-          <div className="h-0 self-stretch outline-1 outline-offset-[-0.50px] outline-gray-700" />
-          <Modal.Description className="flex w-full flex-col overflow-y-scroll [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-800">
-            {members.map((member) => (
-              <CrewMemberListItem
-                key={member.userId}
-                member={member}
-                editMode={editMode}
-              />
-            ))}
-          </Modal.Description>
-          {editMode === 'edit' && (
-            <Modal.Footer className="w-full">
-              <Button className="w-full" onClick={() => setEditMode('view')}>
-                완료
-              </Button>
-            </Modal.Footer>
-          )}
-        </Modal.Content>
-      </Modal>
     </div>
   );
 }
