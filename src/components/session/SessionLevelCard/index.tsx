@@ -2,6 +2,7 @@
 
 import { Label } from '@radix-ui/react-label';
 import { cva, type VariantProps } from 'class-variance-authority';
+import LevelIcon from '@/assets/icons/level.svg?react';
 import Checkbox from '@/components/ui/Checkbox';
 import { cn } from '@/lib/utils';
 import { Level } from '@/types';
@@ -22,10 +23,6 @@ const sessionLevelCardVariants = cva(
   ].join(' '),
   {
     variants: {
-      size: {
-        md: 'min-h-[74px] pt-5 pb-4 px-3',
-        sm: 'min-h-[64px] py-3 px-3',
-      },
       checked: {
         true: 'outline-brand-400 outline-2',
         false: 'outline-gray-750 hover:outline-brand-900',
@@ -36,7 +33,6 @@ const sessionLevelCardVariants = cva(
       },
     },
     defaultVariants: {
-      size: 'md',
       checked: false,
       disabled: false,
     },
@@ -45,7 +41,6 @@ const sessionLevelCardVariants = cva(
 
 export default function SessionLevelCard({
   level,
-  size = 'md',
   checked,
   disabled = false,
   onClick,
@@ -65,23 +60,25 @@ export default function SessionLevelCard({
       aria-disabled={disabled}
       tabIndex={disabled ? -1 : 0}
       onClick={handleClick}
-      className={cn(sessionLevelCardVariants({ size, checked, disabled }))}
+      className={cn(sessionLevelCardVariants({ checked, disabled }))}
       {...rest}
     >
       <Label className="flex w-full items-start justify-between gap-2">
         <div className="flex flex-1 flex-col gap-1.5">
           <p
             className={cn(
-              size === 'md' ? 'text-body2-semibold' : 'text-body3-semibold',
-              'text-white'
+              'flex items-center gap-0.5',
+              'text-body3-semibold px-3 py-3',
+              'tablet:pt-5 tabel:pb-4 tablet:px-3 tablet:text-body2-semibold'
             )}
           >
+            <LevelIcon className="tablet:size-5 size-4" />
             {LEVEL_COPY[level].label}
           </p>
           <p
             className={cn(
-              size === 'md' ? 'text-body3-medium' : 'text-caption-medium',
-              'text-gray-300'
+              'tablet:text-body3-medium',
+              'text-caption-medium text-gray-300'
             )}
           >
             {LEVEL_COPY[level].description}

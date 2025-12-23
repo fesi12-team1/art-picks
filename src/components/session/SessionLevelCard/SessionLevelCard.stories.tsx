@@ -13,12 +13,10 @@ const meta: Meta<typeof SessionLevelCard> = {
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
   argTypes: {
-    size: { control: 'inline-radio', options: ['sm', 'md'] },
     checked: { control: 'boolean' },
     disabled: { control: 'boolean' },
   },
   args: {
-    size: 'md',
     level: 'BEGINNER',
     checked: false,
     disabled: false,
@@ -67,34 +65,6 @@ export const Checked: Story = {
 export const Disabled: Story = {
   args: { disabled: true },
   render: (args) => <SessionLevelCard {...args} />,
-};
-
-/**
- * 사이즈 비교
- */
-export const Sizes: Story = {
-  render: (args) => {
-    const [selected, setSelected] = useState<string | null>(null);
-
-    return (
-      <div className="flex flex-col gap-4">
-        <SessionLevelCard
-          {...args}
-          size="sm"
-          checked={selected === 'sm'}
-          onClick={() => setSelected(selected === 'sm' ? null : 'sm')}
-          level="BEGINNER"
-        />
-        <SessionLevelCard
-          {...args}
-          size="md"
-          checked={selected === 'md'}
-          onClick={() => setSelected(selected === 'md' ? null : 'md')}
-          level="INTERMEDIATE"
-        />
-      </div>
-    );
-  },
 };
 
 /**
