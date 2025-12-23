@@ -23,6 +23,17 @@ export function formatTimeToKorean(hour: number, minute: number): string {
 }
 
 /**
+ * 분 단위를 "HH:mm" 형식의 문자열로 변환합니다.
+ * 서버 API와의 통신에 사용됩니다.
+ * @param minutes
+ * @returns {string} "HH:mm" 형식의 시간 문자열
+ */
+export function formatMinutesToHHmm(minutes: number) {
+  const date = new Date(0, 0, 0, 0, minutes);
+  return format(date, 'HH:mm');
+}
+
+/**
  * target: 목표 일시(ISO string 또는 Date)
  * base: 기준 일시(기본값: 현재)
  *
