@@ -18,29 +18,30 @@ import { SessionListFilters, SessionSort } from '@/types';
  * - filters: UI에서 사용하는 필터 상태
  * - queryFilters: API 쿼리에 사용할 필터 객체
  * - applyFilters: 필터 상태를 받아 URL 쿼리로 적용하는 함수
- * - resetFilters: 필터를 기본값으로 리셋하는 함수
+ * - activeFilterCount: 활성화된 필터 개수
  */
 export function useSessionFilters() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  /* --------------------------
-   * 1) URL 쿼리 -> UI 필터 변환
-   * -------------------------- */
   const filters: SessionFilterState = useMemo(() => {
-    // 다중 지역 가져오기
     const cityList = searchParams.getAll('city');
     const districtList = searchParams.getAll('district');
 
-    // region 객체 재구성
     let region: Record<string, string[]> | undefined = undefined;
 
-    if (cityList.length > 0 && districtList.length > 0) {
+    const isValidRegion =
+      cityList.length > 0 &&
+      districtList.length > 0 &&
+      cityList.length === districtList.length;
+
+    if (isValidRegion) {
       region = cityList.reduce(
         (acc, city, i) => {
-          const district = districtList[i];
-          if (!acc[city]) acc[city] = [];
-          if (district) acc[city].push(district);
+          const district = districtList[i]; // 동일 인덱스의 district 가져오기
+          if (!acc[city]) acc[city] = []; // 도시가 없으면 초기화
+          if (district && district.trim()) acc[city].push(district); // 유효한 구만 추가
+
           return acc;
         },
         {} as Record<string, string[]>
@@ -74,9 +75,6 @@ export function useSessionFilters() {
     };
   }, [searchParams]);
 
-  /* --------------------------
-   * 2) UI 필터 -> API 필터 변환
-   * -------------------------- */
   const queryFilters: SessionListFilters = useMemo(() => {
     const { region, date, time, level, sort, page } = filters;
 
@@ -100,9 +98,6 @@ export function useSessionFilters() {
     };
   }, [filters]);
 
-  /* --------------------------
-   * 3) 필터 적용 시 URL 업데이트
-   * -------------------------- */
   const applyFilters = (next: SessionFilterState) => {
     const { region, date, time, level, sort, page } = next;
     const params = new URLSearchParams();
@@ -134,9 +129,6 @@ export function useSessionFilters() {
     router.push(`/sessions?${params.toString()}`);
   };
 
-  /* --------------------------
-   * 4) 필터 개수 계산
-   * -------------------------- */
   const activeFilterCount = useMemo(() => {
     let count = 0;
     const region = filters.region;
