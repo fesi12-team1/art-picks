@@ -133,9 +133,14 @@ function UserMenu({ user }: { user: Profile }) {
 }
 
 function GuestMenu() {
+  const pathname = usePathname();
+
   return (
     <Link
-      href="/signin"
+      href={{
+        pathname: '/signin',
+        query: { redirect: pathname },
+      }}
       className="text-body3-semibold tablet:text-body2-semibold mx-2"
     >
       로그인
