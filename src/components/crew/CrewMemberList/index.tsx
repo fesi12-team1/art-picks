@@ -1,4 +1,8 @@
 import { useContext, useState } from 'react';
+import {
+  useExpelMember,
+  useUpdateMemberRole,
+} from '@/api/mutations/crewMutations';
 import Settings from '@/assets/icons/settings.svg?react';
 import Badge from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
@@ -34,31 +38,67 @@ function CrewMemberListItem({
   member: CrewMember;
   editMode: 'view' | 'edit';
 }) {
+  const { crewId } = useContext(CrewDetailContext);
+  const expelMember = useExpelMember(member.userId);
+  const updateMemberRole = useUpdateMemberRole(crewId ?? 0, member.userId);
+  const handleSelect = (roleTo: 'STAFF' | 'MEMBER') => {
+    if (roleTo === member.role) return;
+
+    updateMemberRole.mutate({ role: roleTo });
+  };
+
+  const roleText = (role = member.role) => {
+    switch (role) {
+      case 'LEADER':
+        return '크루장';
+      case 'STAFF':
+        return '운영진';
+      case 'MEMBER':
+        return '일반';
+      default:
+        break;
+    }
+  };
   return (
-    <div className="mb-5 flex gap-3">
+    <div className="mb-5 flex items-center gap-3">
       <UserAvatar src={member.profileImage} className="size-10 shrink-0" />
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-1.5">
-          <span className="text-body3-semibold">{member.name}</span>
-          {editMode === 'view' && member.role === 'STAFF' && <StaffTag />}
-          {editMode === 'view' && member.role === 'LEADER' && <LeaderTag />}
-          {editMode === 'edit' && (
-            <Dropdown>
-              <Dropdown.Trigger className="bg-transparent">
-                최근 생성순
-              </Dropdown.Trigger>
-              <Dropdown.Content>
-                {['운영진', '일반'].map((item) => (
-                  <Dropdown.Item key={item}>{item}</Dropdown.Item>
-                ))}
-              </Dropdown.Content>
-            </Dropdown>
-          )}
+      {editMode === 'view' ? (
+        <div className="flex flex-col gap-1">
+          <div className="flex w-full items-center gap-1.5">
+            <span className="text-body3-semibold">{member.name}</span>
+            {member.role === 'LEADER' && <LeaderTag />}
+            {member.role === 'STAFF' && <StaffTag />}
+          </div>
+          <span className="text-caption-regular line-clamp-1">
+            {member.introduction || '안녕하세요:) 잘 부탁드립니다!'}
+          </span>
         </div>
-        <span className="text-caption-regular line-clamp-1">
-          {member.introduction || '안녕하세요:) 잘 부탁드립니다!'}
-        </span>
-      </div>
+      ) : (
+        <div className="flex w-full items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <span className="text-body3-semibold">{member.name}</span>
+            {member.role === 'LEADER' && <LeaderTag />}
+            {member.role !== 'LEADER' && (
+              <Dropdown size="lg">
+                <Dropdown.Trigger>{roleText()}</Dropdown.Trigger>
+                <Dropdown.Content className="z-60">
+                  <Dropdown.Item onSelect={() => handleSelect('STAFF')}>
+                    운영진
+                  </Dropdown.Item>
+                  <Dropdown.Item onSelect={() => handleSelect('MEMBER')}>
+                    일반
+                  </Dropdown.Item>
+                </Dropdown.Content>
+              </Dropdown>
+            )}
+          </div>
+          <button type="button" onClick={() => expelMember.mutate(crewId ?? 0)}>
+            <span className="text-body3-medium text-error-100 shrink-0 px-3 py-2">
+              삭제하기
+            </span>
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -73,7 +113,7 @@ export default function CrewMemberList({
   members,
   children,
 }: CrewMemberListProps) {
-  const myRole = useContext(CrewDetailContext);
+  const { myRole } = useContext(CrewDetailContext);
   const [editMode, setEditMode] = useState<'view' | 'edit'>('view');
   return (
     <div className="flex flex-col">
@@ -103,7 +143,10 @@ export default function CrewMemberList({
             멤버 전체보기
           </Button>
         </Modal.Trigger>
-        <Modal.Content className="tablet:h-[620px] flex h-full w-[400px] flex-col bg-gray-800">
+        <Modal.Content
+          className="tablet:h-[620px] flex h-full w-[400px] flex-col bg-gray-800"
+          onCloseAutoFocus={() => setEditMode('view')}
+        >
           <Modal.Title className="self-start">
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
@@ -122,9 +165,9 @@ export default function CrewMemberList({
               </span>
             </div>
           </Modal.Title>
-          <Modal.CloseButton />
+          <Modal.CloseButton onClick={() => setEditMode('view')} />
           <div className="h-0 self-stretch outline-1 outline-offset-[-0.50px] outline-gray-700" />
-          <Modal.Description className="flex flex-col overflow-y-scroll [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-800">
+          <Modal.Description className="flex w-full flex-col overflow-y-scroll [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-800">
             {members.map((member) => (
               <CrewMemberListItem
                 key={member.userId}
@@ -134,7 +177,7 @@ export default function CrewMemberList({
             ))}
           </Modal.Description>
           {editMode === 'edit' && (
-            <Modal.Footer>
+            <Modal.Footer className="w-full">
               <Button className="w-full" onClick={() => setEditMode('view')}>
                 완료
               </Button>
