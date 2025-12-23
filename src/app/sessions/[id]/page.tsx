@@ -38,7 +38,7 @@ export default function Page() {
     enabled: !!crewId,
   });
 
-  const { ref } = useFixedBottomBar();
+  const { ref, height } = useFixedBottomBar();
 
   if (sessionQuery.isLoading) return null;
   if (sessionQuery.isError) return null;
@@ -52,7 +52,7 @@ export default function Page() {
     <>
       <main
         className="h-main laptop:bg-gray-900 bg-gray-800"
-        style={{ paddingBottom: 96 }}
+        style={{ paddingBottom: height }}
       >
         <SessionDetailView session={session} crew={crewQuery.data} />
       </main>
