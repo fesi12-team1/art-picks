@@ -1,4 +1,4 @@
-import { queryOptions } from '@tanstack/react-query';
+import { InfiniteData, queryOptions } from '@tanstack/react-query';
 import {
   getCrewDetail,
   getCrewMemberCount,
@@ -38,6 +38,13 @@ export const crewQueries = {
       },
       initialPageParam: 0,
       staleTime: 1000 * 60,
+
+      select: (data: InfiniteData<SliceData<Crew>>) => {
+        return {
+          ...data,
+          crews: data.pages.flatMap((p) => p.content),
+        };
+      },
     };
   },
 

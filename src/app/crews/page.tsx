@@ -8,9 +8,7 @@ import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 
 export default function Page() {
   const { data, fetchNextPage, hasNextPage, isLoading, isError } =
-    useInfiniteQuery(
-      crewQueries.listInfinite({ size: 10, sort: 'createdAtDesc' })
-    );
+    useInfiniteQuery(crewQueries.list({ sort: 'createdAtDesc' }));
 
   const loadMoreRef = useInfiniteScroll(() => fetchNextPage(), hasNextPage);
 
@@ -59,10 +57,8 @@ export default function Page() {
           </Dropdown>
         </div>
         <div className="grid w-full grid-cols-1 gap-6">
-          {data?.pages && data.pages.length > 0 ? (
-            data.pages.map((page) =>
-              page.content.map((crew) => <CrewCard key={crew.id} crew={crew} />)
-            )
+          {data?.crews && data.crews.length > 0 ? (
+            data.crews.map((crew) => <CrewCard key={crew.id} crew={crew} />)
           ) : (
             <div className="flex h-40 items-center justify-center text-gray-400">
               등록된 크루가 없습니다.
