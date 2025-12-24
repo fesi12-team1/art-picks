@@ -30,9 +30,14 @@ function clampTime(time: number) {
 interface TimePickerProps {
   value: number;
   onChange: (next: number) => void;
+  className?: string;
 }
 
-export default function TimePicker({ value, onChange }: TimePickerProps) {
+export default function TimePicker({
+  value,
+  onChange,
+  className,
+}: TimePickerProps) {
   const [open, setOpen] = useState(false);
 
   const timeLabel = toLabel(value);
@@ -53,7 +58,12 @@ export default function TimePicker({ value, onChange }: TimePickerProps) {
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger className="relative flex items-center justify-between gap-2 rounded-lg bg-gray-800 px-3 py-2 text-gray-200">
+      <PopoverTrigger
+        className={cn(
+          'relative flex items-center justify-between gap-2 rounded-lg bg-gray-800 px-3 py-2 text-gray-200',
+          className
+        )}
+      >
         <p className="text-body3-medium tabular-nums">{timeLabel}</p>
         <ArrowDown className="size-6" />
       </PopoverTrigger>

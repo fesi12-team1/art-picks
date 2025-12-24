@@ -5,7 +5,7 @@ import { useState } from 'react';
 import ShevronLeft from '@/assets/icons/chevron-left.svg?react';
 import Button from '@/components/ui/Button';
 import { useDaumPostcode } from '@/provider/DaumPostcodeProvider';
-import DateInputField from './_components/DateInputField';
+import DateTimeInputField from './_components/DateTimeInputField';
 import DetailInputField from './_components/DetailInputField';
 import FakeTextInputField from './_components/FakeTextInputField';
 import ImageInputField from './_components/ImageInputField';
@@ -55,13 +55,11 @@ function SessionCreateForm() {
   const { openAddressSearch } = useDaumPostcode();
 
   return (
-    <form className="laptop:flex-row laptop:gap-20 flex w-full flex-col">
-      <div className="w-[380px]">
+    <form className="laptop:flex-row laptop:gap-20 flex w-full flex-col items-stretch">
+      <div>
         <NameInputField />
         <ImageInputField />
-        <div className="flex">
-          <DateInputField date={date} />
-        </div>
+        <DateTimeInputField />
         <div className="flex flex-col gap-3">
           <FakeTextInputField location={location} />
           <SearchAddressButton
