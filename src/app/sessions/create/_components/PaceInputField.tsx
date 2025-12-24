@@ -4,7 +4,7 @@ export default function PaceInputField() {
   return (
     <div>
       <label>
-        <p className="tablet:text-body3-semibold text-caption-semibold">
+        <p className="text-caption-semibold tablet:text-body3-semibold text-gray-50">
           {'페이스 (분/km)'}
         </p>
         <p className="tablet:text-body3-semibold text-caption-regular text-gray-300">

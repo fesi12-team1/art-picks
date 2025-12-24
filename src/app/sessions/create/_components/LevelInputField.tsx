@@ -4,7 +4,7 @@ export default function LevelInputField() {
   return (
     <div>
       <label className="mb-4 block">
-        <p className="tablet:text-body3-semibold text-caption-semibold">
+        <p className="text-caption-semibold tablet:text-body3-semibold text-gray-50">
           난이도
         </p>
         <p className="tablet:text-body3-semibold text-caption-regular text-gray-300">

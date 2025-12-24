@@ -5,7 +5,9 @@ export default function FakeTextInputField({ location }: { location: string }) {
     <div
       className={cn(location ? 'flex flex-col items-start gap-2' : 'hidden')}
     >
-      <label className="text-body3-semibold text-gray-50">장소</label>
+      <label className="text-caption-semibold tablet:text-body3-semibold text-gray-50">
+        장소
+      </label>
       <input
         disabled
         value={location}

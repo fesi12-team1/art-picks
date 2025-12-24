@@ -45,7 +45,7 @@ export default function SessionCreateForm() {
         <hr className="text-gray-800" />
         <MaxParticipantsInputField />
         <DateTimeInputField />
-        <DetailInputField className="laptop:block hidden" />
+        <DetailInputField className="laptop:hidden block" />
         <SubmitButton className="laptop:mt-5 mt-4" />
       </div>
     </form>
