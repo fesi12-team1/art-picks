@@ -169,85 +169,88 @@ export default function Page() {
                         {totalElements}
                       </span>
                     </div>
-                    <div className="flex flex-col divide-y divide-dashed divide-gray-500 *:pb-2 not-first:*:pt-2">
-                      {reviews.map((review) => (
-                        <ReviewCard key={review?.id} data={review} />
-                      ))}
-                    </div>
-                    <div className="tablet:mt-4 mt-3 flex justify-center">
-                      <Pagination>
-                        <Pagination.Content>
-                          {/* Previous */}
-                          <Pagination.Item>
-                            <Pagination.Previous
-                              href="#"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                if (!isLoading) pagination.goToPrevious();
-                              }}
-                              className={cn(
-                                !pagination.canGoPrevious || isLoading
-                                  ? 'pointer-events-none opacity-50'
-                                  : ''
-                              )}
-                              isActive={pagination.canGoPrevious}
-                            />
-                          </Pagination.Item>
-
-                          {/* Page Numbers */}
-                          {pagination.shouldShowStartEllipsis && (
-                            <Pagination.Item>
-                              <Pagination.Ellipsis />
-                            </Pagination.Item>
-                          )}
-
-                          {pagination.displayedPages.map((pageNum) => (
-                            <Pagination.Item key={pageNum}>
-                              <Pagination.Link
-                                href="#"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  if (!isLoading) pagination.goToPage(pageNum);
-                                }}
-                                isActive={pageNum === pagination.currentPage}
-                                className={cn(
-                                  isLoading
-                                    ? 'pointer-events-none opacity-50'
-                                    : ''
-                                )}
-                              >
-                                {pageNum + 1}
-                              </Pagination.Link>
-                            </Pagination.Item>
+                    {reviews && totalElements > 0 && (
+                      <>
+                        <div className="flex flex-col divide-y divide-dashed divide-gray-500 *:pb-2 not-first:*:pt-2">
+                          {reviews.map((review) => (
+                            <ReviewCard key={review.id} data={review} />
                           ))}
+                        </div>
+                        <div className="tablet:mt-4 mt-3 flex justify-center">
+                          <Pagination>
+                            <Pagination.Content>
+                              {/* Previous */}
+                              <Pagination.Item>
+                                <Pagination.Previous
+                                  href="#"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    if (!isLoading) pagination.goToPrevious();
+                                  }}
+                                  className={cn(
+                                    !pagination.canGoPrevious || isLoading
+                                      ? 'pointer-events-none opacity-50'
+                                      : ''
+                                  )}
+                                  isActive={pagination.canGoPrevious}
+                                />
+                              </Pagination.Item>
 
-                          {pagination.shouldShowEndEllipsis && (
-                            <Pagination.Item>
-                              <Pagination.Ellipsis />
-                            </Pagination.Item>
-                          )}
-
-                          {/* Next */}
-                          <Pagination.Item>
-                            <Pagination.Next
-                              href="#"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                if (!isLoading) pagination.goToNext();
-                              }}
-                              className={cn(
-                                !pagination.canGoNext || isLoading
-                                  ? 'pointer-events-none opacity-50'
-                                  : ''
+                              {/* Page Numbers with Ellipsis (-1 represents ellipsis) */}
+                              {pagination.displayedPages.map(
+                                (pageNum, index) =>
+                                  pageNum === -1 ? (
+                                    <Pagination.Item key={`ellipsis-${index}`}>
+                                      <Pagination.Ellipsis />
+                                    </Pagination.Item>
+                                  ) : (
+                                    <Pagination.Item key={pageNum}>
+                                      <Pagination.Link
+                                        href="#"
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          if (!isLoading)
+                                            pagination.goToPage(pageNum);
+                                        }}
+                                        isActive={
+                                          pageNum === pagination.currentPage
+                                        }
+                                        className={cn(
+                                          isLoading
+                                            ? 'pointer-events-none opacity-50'
+                                            : ''
+                                        )}
+                                      >
+                                        {pageNum + 1}
+                                      </Pagination.Link>
+                                    </Pagination.Item>
+                                  )
                               )}
-                              isActive={pagination.canGoNext}
-                            />
-                          </Pagination.Item>
-                        </Pagination.Content>
-                      </Pagination>
-                    </div>
+
+                              {/* Next */}
+                              <Pagination.Item>
+                                <Pagination.Next
+                                  href="#"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    if (!isLoading) pagination.goToNext();
+                                  }}
+                                  className={cn(
+                                    !pagination.canGoNext || isLoading
+                                      ? 'pointer-events-none opacity-50'
+                                      : ''
+                                  )}
+                                  isActive={pagination.canGoNext}
+                                />
+                              </Pagination.Item>
+                            </Pagination.Content>
+                          </Pagination>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
+
                 {/* Crew Title */}
                 <div className="laptop:bg-gray-750 laptop:w-[360px] laptop:shrink-0 w-full flex-col self-start rounded-[20px] px-6 py-7 shadow-[0px_10px_30px_-5px_rgba(0,0,0,0.20)]">
                   <CrewMemberList crew={crew} members={members}>

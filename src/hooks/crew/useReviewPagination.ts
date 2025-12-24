@@ -11,7 +11,7 @@ interface UsePaginationReturn {
   // State
   currentPage: number; // 0-indexed
   totalPages: number;
-  displayedPages: number[]; // Array of page numbers to display
+  displayedPages: number[]; // Array of page numbers to display, -1 represents ellipsis
 
   // Navigation
   canGoPrevious: boolean;
@@ -19,39 +19,26 @@ interface UsePaginationReturn {
   goToPage: (page: number) => void;
   goToPrevious: () => void;
   goToNext: () => void;
-
-  // Display helpers
-  shouldShowStartEllipsis: boolean;
-  shouldShowEndEllipsis: boolean;
-}
-
-interface DisplayPagesResult {
-  pages: number[];
-  showStartEllipsis: boolean;
-  showEndEllipsis: boolean;
 }
 
 /**
  * Helper function to calculate which page numbers to display based on current page
  * and total pages, following the design specifications.
+ * Uses -1 to represent ellipsis positions in the returned array.
  *
  * @param current - Current page (0-indexed)
  * @param total - Total number of pages
  * @param maxElements - Maximum number of elements including ellipsis (5 for mobile, 7 for tablet+)
- * @returns Object containing page numbers to display and ellipsis flags
+ * @returns Array of page numbers where -1 represents an ellipsis
  */
 function getDisplayedPages(
   current: number,
   total: number,
   maxElements: number
-): DisplayPagesResult {
+): number[] {
   // Edge case: show all if total pages fit within max elements
   if (total <= maxElements) {
-    return {
-      pages: Array.from({ length: total }, (_, i) => i),
-      showStartEllipsis: false,
-      showEndEllipsis: false,
-    };
+    return Array.from({ length: total }, (_, i) => i);
   }
 
   // Reserve 2 slots for ellipsis (one at start, one at end when needed)
@@ -62,35 +49,24 @@ function getDisplayedPages(
   // At START: [0] [1] [2] [3] [4] ... [N-1]
   if (current <= startThreshold) {
     const pages = Array.from({ length: maxPageNumbers }, (_, i) => i);
+    pages.push(-1); // Ellipsis
     pages.push(total - 1); // Always include last page
-    return {
-      pages,
-      showStartEllipsis: false,
-      showEndEllipsis: true,
-    };
+    return pages;
   }
 
   // At END: [0] ... [N-5] [N-4] [N-3] [N-2] [N-1]
   if (current >= endThreshold) {
-    const pages = Array.from(
-      { length: maxPageNumbers },
-      (_, i) => total - maxPageNumbers + i
-    );
-    pages.unshift(0); // Always include first page
-    return {
-      pages,
-      showStartEllipsis: true,
-      showEndEllipsis: false,
-    };
+    const pages = [0]; // First page
+    pages.push(-1); // Ellipsis
+    // Add last maxPageNumbers pages
+    for (let i = total - maxPageNumbers; i < total; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 
-  // In MIDDLE: [0] [...] [current-1] [current] [current+1] ... [N-1]
-  const pages = [0, current - 1, current, current + 1, total - 1];
-  return {
-    pages,
-    showStartEllipsis: true,
-    showEndEllipsis: true,
-  };
+  // In MIDDLE: [0] ... [current-1] [current] [current+1] ... [N-1]
+  return [0, -1, current - 1, current, current + 1, -1, total - 1];
 }
 
 /**
@@ -120,8 +96,8 @@ export function useReviewPagination({
   // Tablet/Desktop: 7 elements (5 page numbers + 2 ellipsis potential)
   const maxElements = isMobile ? 5 : 7;
 
-  // Calculate displayed pages and ellipsis flags
-  const { pages, showStartEllipsis, showEndEllipsis } = useMemo(
+  // Calculate displayed pages with -1 representing ellipsis
+  const pages = useMemo(
     () => getDisplayedPages(currentPage, totalPages, maxElements),
     [currentPage, totalPages, maxElements]
   );
@@ -161,9 +137,5 @@ export function useReviewPagination({
     goToPage,
     goToPrevious,
     goToNext,
-
-    // Display helpers
-    shouldShowStartEllipsis: showStartEllipsis,
-    shouldShowEndEllipsis: showEndEllipsis,
   };
 }
