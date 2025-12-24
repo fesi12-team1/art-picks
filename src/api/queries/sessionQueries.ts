@@ -1,11 +1,17 @@
-import { queryOptions } from '@tanstack/react-query';
+import { InfiniteData, queryOptions } from '@tanstack/react-query';
 import {
   getSessionDetail,
   getSessionParticipants,
   getSessions,
 } from '@/api/fetch/sessions';
 import { normalizeParams } from '@/lib/utils';
-import { SessionListFilters } from '@/types';
+import {
+  InfiniteQueryPageParam,
+  MemberRoleFilters,
+  Session,
+  SessionListFilters,
+  SliceData,
+} from '@/types';
 
 export const sessionQueries = {
   all: () => ['sessions'],
@@ -22,6 +28,36 @@ export const sessionQueries = {
     });
   },
 
+  // 세션 목록 조회(무한 스크롤)
+  infiniteList: (filters: Omit<SessionListFilters, 'page'>) => {
+    const cleanFilters = normalizeParams(filters);
+    return {
+      queryKey: [...sessionQueries.lists(), cleanFilters],
+      queryFn: ({ pageParam }: InfiniteQueryPageParam) =>
+        getSessions({
+          ...cleanFilters,
+          page: pageParam,
+          size: filters.size ?? 18,
+        }),
+      getNextPageParam: (
+        lastPage: SliceData<Session>,
+        allPages: SliceData<Session>[]
+      ) => {
+        if (!lastPage.hasNext) return undefined;
+        return allPages.length;
+      },
+      initialPageParam: 0,
+      staleTime: 1000 * 60,
+
+      select: (data: InfiniteData<SliceData<Session>>) => {
+        return {
+          ...data,
+          sessions: data.pages.flatMap((p) => p.content),
+        };
+      },
+    };
+  },
+
   // 세션 상세 정보 조회
   details: () => [...sessionQueries.all(), 'detail'],
   detail: (sessionId: number) =>
@@ -32,10 +68,18 @@ export const sessionQueries = {
     }),
 
   // 세션 참가자 조회
-  participants: (sessionId: number) =>
-    queryOptions({
-      queryKey: [...sessionQueries.details(), sessionId, 'participants'],
-      queryFn: () => getSessionParticipants(sessionId),
-      enabled: !!sessionId, // sessionId가 유효할 때만 실행
-    }),
+  participants: (sessionId: number, filters?: MemberRoleFilters) => {
+    const cleanFilters = normalizeParams(filters);
+
+    return queryOptions({
+      queryKey: [
+        ...sessionQueries.details(),
+        sessionId,
+        'participants',
+        cleanFilters,
+      ],
+      queryFn: () => getSessionParticipants(sessionId, cleanFilters),
+      enabled: !!sessionId,
+    });
+  },
 };

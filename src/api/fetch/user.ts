@@ -1,12 +1,13 @@
 import {
   Crew,
+  LikeSessions,
   PageData,
   PaginationQueryParams,
   Profile,
-  ResponseData,
   Review,
   Session,
   SliceData,
+  SuccessResponse,
 } from '@/types';
 
 export async function getMyProfile() {
@@ -22,7 +23,7 @@ export async function getMyProfile() {
     }
   }
 
-  const { data }: ResponseData<Profile> = await response.json();
+  const { data }: SuccessResponse<Profile> = await response.json();
   return data;
 }
 
@@ -49,7 +50,7 @@ export async function updateMyProfile(body: UpdateMyProfileRequestBody) {
     }
   }
 
-  const { data }: ResponseData<Profile> = await response.json();
+  const { data }: SuccessResponse<Profile> = await response.json();
   return data;
 }
 
@@ -67,7 +68,8 @@ export async function getUserProfile(userId: number) {
   }
 
   type UserProfileResponseData = Omit<Profile, 'updatedAt' | 'email'>;
-  const { data }: ResponseData<UserProfileResponseData> = await response.json();
+  const { data }: SuccessResponse<UserProfileResponseData> =
+    await response.json();
   return data;
 }
 
@@ -95,7 +97,7 @@ export async function getMyReviews(queryParams?: PaginationQueryParams) {
     }
   }
 
-  const { data }: ResponseData<PageData<Review>> = await response.json();
+  const { data }: SuccessResponse<PageData<Review>> = await response.json();
   return data;
 }
 
@@ -123,23 +125,7 @@ export async function getMyLikedSessions(queryParams?: PaginationQueryParams) {
     }
   }
 
-  type LikeSessionsResponseData = SliceData<
-    Pick<
-      Session,
-      | 'crewId'
-      | 'name'
-      | 'image'
-      | 'city'
-      | 'district'
-      | 'location'
-      | 'coords'
-      | 'sessionAt'
-      | 'level'
-      | 'status'
-    > & { sessionId: number }
-  >;
-
-  const { data }: ResponseData<LikeSessionsResponseData> =
+  const { data }: SuccessResponse<SliceData<LikeSessions>> =
     await response.json();
   return data;
 }
@@ -168,7 +154,7 @@ export async function getMyOwnedCrews(queryParams?: PaginationQueryParams) {
     }
   }
 
-  const { data }: ResponseData<SliceData<Crew>> = await response.json();
+  const { data }: SuccessResponse<SliceData<Crew>> = await response.json();
   return data;
 }
 
@@ -198,7 +184,7 @@ export async function getMyJoinedCrews(queryParams?: PaginationQueryParams) {
   type GetMyJoinedCrewsResponseData = SliceData<
     Crew & { myRole: 'LEADER' | 'STAFF' | 'MEMBER' }
   >;
-  const { data }: ResponseData<GetMyJoinedCrewsResponseData> =
+  const { data }: SuccessResponse<GetMyJoinedCrewsResponseData> =
     await response.json();
   return data;
 }
@@ -228,7 +214,7 @@ export async function getMyCreatedSessions(
     }
   }
 
-  const { data }: ResponseData<SliceData<Omit<Session, 'description'>>> =
+  const { data }: SuccessResponse<SliceData<Omit<Session, 'description'>>> =
     await response.json();
   return data;
 }
