@@ -8,27 +8,13 @@ export default function LevelInputField() {
         <span>페이스와 별개로, 이 세션의 체감 난이도를 선택해주세요</span>
       </label>
       <div>
+        <SessionLevelCard level="BEGINNER" checked={false} onClick={() => {}} />
         <SessionLevelCard
-          label="초급"
-          description="천천히 몸을 풀며 가볍게 달리는 데 집중해요"
-          size="sm"
+          level="INTERMEDIATE"
           checked={false}
           onClick={() => {}}
         />
-        <SessionLevelCard
-          label="초급"
-          description="천천히 몸을 풀며 가볍게 달리는 데 집중해요"
-          size="sm"
-          checked={false}
-          onClick={() => {}}
-        />
-        <SessionLevelCard
-          label="초급"
-          description="천천히 몸을 풀며 가볍게 달리는 데 집중해요"
-          size="sm"
-          checked={false}
-          onClick={() => {}}
-        />
+        <SessionLevelCard level="ADVANCED" checked={false} onClick={() => {}} />
       </div>{' '}
     </div>
   );
