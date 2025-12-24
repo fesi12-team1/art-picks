@@ -1,4 +1,4 @@
-import { queryOptions } from '@tanstack/react-query';
+import { InfiniteData, queryOptions } from '@tanstack/react-query';
 import {
   getSessionDetail,
   getSessionParticipants,
@@ -17,8 +17,18 @@ export const sessionQueries = {
 
   // 세션 목록 조회
   lists: () => [...sessionQueries.all(), 'list'],
+  list: (filters: SessionListFilters) => {
+    const cleanFilters = normalizeParams(filters);
+    return queryOptions({
+      queryKey: [...sessionQueries.lists(), cleanFilters],
+      queryFn: () => getSessions(cleanFilters),
+      placeholderData: (previousData) => previousData, // 필터가 변경되어 데이터를 새로 불러올 때 화면이 깜빡이는 현상 방지
+      staleTime: 1000 * 60, // 1분동안 fresh 상태
+    });
+  },
+
   // 세션 목록 조회(무한 스크롤)
-  list: (filters: Omit<SessionListFilters, 'page' | 'size'>) => {
+  infiniteList: (filters: Omit<SessionListFilters, 'page' | 'size'>) => {
     const cleanFilters = normalizeParams(filters);
     return {
       queryKey: [...sessionQueries.lists(), 'infinite', cleanFilters],
@@ -33,6 +43,13 @@ export const sessionQueries = {
       },
       initialPageParam: 0,
       staleTime: 1000 * 60,
+
+      select: (data: InfiniteData<SliceData<Session>>) => {
+        return {
+          ...data,
+          sessions: data.pages.flatMap((p) => p.content),
+        };
+      },
     };
   },
 

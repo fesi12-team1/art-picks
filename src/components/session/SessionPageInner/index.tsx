@@ -15,15 +15,8 @@ export default function SessionPageInner() {
   const { filters, queryFilters, applyFilters, activeFilterCount } =
     useSessionFilters();
 
-  const {
-    data: sessions,
-    fetchNextPage,
-    hasNextPage,
-    isLoading,
-    isError,
-  } = useInfiniteQuery(
-    sessionQueries.listInfinite({ size: 20, ...queryFilters })
-  );
+  const { data, fetchNextPage, hasNextPage, isLoading, isError } =
+    useInfiniteQuery(sessionQueries.infiniteList({ ...queryFilters }));
 
   const loadMoreRef = useInfiniteScroll(() => fetchNextPage(), hasNextPage);
 
@@ -51,7 +44,7 @@ export default function SessionPageInner() {
           applyFilters={applyFilters}
           activeFilterCount={activeFilterCount}
         />
-        <SessionList data={sessions?.pages.flatMap((page) => page.content)} />
+        <SessionList data={data?.sessions} />
         <div ref={loadMoreRef} />
       </PageLayout>
     </SessionFilterProvider>
