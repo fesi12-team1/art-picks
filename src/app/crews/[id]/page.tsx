@@ -59,7 +59,7 @@ export default function Page() {
     (member): member is CrewMember => member !== undefined
   );
   const { data: crewSessions } = useQuery(
-    sessionQueries.list({ crewId, sort: 'registerByAsc' })
+    sessionQueries.list({ page: 0, size: 3, crewId, sort: 'registerByAsc' })
   );
   const { data: myProfile } = useQuery(userQueries.me.info());
   const { data: myRoleData } = useQuery({

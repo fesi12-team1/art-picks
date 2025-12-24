@@ -265,11 +265,11 @@ export async function leaveCrew(crewId: number) {
     }
   }
 
-  type leaveResponseData = {
+  type LeaveResponseData = {
     message: string;
   };
 
-  const { data }: SuccessResponse<leaveResponseData> = await response.json();
+  const { data }: SuccessResponse<LeaveResponseData> = await response.json();
   return data;
 }
 
