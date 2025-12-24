@@ -73,7 +73,7 @@ export default function TimePicker({
           side="bottom"
           align="end"
           sideOffset={4}
-          className="w-32 overflow-hidden rounded-lg border border-gray-500 bg-gray-700"
+          className="w-(--radix-popover-trigger-width) overflow-hidden rounded-lg border border-gray-500 bg-gray-700"
         >
           <div className="h-56 overflow-y-auto">
             {timeList.map((t) => (

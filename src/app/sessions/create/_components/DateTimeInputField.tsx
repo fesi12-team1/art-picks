@@ -27,7 +27,7 @@ export default function DateInputField({ className }: DateInputFieldProps) {
         <TimePicker
           value={time}
           onChange={setTime}
-          className="tablet:w-60 laptop:w-[120px] w-[110px]"
+          className="tablet:max-w-60 laptop:max-w-[120px] max-w-[110px]"
         />
       </div>
     </div>

@@ -1,7 +1,10 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useDaumPostcode } from '@/provider/DaumPostcodeProvider';
+import { formSchema, SessionCreateFormValues } from '../_others/schema';
 import AddressInput from './AddressInput';
 import DateTimeInputField from './DateTimeInputField';
 import DetailInputField from './DetailInputField';
@@ -13,11 +16,27 @@ import PaceInputField from './PaceInputField';
 import SubmitButton from './SubmitButton';
 
 export default function SessionCreateForm() {
-  const date = new Date();
   const [location, setLocation] = useState('서울특별시 어쩌구');
   const [city, setCity] = useState('');
   const [district, setDistrict] = useState('');
   const { openAddressSearch } = useDaumPostcode();
+
+  const form = useForm<SessionCreateFormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: '',
+      description: '',
+      image: '',
+      location: '',
+      sessionAt: new Date().toISOString(),
+      registerBy: new Date().toISOString(),
+      level: 'INTERMEDIATE',
+      maxParticipants: 2,
+      pace: 400,
+    },
+    mode: 'onSubmit', // ✅ 렌더/검증 비용 줄이기(추천)
+    reValidateMode: 'onBlur', // ✅ 제출 후 수정은 blur 때만 재검증
+  });
 
   return (
     <form className="laptop:flex-row laptop:gap-20 flex w-full flex-col items-stretch">

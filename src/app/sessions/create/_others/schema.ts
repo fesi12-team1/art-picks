@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import { SIDO_LIST, SIGUNGU_MAP } from '@/types/region';
-import { Level } from '@/types/session';
 
 export const citySchema = z.enum(SIDO_LIST);
 export type City = z.infer<typeof citySchema>; // == Sido
@@ -30,13 +29,7 @@ export const formSchema = z.object({
     .min(1, '세션 설명을 입력해주세요')
     .max(500, '세션 설명은 최대 500자입니다'),
   image: z.url('유효한 이미지 URL을 입력해주세요'),
-  city: citySchema,
-  district: districtSchema,
   location: z.string().min(1, '주소를 입력해주세요'),
-  coords: z.object({
-    latitude: z.number(),
-    longitude: z.number(),
-  }),
   sessionAt: z.iso.datetime({ offset: true }),
   registerBy: z.iso.datetime({ offset: true }),
   level: levelSchema,
