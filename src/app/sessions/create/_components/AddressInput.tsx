@@ -1,13 +1,8 @@
+import { cn } from '@/lib/utils';
 import FakeTextInputField from './FakeTextInputField';
 import SearchAddressButton from './SearchAddressButton';
 
-export default function AddressInput({
-  location,
-  openAddressSearch,
-  setLocation,
-  setCity,
-  setDistrict,
-}: {
+interface AddressInputProps {
   location: string;
   openAddressSearch: (
     callback: (data: { address: string; sido: string; sigungu: string }) => void
@@ -15,9 +10,19 @@ export default function AddressInput({
   setLocation: (location: string) => void;
   setCity: (city: string) => void;
   setDistrict: (district: string) => void;
-}) {
+  className?: string;
+}
+
+export default function AddressInput({
+  location,
+  openAddressSearch,
+  setLocation,
+  setCity,
+  setDistrict,
+  className,
+}: AddressInputProps) {
   return (
-    <div className="flex flex-col gap-3">
+    <div className={cn('flex flex-col gap-3', className)}>
       <FakeTextInputField location={location} />
       <SearchAddressButton
         location={location}
