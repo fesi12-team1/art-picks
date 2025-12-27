@@ -14,13 +14,15 @@ export interface Crew {
 export type CrewListFilters = PaginationQueryParams & {
   city?: string;
   keyword?: string;
-  sort?:
-    | 'memberCountDesc'
-    | 'lastSessionDesc'
-    | 'createdAtDesc'
-    | 'nameAsc'
-    | 'nameDesc';
+  sort?: CrewSortKey;
 };
+
+export type CrewSortKey =
+  | 'memberCountDesc'
+  | 'lastSessionDesc'
+  | 'createdAtDesc'
+  | 'nameAsc'
+  | 'nameDesc';
 
 export type MemberRoleFilters = {
   role?: 'leader' | 'staff' | 'general';
