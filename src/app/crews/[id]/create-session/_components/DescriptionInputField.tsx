@@ -20,7 +20,7 @@ export default function DetailInputField({ className }: DetailInputFieldProps) {
       <Textarea
         id="detail"
         placeholder="세션에 대한 상세 설명을 작성해주세요"
-        {...register}
+        {...register('description')}
       />
     </div>
   );
