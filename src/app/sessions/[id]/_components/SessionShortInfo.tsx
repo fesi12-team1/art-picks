@@ -1,4 +1,3 @@
-import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -6,15 +5,14 @@ import { crewQueries } from '@/api/queries/crewQueries';
 import { userQueries } from '@/api/queries/userQueries';
 import VerticalEllipsisIcon from '@/assets/icons/vertical-ellipsis.svg?react';
 import Badge, { LevelBadge, PaceBadge } from '@/components/ui/Badge';
-import Button from '@/components/ui/Button';
 import Dropdown from '@/components/ui/Dropdown';
-import Modal from '@/components/ui/Modal';
 import ProgressBar from '@/components/ui/ProgressBar';
 import { formatDDay, formatKoYYMDMeridiemTime } from '@/lib/time';
 import { Session } from '@/types/session';
 import CopyUrlButton from './CopyUrlButton';
 import LikeButton from './LikeButton';
 import ParticipateButton from './ParticipateButton';
+import SessionDeleteModal from './SessionDeleteModal';
 
 export default function SessionShortInfo({
   session,
@@ -88,27 +86,11 @@ export default function SessionShortInfo({
         </div>
         <ParticipateButton className="flex-1" sessionId={session.id} />
       </div>
-      <Modal open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
-        <Modal.Content className="z-999">
-          <Modal.Header>
-            <VisuallyHidden asChild>
-              <Modal.Title>세션을 삭제하시겠습니까?</Modal.Title>
-            </VisuallyHidden>
-          </Modal.Header>
-          <Modal.Description>
-            삭제 후에는 되돌릴 수 없어요 정말 삭제하시겠어요?
-          </Modal.Description>
-          <Modal.Footer>
-            <Button
-              variant="neutral"
-              onClick={() => setIsDeleteModalOpen(false)}
-            >
-              취소
-            </Button>
-            <Button onClick={() => setIsDeleteModalOpen(false)}>확인</Button>
-          </Modal.Footer>
-        </Modal.Content>
-      </Modal>
+
+      <SessionDeleteModal
+        isDeleteModalOpen={isDeleteModalOpen}
+        setIsDeleteModalOpen={setIsDeleteModalOpen}
+      />
     </div>
   );
 }
