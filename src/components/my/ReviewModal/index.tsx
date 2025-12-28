@@ -39,7 +39,7 @@ export default function ReviewModal({
   const { mutateAsync: createReview } = useCreateSessionReview(session?.id);
   const { mutateAsync: uploadImage } = useUploadImage();
 
-  if (!open | !session) {
+  if (!open || !session) {
     return null;
   }
   const handleSubmit = async () => {
@@ -112,7 +112,7 @@ export default function ReviewModal({
                 {session?.name}
               </p>
               <p className="text-caption-regular tablet:text-body3-regular text-gray-300">
-                {formatTime(session?.sessionAt)}
+                {formatTime(session.sessionAt)}
               </p>
             </div>
             <hr className="w-full border-gray-700" />
