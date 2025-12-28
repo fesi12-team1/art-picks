@@ -7,6 +7,7 @@ import {
   useCreateCrew,
   type UseCrewMutationOptions,
 } from '@/api/mutations/crewMutations';
+import { useUploadImage } from '@/api/mutations/imageMutations';
 
 export const createCrewSchema = z.object({
   name: z
@@ -21,11 +22,7 @@ export const createCrewSchema = z.object({
 
   city: z.string().nonempty('활동 지역을 선택해주세요.'),
 
-  image: z
-    .string()
-    .url()
-    .optional()
-    .or(z.literal('').transform(() => undefined)),
+  image: z.instanceof(File).optional(),
 });
 
 export type CreateCrewFormValues = z.infer<typeof createCrewSchema>;
@@ -42,6 +39,8 @@ export function useCreateCrewForm(options?: UseCrewMutationOptions) {
     },
   });
 
+  const uploadImage = useUploadImage();
+
   const mutation = useCreateCrew({
     onSuccess: options?.onSuccess,
     onError: (message) => {
@@ -50,8 +49,24 @@ export function useCreateCrewForm(options?: UseCrewMutationOptions) {
     },
   });
 
-  const submit = form.handleSubmit((values) => {
-    mutation.mutate(values);
+  const submit = form.handleSubmit(async (values) => {
+    let imageUrl: string | undefined = undefined;
+
+    // 이미지 선택된 경우 업로드
+    if (values.image instanceof File) {
+      const result = await uploadImage.mutateAsync({ file: values.image });
+      imageUrl = result.url; // presigned-url로 업로드 후 반환된 실제 imageUrl
+    }
+
+    // 이제 서버에 보낼 body 구성
+    const body = {
+      name: values.name,
+      description: values.description,
+      city: values.city,
+      image: imageUrl, // blob X, S3 URL O
+    };
+
+    await mutation.mutateAsync(body);
   });
 
   return {

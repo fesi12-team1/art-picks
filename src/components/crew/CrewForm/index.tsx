@@ -45,12 +45,7 @@ export default function CrewCreateForm({
 
   const handleImageChange = useCallback(
     (file: File | null) => {
-      if (file) {
-        const url = URL.createObjectURL(file);
-        form.setValue('image', url, { shouldValidate: true });
-      } else {
-        form.setValue('image', '', { shouldValidate: true });
-      }
+      form.setValue('image', file ?? undefined, { shouldValidate: true });
     },
     [form]
   );
