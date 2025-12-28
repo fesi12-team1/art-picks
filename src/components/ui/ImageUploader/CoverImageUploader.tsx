@@ -33,7 +33,7 @@ export default function CoverImageUploader({
 
       <div
         className={
-          'relative h-[140px] w-[327px] overflow-hidden rounded-xl bg-gray-800'
+          'relative h-[140px] w-full overflow-hidden rounded-xl bg-gray-800'
         }
       >
         <div className="aspect-327/140">
