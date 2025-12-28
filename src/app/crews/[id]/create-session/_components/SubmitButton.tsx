@@ -8,7 +8,7 @@ interface SubmitButtonProps {
 export default function SubmitButton({ className }: SubmitButtonProps) {
   return (
     <div className={cn('flex flex-col items-center gap-3', className)}>
-      <Button type="button" className="w-full" size="sm" disabled>
+      <Button type="submit" className="w-full" size="sm">
         생성하기
       </Button>
       <p className="text-caption-medium text-gray-300">

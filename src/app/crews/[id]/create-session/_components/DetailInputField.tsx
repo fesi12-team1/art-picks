@@ -1,10 +1,14 @@
+import { useFormContext } from 'react-hook-form';
 import Textarea from '@/components/ui/Textarea';
+import { SessionCreateFormValues } from '../_others/schema';
 
 interface DetailInputFieldProps {
   className?: string;
 }
 
 export default function DetailInputField({ className }: DetailInputFieldProps) {
+  const { register } = useFormContext<SessionCreateFormValues>();
+
   return (
     <div className={className}>
       <label
@@ -16,6 +20,7 @@ export default function DetailInputField({ className }: DetailInputFieldProps) {
       <Textarea
         id="detail"
         placeholder="세션에 대한 상세 설명을 작성해주세요"
+        {...register}
       />
     </div>
   );

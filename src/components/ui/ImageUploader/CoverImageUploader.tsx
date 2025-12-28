@@ -4,11 +4,11 @@ import useImageUploader from './useImageUploader';
 export default function CoverImageUploader({
   label = '크루의 대표 이미지를 설정해주세요',
   maxSizeMB = 5,
-  onChange,
+  onFileChange: onChange,
 }: {
   label?: string;
   maxSizeMB?: number;
-  onChange?: (file: File | null) => void;
+  onFileChange?: (file: File | null) => void;
 }) {
   const { inputRef, items, open, addFiles, acceptAttr } = useImageUploader({
     maxFiles: 1,

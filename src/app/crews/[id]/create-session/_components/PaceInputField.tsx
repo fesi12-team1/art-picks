@@ -1,6 +1,10 @@
+import { useFormContext } from 'react-hook-form';
 import PaceSlider from '@/components/ui/PaceSlider';
+import { SessionCreateFormValues } from '../_others/schema';
 
 export default function PaceInputField() {
+  const { getValues, setValue } = useFormContext<SessionCreateFormValues>();
+
   return (
     <div>
       <label>
@@ -11,7 +15,12 @@ export default function PaceInputField() {
           세션에서 함께 달릴 기준 페이스를 선택해주세요!
         </p>
       </label>
-      <PaceSlider value={300} onValueChange={() => {}} />
+      <PaceSlider
+        value={getValues('pace')}
+        onValueChange={(nextPace) => {
+          setValue('pace', nextPace);
+        }}
+      />
     </div>
   );
 }
