@@ -26,6 +26,7 @@ export default function Page() {
     fetchNextPage: fetchNextScheduled,
     hasNextPage: hasNextScheduled,
     isFetchingNextPage: isFetchingNextScheduled,
+    isLoading: isLoadingScheduled,
   } = useInfiniteQuery(userQueries.me.sessions.participating('SCHEDULED'));
 
   const {
@@ -33,6 +34,7 @@ export default function Page() {
     fetchNextPage: fetchNextCompleted,
     hasNextPage: hasNextCompleted,
     isFetchingNextPage: isFetchingNextCompleted,
+    isLoading: isLoadingCompleted,
   } = useInfiniteQuery(userQueries.me.sessions.participating('COMPLETED'));
 
   const scheduledRef = useRef<HTMLDivElement | null>(null);
@@ -84,7 +86,16 @@ export default function Page() {
   const scheduledCount = scheduledSessions?.sessions.length ?? 0;
   const completedCount = completedSessions?.sessions.length ?? 0;
 
+  const isLoading = isLoadingScheduled || isLoadingCompleted;
   const hasNoSessions = scheduledCount === 0 && completedCount === 0;
+
+  if (isLoading) {
+    return (
+      <section className="flex h-[60vh] items-center justify-center">
+        <Spinner className="text-brand-500 size-8" />
+      </section>
+    );
+  }
 
   if (hasNoSessions) {
     return (
