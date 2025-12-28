@@ -1,14 +1,19 @@
 'use client';
 
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { PlusIcon } from 'lucide-react';
+import { ChevronLeft, PlusIcon } from 'lucide-react';
+import { useState } from 'react';
 import { crewQueries } from '@/api/queries/crewQueries';
 import CrewCard from '@/components/crew/CrewCard';
+import CrewCreateForm from '@/components/crew/CrewForm';
 import Button from '@/components/ui/Button';
 import Dropdown from '@/components/ui/Dropdown';
+import Modal from '@/components/ui/Modal';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 
 export default function Page() {
+  const [open, setOpen] = useState(false);
+
   const { data, fetchNextPage, hasNextPage, isLoading, isError } =
     useInfiniteQuery(crewQueries.list({ sort: 'createdAtDesc' }));
 
@@ -69,9 +74,30 @@ export default function Page() {
           <div ref={loadMoreRef} />
         </div>
       </section>
-      <Button className="fixed right-16 bottom-16 flex size-18 items-center justify-center rounded-3xl">
+      <Button
+        className="fixed right-16 bottom-16 flex size-18 items-center justify-center rounded-3xl"
+        onClick={() => setOpen(true)}
+      >
         <PlusIcon className="size-8 text-white" />
       </Button>
+      <Modal open={open} onOpenChange={setOpen}>
+        <Modal.Content className="tablet:w-[484px] tablet:max-h-[60vh] h-dvh w-full items-start gap-6 bg-gray-900">
+          <Modal.Header className="relative flex items-center justify-center">
+            <button
+              className="tablet:hidden absolute left-0"
+              onClick={() => setOpen(false)}
+            >
+              <ChevronLeft className="size-6 text-white" />
+            </button>
+            <Modal.Title className="tablet:m-0 ml-7">크루 생성하기</Modal.Title>
+          </Modal.Header>
+          <Modal.CloseButton
+            onClick={() => setOpen(false)}
+            className="tablet:block top-[26px] right-6 hidden"
+          />
+          <CrewCreateForm />
+        </Modal.Content>
+      </Modal>
     </main>
   );
 }
