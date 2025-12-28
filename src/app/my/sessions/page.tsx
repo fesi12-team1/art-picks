@@ -1,6 +1,8 @@
 'use client';
 
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { userQueries } from '@/api/queries/userQueries';
 import ReviewModal from '@/components/my/ReviewModal';
@@ -12,6 +14,7 @@ import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { ParticipatingSession, Session } from '@/types';
 
 export default function Page() {
+  const router = useRouter();
   const isMobile = useMediaQuery({ max: 'tablet' });
 
   const [open, setOpen] = useState(false);
@@ -77,6 +80,38 @@ export default function Page() {
 
     return () => observer.disconnect();
   }, [hasNextCompleted, isFetchingNextCompleted, fetchNextCompleted]);
+
+  const scheduledCount = scheduledSessions?.sessions.length ?? 0;
+  const completedCount = completedSessions?.sessions.length ?? 0;
+
+  const hasNoSessions = scheduledCount === 0 && completedCount === 0;
+
+  if (hasNoSessions) {
+    return (
+      <section className="flex h-[60vh] flex-col items-center justify-center gap-6">
+        <Image
+          width={isMobile ? 240 : 300}
+          height={isMobile ? 218 : 272}
+          src={'/assets/empty-session.png'}
+          alt="세션 없음"
+        />
+        <p className="tablet:text-body2-medium text-body3-regular text-gray-300">
+          아직 예정되거나 완료한 세션이 없어요
+          <br />
+          다양한 세션을 구경하러 가볼까요?
+        </p>
+
+        <Button
+          variant="default"
+          onClick={() => {
+            router.push('/sessions');
+          }}
+        >
+          세션 구경하러 가기
+        </Button>
+      </section>
+    );
+  }
 
   return (
     <section className="tablet:gap-16 flex flex-col gap-10">
