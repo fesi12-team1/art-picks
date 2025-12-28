@@ -167,7 +167,7 @@ export const userQueries = {
           queryFn: ({ pageParam }: InfiniteQueryPageParam) =>
             getMyParticipatingSessions({
               page: pageParam,
-              size: 18,
+              size: 6,
               status,
             }),
           getNextPageParam: (
