@@ -96,7 +96,7 @@ export default function CompletedSessionCard({
             <div className="flex items-center gap-0.5">
               <Star className="size-3 fill-gray-100" />
               <span className="text-caption-medium text-gray-50">
-                {session.ranks}
+                {session.ranks || 0}
               </span>
             </div>
           )}
