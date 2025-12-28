@@ -27,6 +27,7 @@ import { Crew } from '@/types';
 import { Session } from '@/types/session';
 import CopyUrlButton from './_components/CopyUrlButton';
 import LikeButton from './_components/LikeButton';
+import ParticipateButton from './_components/ParticipateButton';
 
 export default function Page() {
   const { id } = useParams();
@@ -62,9 +63,7 @@ export default function Page() {
             <LikeButton liked={session.liked} sessionId={session.id} />
             <CopyUrlButton />
           </div>
-          <Button variant="default" className="flex-1">
-            참여하기
-          </Button>
+          <ParticipateButton className="flex-1" sessionId={session.id} />
         </div>
       </FixedBottomBar>
     </>
@@ -190,9 +189,7 @@ function SessionShortInfo({
           <LikeButton liked={session.liked} sessionId={session.id} />
           <CopyUrlButton />
         </div>
-        <Button variant="default" className="flex-1">
-          참여하기
-        </Button>
+        <ParticipateButton className="flex-1" sessionId={session.id} />
       </div>
       <Modal open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
         <Modal.Content className="z-999">
