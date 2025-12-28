@@ -1,4 +1,9 @@
-import { SessionFilterState, SessionLevel, SessionSortKey } from '@/types';
+import {
+  SessionFilterState,
+  SessionLevel,
+  SessionSortKey,
+  SessionTabKey,
+} from '@/types';
 
 export const SESSION_SORT_OPTIONS = [
   { label: '최신 생성순', value: 'createdAtDesc' },
@@ -25,7 +30,7 @@ export const SESSION_FILTER_TABS = [
   { key: 'time', label: '시간' },
   { key: 'level', label: '난이도' },
 ] as const satisfies readonly {
-  key: 'region' | 'date' | 'time' | 'level';
+  key: SessionTabKey;
   label: string;
 }[];
 

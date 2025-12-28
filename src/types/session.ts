@@ -44,6 +44,7 @@ export type SessionListFilters = PaginationQueryParams & {
 export type SessionSortKey = 'createdAtDesc' | 'sessionAtAsc' | 'registerByAsc';
 export type SessionLevel = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
 export type SessionStatus = 'OPEN' | 'CLOSED';
+export type SessionTabKey = 'region' | 'date' | 'time' | 'level';
 
 export type SessionFilterState = {
   sort: SessionSortKey;
