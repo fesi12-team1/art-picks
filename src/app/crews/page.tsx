@@ -14,6 +14,13 @@ import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 export default function Page() {
   const [open, setOpen] = useState(false);
 
+  const openModal = () => {
+    setOpen(true);
+  };
+  const closeModal = () => {
+    setOpen(false);
+  };
+
   const { data, fetchNextPage, hasNextPage, isLoading, isError } =
     useInfiniteQuery(crewQueries.list({ sort: 'createdAtDesc' }));
 
@@ -76,7 +83,7 @@ export default function Page() {
       </section>
       <Button
         className="fixed right-16 bottom-16 flex size-18 items-center justify-center rounded-3xl"
-        onClick={() => setOpen(true)}
+        onClick={openModal}
       >
         <PlusIcon className="size-8 text-white" />
       </Button>
@@ -85,17 +92,17 @@ export default function Page() {
           <Modal.Header className="relative flex items-center justify-center">
             <button
               className="tablet:hidden absolute left-0"
-              onClick={() => setOpen(false)}
+              onClick={closeModal}
             >
               <ChevronLeft className="size-6 text-white" />
             </button>
             <Modal.Title className="tablet:m-0 ml-7">크루 생성하기</Modal.Title>
           </Modal.Header>
           <Modal.CloseButton
-            onClick={() => setOpen(false)}
+            onClick={closeModal}
             className="tablet:block top-[26px] right-6 hidden"
           />
-          <CrewCreateForm />
+          <CrewCreateForm onSuccessHandler={closeModal} />
         </Modal.Content>
       </Modal>
     </main>

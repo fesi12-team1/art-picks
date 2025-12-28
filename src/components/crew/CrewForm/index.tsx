@@ -12,10 +12,19 @@ import { useCreateCrewForm } from '@/hooks/crew/useCreateCrewForm';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { SIDO_LIST } from '@/types/region';
 
-export default function CrewCreateForm() {
+interface CrewCreateFormProps {
+  onSuccessHandler?: () => void;
+}
+
+export default function CrewCreateForm({
+  onSuccessHandler,
+}: CrewCreateFormProps) {
   const { form, submit, isPending } = useCreateCrewForm({
     onSuccess() {
       toast.success('크루가 생성되었습니다!');
+      if (onSuccessHandler) {
+        onSuccessHandler();
+      }
     },
     onError: (message) => {
       toast.error(`크루 생성 실패: ${message}`);
