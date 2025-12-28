@@ -1,19 +1,11 @@
 import KakaoMap from '@/components/session/KakaoMap';
-import Button from '@/components/ui/Button';
 import { formatKoYMD, formatKoYYMDMeridiemTime } from '@/lib/time';
 import { Session } from '@/types';
 import ParticipantsList from './ParticipantsList';
 
 export default function SessionDetailInfo({ session }: { session: Session }) {
-  const {
-    description,
-    createdAt,
-    sessionAt,
-    registerBy,
-    location,
-    coords,
-    currentParticipantCount,
-  } = session;
+  const { description, createdAt, sessionAt, registerBy, location, coords } =
+    session;
 
   return (
     <div className="tablet:px-12 laptop:px-3 laptop:py-0 tablet:py-8 tablet:gap-8 laptop:bg-gray-900 flex flex-col gap-6 bg-gray-800 px-6 py-6">
