@@ -1,10 +1,10 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
+import Image from 'next/image';
 import { sessionQueries } from '@/api/queries/sessionQueries';
 import SessionInfo from '@/components/session/SessionInfo';
 import Rating from '@/components/ui/Rating';
-import SafeImage from '@/components/ui/SafeImage';
 import UserAvatar from '@/components/ui/UserAvatar';
 import { Review } from '@/types';
 
@@ -25,9 +25,8 @@ export default function ReviewCard({
   return (
     <li className="flex flex-col gap-2">
       {review.image && (
-        <SafeImage
+        <Image
           src={review.image}
-          fallbackSrc="/assets/profile-default.png"
           alt="리뷰 이미지"
           width={124}
           height={80}
