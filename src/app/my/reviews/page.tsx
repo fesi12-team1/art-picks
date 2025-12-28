@@ -49,9 +49,9 @@ export default function MyReviewsPage() {
   }
 
   return (
-    <section className="flex flex-col gap-6">
+    <section className="flex flex-col gap-4">
       {reviews.map((review, index) => (
-        <>
+        <div key={review.id} className="flex flex-col gap-4">
           <ReviewCard key={review.id} data={review} showUser={false} />
           {index !== reviews.length - 1 && (
             <div
@@ -62,7 +62,7 @@ export default function MyReviewsPage() {
               }}
             />
           )}
-        </>
+        </div>
       ))}
 
       <div ref={bottomRef} className="h-5" />
