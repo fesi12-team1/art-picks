@@ -12,10 +12,13 @@ export default function BackButton() {
   };
 
   return (
-    <ShevronLeft
+    <button
       type="button"
       onClick={handleClick}
-      className="size-6 hover:cursor-pointer"
-    />
+      className="hover:cursor-pointer"
+      aria-label="뒤로 가기"
+    >
+      <ShevronLeft className="size-6" />
+    </button>
   );
 }
