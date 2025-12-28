@@ -89,7 +89,9 @@ export default function CompletedSessionCard({
               </div>
             )}
           </div>
-          {action && actionPlacement === 'bottom' && <div>{action}</div>}
+          {action && actionPlacement === 'bottom' && (
+            <div className="pointer-events-auto">{action}</div>
+          )}
           {showRanks && (
             <div className="flex items-center gap-0.5">
               <Star className="size-3 fill-gray-100" />

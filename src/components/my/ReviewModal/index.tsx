@@ -2,7 +2,7 @@
 
 import { format } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { useUploadImage } from '@/api/mutations/imageMutations';
 import { useCreateSessionReview } from '@/api/mutations/reviewMutations';
@@ -15,6 +15,12 @@ import Spinner from '@/components/ui/Spinner';
 import Textarea from '@/components/ui/Textarea';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { Session } from '@/types';
+
+const formatTime = (time: string) => {
+  return format(new Date(time), 'yyyy년 M월 d일 • a h:mm', {
+    locale: ko,
+  });
+};
 
 interface ReviewModalProps {
   open: boolean;
@@ -33,6 +39,15 @@ export default function ReviewModal({
   const [description, setDescription] = useState<string>('');
   const [image, setImage] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!open) {
+      setRanks(0);
+      setDescription('');
+      setImage(null);
+      setIsSubmitting(false);
+    }
+  }, [open]);
 
   const isDisabled = isSubmitting || ranks === 0 || description.trim() === '';
 
@@ -61,6 +76,7 @@ export default function ReviewModal({
           imageUrl = url;
         } catch {
           toast.error('이미지 업로드 실패!');
+          setIsSubmitting(false);
           return;
         }
       }
@@ -78,12 +94,6 @@ export default function ReviewModal({
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const formatTime = (time: string) => {
-    return format(new Date(time), 'yyyy년 M월 d일 • a h:mm', {
-      locale: ko,
-    });
   };
 
   return (
@@ -106,10 +116,10 @@ export default function ReviewModal({
           <div className="flex flex-col gap-6">
             <div className="flex flex-col items-center justify-center gap-0.5">
               <p className="text-caption-regular tablet:text-body3-regular text-gray-300">
-                {session?.location}
+                {session.location}
               </p>
               <p className="text-body3-semibold tablet:text-body2-semibold text-gray-100">
-                {session?.name}
+                {session.name}
               </p>
               <p className="text-caption-regular tablet:text-body3-regular text-gray-300">
                 {formatTime(session.sessionAt)}
