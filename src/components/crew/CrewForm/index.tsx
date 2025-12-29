@@ -56,13 +56,17 @@ export default function CrewCreateForm({
       onSubmit={submit}
       className="tablet:justify-between flex h-full w-full flex-col gap-4"
     >
-      <CoverImageUploader onChange={handleImageChange} />
+      <CoverImageUploader
+        onChange={handleImageChange}
+        className="bg-gray-750"
+      />
 
       <Input
         label="크루 이름"
         {...form.register('name')}
         placeholder="크루 이름을 작성해주세요"
         errorMessage={form.formState.errors.name?.message}
+        className="bg-gray-750"
       />
 
       <div className="flex flex-col gap-2">
@@ -71,6 +75,7 @@ export default function CrewCreateForm({
           <Textarea
             {...form.register('description')}
             placeholder="크루에 대한 상세 설명을 작성해주세요"
+            className="bg-gray-750"
           />
         </Label>
         {form.formState.errors.description && (
