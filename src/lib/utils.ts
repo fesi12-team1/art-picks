@@ -101,6 +101,25 @@ export function getOptionLabel<
   return options.find((option) => option.value === value)?.label;
 }
 
+export async function copyStringToClipboard(text: string) {
+  // 최신 브라우저
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  // fallback (구형/일부 환경)
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.appendChild(textarea);
+  textarea.focus();
+  textarea.select();
+  document.execCommand('copy');
+  document.body.removeChild(textarea);
+}
+
 /**
  * 객체를 쿼리 파라미터 형식으로 변환합니다.
  * @param obj - 쿼리 파라미터로 변환할 객체

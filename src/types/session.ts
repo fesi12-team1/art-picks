@@ -25,6 +25,7 @@ export interface Session<City extends Sido = Sido> {
   maxParticipantCount: number;
   currentParticipantCount: number;
   createdAt: string;
+  ranks: number;
   liked: boolean;
   participants: CrewMember[];
 }
@@ -67,3 +68,7 @@ export type LikeSessions = Pick<
   | 'level'
   | 'status'
 > & { sessionId: number };
+
+export type ParticipatingSession = Omit<Session, 'description'> & {
+  reviewed?: boolean;
+};
