@@ -34,7 +34,7 @@ export default function Input({
   return (
     <div className="w-full">
       {label && (
-        <Label htmlFor={id} className="mb-1">
+        <Label htmlFor={id} className="mb-1 block">
           {label}
         </Label>
       )}

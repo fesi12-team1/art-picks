@@ -52,10 +52,7 @@ export default function CrewCreateForm({
   );
 
   return (
-    <form
-      onSubmit={submit}
-      className="tablet:justify-between flex h-full w-full flex-col gap-4"
-    >
+    <form onSubmit={submit} className="flex w-full flex-col gap-4">
       <CoverImageUploader
         onChange={handleImageChange}
         className="bg-gray-750"
@@ -89,7 +86,7 @@ export default function CrewCreateForm({
         <label className="text-caption-semibold tablet:text-body3-semibold text-gray-50">
           지역
         </label>
-        <div className="tablet:grid-cols-7 mt-1 grid w-full grid-cols-5 gap-4">
+        <div className="tablet:grid-cols-7 tablet:gap-2 mt-1 grid w-full grid-cols-5 place-items-center gap-3">
           {SIDO_LIST.map((sido) => (
             <Chip
               key={sido}
