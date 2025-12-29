@@ -71,7 +71,7 @@ export async function handleRequest(
         ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
       },
       body: hasBody ? request.body : undefined,
-      cache: requiresAuth ? 'no-cache' : 'default',
+      cache: requiresAuth || accessToken ? 'no-cache' : 'default',
       ...(hasBody && { duplex: 'half' }),
     });
 
