@@ -26,14 +26,17 @@ export async function handleRequest(
     }
 
     try {
-      const refreshResponse = await fetch('/api/auth/refresh', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-          'Cookie': `refreshToken=${refreshToken}`,
-        },
-        cache: 'no-cache',
-      });
+      const refreshResponse = await fetch(
+        `${request.nextUrl.origin}/api/auth/refresh`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            'Cookie': `refreshToken=${refreshToken}`,
+          },
+          cache: 'no-cache',
+        }
+      );
 
       if (!refreshResponse.ok) {
         return NextResponse.redirect(new URL('/signin', request.url));
