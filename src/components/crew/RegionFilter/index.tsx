@@ -59,7 +59,7 @@ export default function RegionFilter({ value, onChange }: RegionFilterProps) {
     return (
       <>
         <FilterModalTrigger
-          hasSelected={open}
+          hasSelected={Boolean(value?.length)}
           size="lg"
           onClick={() => handleOpenChange(true)}
         >
