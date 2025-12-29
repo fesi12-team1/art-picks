@@ -48,7 +48,7 @@ function CrewCardLeft({
   );
 }
 
-function CrewCardImage({ id, image }: { id: number; image?: string }) {
+function CrewCardImage({ id, image }: { id: number; image?: string | null }) {
   return (
     <Link
       href={`/crews/${id}`}
