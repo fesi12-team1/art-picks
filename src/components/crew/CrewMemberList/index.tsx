@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import {
-  useDelegateCrewLeader,
   useDeleteCrew,
   useExpelMember,
   useLeaveCrew,
-  useUpdateCrewDetail,
   useUpdateMemberRole,
 } from '@/api/mutations/crewMutations';
 import Settings from '@/assets/icons/settings.svg?react';
@@ -15,7 +13,7 @@ import Dropdown from '@/components/ui/Dropdown';
 import Modal from '@/components/ui/Modal';
 import UserAvatar from '@/components/ui/UserAvatar';
 import { useCrewRole } from '@/context/CrewDetailContext';
-import { Crew, CrewMember } from '@/types';
+import { Crew, CrewMember, ROLE_LABEL } from '@/types';
 
 interface CrewMemberListProps {
   crew: Crew;
@@ -172,7 +170,7 @@ function CrewMenuActions() {
               </Modal.Close>
               <Modal.Close asChild>
                 <Button className="w-full" onClick={() => leaveCrew.mutate()}>
-                  삭제
+                  탈퇴
                 </Button>
               </Modal.Close>
             </div>
@@ -252,22 +250,10 @@ function CrewMemberListItem({
     updateMemberRole.mutate({ userId: member.userId, body: { role: roleTo } });
   };
 
-  const roleText = (role = member.role) => {
-    switch (role) {
-      case 'LEADER':
-        return '크루장';
-      case 'STAFF':
-        return '운영진';
-      case 'MEMBER':
-        return '일반';
-      default:
-        break;
-    }
-  };
   return (
     <div className="mb-5 flex items-center gap-3">
       <UserAvatar src={member.profileImage} className="size-10 shrink-0" />
-      {editMode === 'view' ? (
+      {editMode === 'view' && (
         <div className="flex flex-col gap-1">
           <div className="flex w-full items-center gap-1.5">
             <span className="text-body3-semibold">{member.name}</span>
@@ -278,20 +264,21 @@ function CrewMemberListItem({
             {member.introduction || '안녕하세요:) 잘 부탁드립니다!'}
           </span>
         </div>
-      ) : (
+      )}
+      {editMode === 'edit' && (
         <div className="flex w-full items-center justify-between">
           <div className="flex items-center gap-1.5">
             <span className="text-body3-semibold">{member.name}</span>
             {member.role === 'LEADER' && <LeaderTag />}
             {member.role !== 'LEADER' && (
               <Dropdown size="lg">
-                <Dropdown.Trigger>{roleText()}</Dropdown.Trigger>
+                <Dropdown.Trigger>{ROLE_LABEL[member.role]}</Dropdown.Trigger>
                 <Dropdown.Content className="z-60">
                   <Dropdown.Item onSelect={() => handleSelect('STAFF')}>
-                    운영진
+                    {ROLE_LABEL['STAFF']}
                   </Dropdown.Item>
                   <Dropdown.Item onSelect={() => handleSelect('MEMBER')}>
-                    일반
+                    {ROLE_LABEL['MEMBER']}
                   </Dropdown.Item>
                 </Dropdown.Content>
               </Dropdown>
