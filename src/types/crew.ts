@@ -31,9 +31,10 @@ export interface CrewMember {
   userId: number;
   name: string;
   profileImage: string | null;
-  role: 'LEADER' | 'STAFF' | 'MEMBER';
+  role: CrewMemberRole;
   introduction: Profile['introduction'];
   joinedAt: string;
 }
 
+export type CrewMemberRole = 'LEADER' | 'STAFF' | 'MEMBER';
 export type CrewMemberRoleData = Pick<CrewMember, 'userId' | 'role'>;

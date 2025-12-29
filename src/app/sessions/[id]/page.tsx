@@ -15,7 +15,12 @@ import FixedBottomBar, {
   useFixedBottomBar,
 } from '@/components/layout/FixedBottomBar';
 import KakaoMap from '@/components/session/KakaoMap';
-import Badge, { LevelBadge, PaceBadge } from '@/components/ui/Badge';
+import {
+  DdayBadge,
+  LevelBadge,
+  PaceBadge,
+  RoleBadge,
+} from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import Dropdown from '@/components/ui/Dropdown';
 import Modal from '@/components/ui/Modal';
@@ -153,9 +158,7 @@ function SessionShortInfo({
     <div className="laptop:bg-gray-750 laptop:rounded-b-[20px] laptop:px-6 laptop:pt-7 laptop:pb-6 laptop:mt-0 tablet:px-12 tablet:pt-10 laptop:gap-8 relative z-10 -mt-5 flex flex-col gap-6 rounded-t-[20px] bg-gray-800 px-7 pt-6">
       <div>
         <div className="mb-1 flex w-full items-center justify-between gap-2">
-          <Badge variant="dday" size="sm">
-            마감 {formatDDay(registerBy)}
-          </Badge>
+          <DdayBadge dday={`마감 ${formatDDay(registerBy)}`} />
           {isManager && (
             <Dropdown>
               <Dropdown.TriggerNoArrow>
@@ -179,8 +182,8 @@ function SessionShortInfo({
           </div>
         </div>
         <div className="flex items-center gap-1">
-          <PaceBadge size="sm" pace={pace} />
-          <LevelBadge size="sm" level={level} />
+          <PaceBadge paceSeconds={pace} />
+          <LevelBadge level={level} />
         </div>
       </div>
       <ProgressBar value={currentParticipantCount} max={maxParticipantCount} />
@@ -316,9 +319,7 @@ function ParticipantsList({ sessionId }: { sessionId: number }) {
               <span className="text-body3-semibold tablet:text-body2-semibold">
                 {participant.name}
               </span>
-              <Badge size="sm" variant="dday">
-                {participant.role}
-              </Badge>
+              <RoleBadge role={participant.role} />
             </div>
             <p className="text-caption-regular tablet:text-body3-regular line-clamp-1 text-gray-200">
               {participant.introduction}
