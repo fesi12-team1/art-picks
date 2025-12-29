@@ -66,6 +66,11 @@ function getDisplayedPages(
   }
 
   // In MIDDLE: [0] ... [current-1] [current] [current+1] ... [N-1]
+  if (maxElements === 5) {
+    // Mobile MIDDLE: [0] ... [current] ... [N-1]
+    return [0, -1, current, -1, total - 1];
+  }
+  // Desktop MIDDLE: [0] ... [current-1] [current] [current+1] ... [N-1]
   return [0, -1, current - 1, current, current + 1, -1, total - 1];
 }
 

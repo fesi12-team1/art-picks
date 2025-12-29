@@ -8,7 +8,7 @@ import {
   useRouter,
   useSearchParams,
 } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useJoinCrew, useLeaveCrew } from '@/api/mutations/crewMutations';
 import { crewQueries } from '@/api/queries/crewQueries';
 import { sessionQueries } from '@/api/queries/sessionQueries';
@@ -42,6 +42,10 @@ export default function Page() {
   const router = useRouter();
 
   const [currentPage, setCurrentPage] = useState(pageFilter);
+
+  useEffect(() => {
+    setCurrentPage(pageFilter);
+  }, [pageFilter]);
 
   // Detect mobile screen size
   const isMobile = !useMediaQuery({ min: 'tablet' });
@@ -117,7 +121,7 @@ export default function Page() {
                 <div className="laptop:px-3 flex w-full flex-col gap-y-10 px-6">
                   <Tabs
                     defaultValue="1"
-                    className="tablet:top-[60px] sticky top-[56px]"
+                    className="tablet:top-15 sticky top-14"
                   >
                     <Tabs.List>
                       <Tabs.Trigger
