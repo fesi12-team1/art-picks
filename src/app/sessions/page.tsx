@@ -44,7 +44,7 @@ function Layout({ children }: { children: React.ReactNode }) {
 }
 
 function Header() {
-  const isTabletUp = useMediaQuery({ max: 'tablet' });
+  const isLaptopUp = useMediaQuery({ min: 'laptop' });
 
   return (
     <div
@@ -69,8 +69,8 @@ function Header() {
         <Image
           src="/assets/session-list.png"
           alt="Session List"
-          width={isTabletUp ? 417 : 302}
-          height={isTabletUp ? 235 : 170}
+          width={isLaptopUp ? 417 : 302}
+          height={isLaptopUp ? 235 : 170}
         />
       </div>
     </div>
