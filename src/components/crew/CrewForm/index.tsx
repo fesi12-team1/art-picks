@@ -38,18 +38,24 @@ export default function CrewCreateForm({
 
   const handleSelectCity = (sido: string) => {
     if (selectedCity === sido) {
-      form.setValue('city', '', { shouldValidate: true });
+      form.setValue('city', '');
     } else {
-      form.setValue('city', sido, { shouldValidate: true });
+      form.setValue('city', sido);
     }
   };
 
   const handleImageChange = useCallback(
     (file: File | null) => {
-      form.setValue('image', file ?? undefined, { shouldValidate: true });
+      form.setValue('image', file ?? undefined);
     },
     [form]
   );
+
+  const canSubmit =
+    form.watch('name').trim().length &&
+    form.watch('description').trim().length &&
+    form.watch('city') !== '' &&
+    !isPending;
 
   return (
     <form onSubmit={submit} className="flex w-full flex-col gap-4">
@@ -106,7 +112,7 @@ export default function CrewCreateForm({
         )}
       </div>
 
-      <Button type="submit" disabled={isPending || !form.formState.isValid}>
+      <Button type="submit" disabled={!canSubmit}>
         {form.formState.isSubmitting ? '생성 중...' : '완료'}
         {form.formState.isSubmitting && <Spinner className="ml-3" />}
       </Button>
