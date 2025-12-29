@@ -38,7 +38,7 @@ export default function SessionDetailInfo({ session }: { session: Session }) {
         <h2 className="text-body2-semibold tablet:text-title3-semibold flex flex-col text-gray-50">
           장소
         </h2>
-        <div className="tablet:h-[312px] tabler:rounded-[20px] flex h-[218px] flex-col overflow-hidden rounded-xl border border-gray-600 bg-gray-700">
+        <div className="tablet:h-[312px] tablet:rounded-[20px] flex h-[218px] flex-col overflow-hidden rounded-xl border border-gray-600 bg-gray-700">
           <div className="min-h-0 flex-1">
             <KakaoMap
               coords={coords}
