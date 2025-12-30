@@ -83,7 +83,10 @@ function CrewCreateModal() {
               className="tablet:hidden absolute left-0"
               onClick={closeModal}
             >
-              <ChevronLeft className="size-6 text-white" />
+              <ChevronLeft
+                aria-label="뒤로 가기"
+                className="size-6 text-white"
+              />
             </button>
             <Modal.Title className="tablet:m-0 ml-7">크루 생성하기</Modal.Title>
           </Modal.Header>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import Button from '@/components/ui/Button';
 import Chip from '@/components/ui/Chip';
@@ -20,7 +20,10 @@ interface CrewCreateFormProps {
 export default function CrewCreateForm({
   onSuccessHandler,
 }: CrewCreateFormProps) {
-  const { form, submit, isPending } = useCreateCrewForm({
+  const [selectedCity, setSelectedCity] = useState<string>('');
+  const isPc = useMediaQuery({ min: 'laptop' });
+
+  const { form, submit } = useCreateCrewForm({
     onSuccess() {
       toast.success('크루가 생성되었습니다!');
       if (onSuccessHandler) {
@@ -32,30 +35,36 @@ export default function CrewCreateForm({
     },
   });
 
-  const isPc = useMediaQuery({ min: 'laptop' });
+  const handleSelectCity = (city: string) => {
+    setSelectedCity((prev) => (prev === city ? '' : city));
 
-  const selectedCity = form.watch('city');
-
-  const handleSelectCity = (sido: string) => {
-    if (selectedCity === sido) {
+    if (selectedCity === city) {
+      setSelectedCity('');
       form.setValue('city', '');
     } else {
-      form.setValue('city', sido);
+      setSelectedCity(city);
+      form.setValue('city', city);
     }
   };
 
-  const handleImageChange = useCallback(
-    (file: File | null) => {
-      form.setValue('image', file ?? undefined);
-    },
-    [form]
-  );
+  const handleImageChange = (file: File | null) => {
+    if (!file) {
+      form.setValue('image', undefined);
+      return;
+    }
+    form.setValue('image', file);
+  };
+
+  const { errors, isSubmitting } = form.formState;
+
+  const name = form.getValues('name');
+  const description = form.getValues('description');
+  const city = form.getValues('city');
 
   const canSubmit =
-    form.watch('name').trim().length &&
-    form.watch('description').trim().length &&
-    form.watch('city') !== '' &&
-    !isPending;
+    name.trim().length > 0 &&
+    description.trim().length > 0 &&
+    city.trim().length > 0;
 
   return (
     <form onSubmit={submit} className="flex w-full flex-col gap-4">
@@ -68,7 +77,7 @@ export default function CrewCreateForm({
         label="크루 이름"
         {...form.register('name')}
         placeholder="크루 이름을 작성해주세요"
-        errorMessage={form.formState.errors.name?.message}
+        errorMessage={errors.name?.message}
         className="bg-gray-750"
       />
 
@@ -80,12 +89,12 @@ export default function CrewCreateForm({
           placeholder="크루에 대한 상세 설명을 작성해주세요"
           className="bg-gray-750"
         />
-        {form.formState.errors.description && (
+        {errors.description && (
           <p
             id="crew-description-error"
             className="text-error-100 tablet:text-body3-semibold text-caption-semibold"
           >
-            {form.formState.errors.description.message}
+            {errors.description.message}
           </p>
         )}
       </div>
@@ -107,16 +116,16 @@ export default function CrewCreateForm({
             </Chip>
           ))}
         </div>
-        {form.formState.errors.city && (
-          <p className="text-error-100 tablet:text-body3-semibold text-caption-semibold mt-2">
-            {form.formState.errors.city.message}
+        {errors.city && (
+          <p className="text-error-100 tablet:text-body3-semibold text-caption-semibold mt-1">
+            {errors.city.message}
           </p>
         )}
       </div>
 
-      <Button type="submit" disabled={!canSubmit}>
-        {form.formState.isSubmitting ? '생성 중...' : '완료'}
-        {form.formState.isSubmitting && <Spinner className="ml-3" />}
+      <Button type="submit" disabled={!canSubmit || isSubmitting}>
+        {isSubmitting ? '생성 중...' : '완료'}
+        {isSubmitting && <Spinner className="ml-3" />}
       </Button>
     </form>
   );
