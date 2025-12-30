@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import handleRequest from '@/server/api/handleRequest';
+import handleRequest from '@/lib/api/handleRequest';
 
 const handler = async (request: NextRequest) => {
   return handleRequest(request, true);

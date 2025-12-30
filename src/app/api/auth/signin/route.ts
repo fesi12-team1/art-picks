@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getBackendUrl } from '@/server/api/utils';
+import { getBackendUrl } from '@/lib/api/utils/auth';
 
 export async function POST(request: NextRequest) {
   try {
