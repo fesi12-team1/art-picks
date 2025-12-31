@@ -1,5 +1,4 @@
-'use client';
-
+import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import z from 'zod';
 import { useUpdateSession } from '@/api/mutations/sessionMutations';
@@ -31,6 +30,8 @@ export default function SessionUpdateModal({
   session: Session;
 }) {
   const methods = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+
     defaultValues: {
       name: session?.name || '',
       image: session?.image || '',
@@ -42,8 +43,11 @@ export default function SessionUpdateModal({
 
   const mutation = useUpdateSession(session.id);
   const onSubmit = (data: z.infer<typeof schema>) => {
-    mutation.mutate(data);
-    setIsUpdateModalOpen(false);
+    mutation.mutate(data, {
+      onSuccess: () => {
+        setIsUpdateModalOpen(false);
+      },
+    });
   };
 
   return (
@@ -68,7 +72,7 @@ export default function SessionUpdateModal({
           <form
             id="update-session-form"
             onSubmit={methods.handleSubmit(onSubmit)}
-            className="w-full flex-1"
+            className="w-full"
           >
             <SessionUpdateFields />
           </form>
