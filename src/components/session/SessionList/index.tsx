@@ -22,7 +22,7 @@ export default function SessionList({
     <>
       <div className="tablet:mt-6 mt-2 flex w-full flex-1">
         {sessions?.length ? (
-          <div className="laptop:grid-cols-3 grid w-full grid-cols-2 gap-6">
+          <ul className="laptop:grid-cols-3 grid w-full grid-cols-2 gap-6">
             {sessions.map((session) => (
               <SessionCard
                 key={session.id}
@@ -31,7 +31,7 @@ export default function SessionList({
               />
             ))}
             <div ref={loadMoreRef} className="h-1" />
-          </div>
+          </ul>
         ) : (
           <EmptyState />
         )}
