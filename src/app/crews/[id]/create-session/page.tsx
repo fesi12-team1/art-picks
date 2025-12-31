@@ -1,5 +1,6 @@
 import { ErrorBoundary, Suspense } from '@suspensive/react';
 import Spinner from '@/components/ui/Spinner';
+import AuthErrorFallback from './_components/AuthFallback';
 import BackButton from './_components/BackButton';
 import SessionCreateForm from './_components/SessionCreateForm';
 import RoleGuard from './_others/RoleGuard';
@@ -19,7 +20,7 @@ export default async function Page({
           세션 생성하기
         </h1>
       </div>
-      <ErrorBoundary fallback={<div>접근 권한 에러가 발생했습니다.</div>}>
+      <ErrorBoundary fallback={<AuthErrorFallback />}>
         <Suspense fallback={<Spinner />}>
           <RoleGuard crewId={crewId}>
             <SessionCreateForm crewId={crewId} />
