@@ -1,17 +1,19 @@
 import { cn } from '@/lib/utils';
 import useImageUploader from './useImageUploader';
 
+interface CoverImageUploaderProps {
+  label?: string;
+  maxSizeMB?: number;
+  onFileChange?: (file: File | null) => void;
+  className?: string;
+}
+
 export default function CoverImageUploader({
   label = '크루의 대표 이미지를 설정해주세요',
   maxSizeMB = 5,
   onFileChange: onChange,
   className,
-}: {
-  label?: string;
-  maxSizeMB?: number;
-  onFileChange?: (file: File | null) => void;
-  className?: string;
-}) {
+}: CoverImageUploaderProps) {
   const { inputRef, items, open, addFiles, acceptAttr } = useImageUploader({
     maxFiles: 1,
     maxSizeMB,
@@ -20,7 +22,7 @@ export default function CoverImageUploader({
   const has = items.length > 0;
 
   return (
-    <div className={className}>
+    <div>
       <input
         ref={inputRef}
         type="file"
@@ -34,7 +36,10 @@ export default function CoverImageUploader({
       />
 
       <div
-        className={'relative h-[140px] overflow-hidden rounded-xl bg-gray-800'}
+        className={cn(
+          'relative h-[140px] w-full overflow-hidden rounded-xl bg-gray-800',
+          className
+        )}
       >
         <div className="aspect-327/140">
           {has && (
@@ -50,8 +55,13 @@ export default function CoverImageUploader({
         <div
           className={cn(
             'group transparent absolute inset-0 flex flex-col items-center justify-center gap-3 transition-colors',
-            has && 'bg-black/40',
-            'hover:bg-black/60'
+            has &&
+              (className?.includes('bg-gray-750')
+                ? 'bg-gray-750/40'
+                : 'bg-gray-800/40'),
+            className?.includes('bg-gray-750')
+              ? 'hover:bg-gray-750/60'
+              : 'hover:bg-gray-800/60'
           )}
         >
           {has || (

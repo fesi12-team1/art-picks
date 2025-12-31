@@ -34,7 +34,7 @@ export default function Input({
   return (
     <div className="w-full">
       {label && (
-        <Label htmlFor={id} className="mb-1">
+        <Label htmlFor={id} className="mb-1 block">
           {label}
         </Label>
       )}
@@ -57,7 +57,7 @@ export default function Input({
           ref={ref}
           id={id}
           className={cn(
-            'flex-1 bg-transparent text-white outline-none placeholder:text-gray-400',
+            'flex-1 bg-transparent text-white outline-none placeholder:text-gray-300',
             'text-body3-medium placeholder:text-body3-medium',
             'tablet:text-body2-medium tablet:placeholder:text-body2-medium'
           )}
