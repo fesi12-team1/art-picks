@@ -1,7 +1,7 @@
 'use client';
 
 import { ChevronLeft } from 'lucide-react';
-import CrewCreateForm from '@/components/crew/CrewForm';
+import CrewForm from '@/components/crew/CrewForm';
 import Modal from '@/components/ui/Modal';
 import { Crew } from '@/types';
 
@@ -9,16 +9,23 @@ interface CrewModalProps {
   mode: 'create' | 'edit';
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  initialData?: Crew;
+  crewData?: Crew;
+  onSuccess?: () => void;
 }
 
 export default function CrewModal({
   mode,
   open,
   onOpenChange,
-  initialData,
+  crewData,
+  onSuccess,
 }: CrewModalProps) {
   const closeModal = () => onOpenChange(false);
+
+  const handleSuccess = () => {
+    closeModal();
+    onSuccess?.();
+  };
 
   return (
     <Modal open={open} onOpenChange={onOpenChange}>
@@ -42,13 +49,31 @@ export default function CrewModal({
         />
 
         <div className="scrollbar-hidden w-full overflow-y-auto px-0.5">
-          {open && (
-            <CrewCreateForm />
-            // <CrewForm
-            //   mode={mode}
-            //   initialValues={initialData}
-            //   onSuccess={closeModal}
-            // />
+          {open && mode === 'create' && (
+            <CrewForm
+              mode="create"
+              defaultValues={{
+                name: '',
+                description: '',
+                city: '서울',
+                image: undefined,
+              }}
+              onSuccess={handleSuccess}
+            />
+          )}
+
+          {open && mode === 'edit' && crewData && (
+            <CrewForm
+              mode="edit"
+              crewId={crewData.id}
+              defaultValues={{
+                name: crewData.name,
+                description: crewData.description,
+                city: crewData.city,
+                image: crewData.image || undefined,
+              }}
+              onSuccess={handleSuccess}
+            />
           )}
         </div>
       </Modal.Content>

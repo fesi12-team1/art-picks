@@ -158,7 +158,8 @@ function CrewMenuActions({ crew: crewData }: { crew?: Crew }) {
         mode="edit"
         open={currentModal === 'edit'}
         onOpenChange={(open) => !open && setCurrentModal(null)}
-        initialData={crewData}
+        crewData={crewData}
+        onSuccess={() => setCurrentModal(null)} // 현재 작동 안함
       />
 
       {/* Leave Crew Modal */}
