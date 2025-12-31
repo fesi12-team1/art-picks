@@ -14,11 +14,14 @@ jest.mock('next/navigation', () => ({
 }));
 
 if (process.env.NEXT_PUBLIC_USE_MSW === 'true') {
-  beforeAll(async () => {
-    const { server } = await import('@/mocks/jest');
-    server.listen();
+  let server: Awaited<typeof import('@/mocks/jest')>['server'];
 
-    afterEach(() => server.resetHandlers());
-    afterAll(() => server.close());
+  beforeAll(async () => {
+    const { server: mockServer } = await import('@/mocks/jest');
+    server = mockServer;
+    server.listen();
   });
+
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
 }
