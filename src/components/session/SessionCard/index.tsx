@@ -84,7 +84,7 @@ export default function SessionCard({
         </div>
       </div>
 
-      <div className="mobile:mb-2 tablet:mt-[18px] pointer-events-none my-3 mt-3">
+      <div className="mobile:mb-2 tablet:mt-[18px] pointer-events-none my-3">
         <span className="text-body3-semibold tablet:text-title3-semibold laptop:text-title3-semibold mb-0.5 line-clamp-1 text-gray-50">
           {name}
         </span>
