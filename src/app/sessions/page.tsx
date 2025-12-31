@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import SessionPageContent from '@/components/session/SessionPageContent';
+import Spinner from '@/components/ui/Spinner';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 export default function Page() {
@@ -16,13 +17,7 @@ export default function Page() {
           </div>
         }
       >
-        <Suspense
-          fallback={
-            <div className="h-main flex items-center justify-center text-gray-300">
-              로딩 중...
-            </div>
-          }
-        >
+        <Suspense fallback={<Spinner.Page />}>
           <SessionPageContent />
         </Suspense>
       </ErrorBoundary>
@@ -38,7 +33,7 @@ function Layout({ children }: { children: React.ReactNode }) {
       }
     >
       <Header />
-      {children}
+      <div className="w-full flex-1">{children}</div>
     </main>
   );
 }

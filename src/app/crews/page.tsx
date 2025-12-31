@@ -7,6 +7,7 @@ import CrewCreateForm from '@/components/crew/CrewForm';
 import CrewPageContent from '@/components/crew/CrewPageContent';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
+import Spinner from '@/components/ui/Spinner';
 
 export default function Page() {
   return (
@@ -18,13 +19,7 @@ export default function Page() {
           </div>
         }
       >
-        <Suspense
-          fallback={
-            <div className="h-main flex items-center justify-center text-gray-300">
-              로딩 중...
-            </div>
-          }
-        >
+        <Suspense fallback={<Spinner.Page />}>
           <CrewPageContent />
         </Suspense>
       </ErrorBoundary>
@@ -36,7 +31,7 @@ function Layout({ children }: { children: React.ReactNode }) {
   return (
     <main className="h-main mx-auto flex max-w-[1120px] flex-col items-center justify-start px-6">
       <Header />
-      {children}
+      <div className="flex w-full flex-col">{children}</div>
       <CrewCreateModal />
     </main>
   );
