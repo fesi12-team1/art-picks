@@ -147,28 +147,52 @@ export default function Page() {
                     <span className="text-title3-semibold text-gray-50">
                       모집중인 세션
                     </span>
-                    <div className="grid grid-cols-3 gap-3">
-                      {crewSessions?.content.slice(0, 3).map((session) => (
-                        <SessionCard
-                          key={session.id}
-                          session={session}
-                          displayParticipants={false}
-                        />
-                      ))}
-                    </div>
+                    {crewSessions && crewSessions.content.length > 0 ? (
+                      <div className="grid grid-cols-3 gap-3">
+                        {crewSessions.content.slice(0, 3).map((session) => (
+                          <SessionCard
+                            key={session.id}
+                            session={session}
+                            displayParticipants={false}
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <span
+                        className={cn(
+                          'self-center justify-self-center text-gray-300',
+                          'text-body3-regular py-2.5',
+                          'tablet:text-body2-medium tablet:py-5 tablet:mb-4'
+                        )}
+                      >
+                        현재 모집중인 세션이 없어요
+                      </span>
+                    )}
                   </div>
                   <div className="flex flex-col gap-4">
                     <span className="text-title3-semibold text-gray-50">
                       마감된 세션
                     </span>
-                    <div className="flex flex-col divide-y divide-gray-700 *:py-2">
-                      {crewSessions?.content.slice(0, 3).map((session) => (
-                        <CompletedSessionCard
-                          key={session.id}
-                          session={session}
-                        />
-                      ))}
-                    </div>
+                    {crewSessions && crewSessions.content.length > 0 ? (
+                      <div className="flex flex-col divide-y divide-gray-700 *:py-2">
+                        {crewSessions?.content.slice(0, 3).map((session) => (
+                          <CompletedSessionCard
+                            key={session.id}
+                            session={session}
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <span
+                        className={cn(
+                          'self-center justify-self-center text-gray-300',
+                          'text-body3-regular py-2.5',
+                          'tablet:text-body2-medium tablet:py-5 tablet:mb-4'
+                        )}
+                      >
+                        아직 마감된 세션이 없어요
+                      </span>
+                    )}
                   </div>
                   <div
                     id="review"
@@ -182,7 +206,7 @@ export default function Page() {
                         {totalElements}
                       </span>
                     </div>
-                    {reviews && totalElements > 0 && (
+                    {reviews && totalElements > 0 ? (
                       <>
                         <div className="flex flex-col divide-y divide-dashed divide-gray-500 *:pb-2 not-first:*:pt-2">
                           {reviews.map((review) => (
@@ -202,6 +226,16 @@ export default function Page() {
                           isLoading={isLoading}
                         />
                       </>
+                    ) : (
+                      <span
+                        className={cn(
+                          'self-center justify-self-center text-gray-300',
+                          'text-body3-regular py-2.5',
+                          'tablet:text-body2-medium tablet:py-5 tablet:mb-4'
+                        )}
+                      >
+                        아직 작성된 후기가 없어요
+                      </span>
                     )}
                   </div>
                 </div>
