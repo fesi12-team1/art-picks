@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import {
   useRegisterSession,
   useUnregisterSession,
@@ -54,6 +55,17 @@ export function useSessionAction(sessionId: number) {
     onError: (error) => {
       const status = error.status;
       const errorCode = error.code;
+      const errorMessage = error.message;
+
+      if (errorCode === 'SESSION_FULL') {
+        toast.error(errorMessage || '세션 정원이 모두 찼습니다.');
+        return;
+      }
+
+      if (errorCode === 'SESSION_CLOSED') {
+        toast.error(errorMessage || '세션 신청이 마감되었습니다.');
+        return;
+      }
 
       // 1. 비로그인 처리 (401)
       if (status === '401' || errorCode === 'UNAUTHORIZED') {
