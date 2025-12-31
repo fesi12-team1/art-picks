@@ -1,6 +1,6 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import {
   useParams,
@@ -8,7 +8,7 @@ import {
   useRouter,
   useSearchParams,
 } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { useJoinCrew, useLeaveCrew } from '@/api/mutations/crewMutations';
 import { crewQueries } from '@/api/queries/crewQueries';
@@ -23,6 +23,7 @@ import CompletedSessionCard from '@/components/session/CompletedSessionCard';
 import SessionCard from '@/components/session/SessionCard';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
+import Spinner from '@/components/ui/Spinner';
 import Tabs from '@/components/ui/Tabs';
 import { CrewDetailContext, useCrewRole } from '@/context/CrewDetailContext';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
@@ -66,9 +67,57 @@ export default function Page() {
   const members = [...(crewMembers?.members || [])].filter(
     (member): member is CrewMember => member !== undefined
   );
-  const { data: crewSessions } = useQuery(
-    sessionQueries.list({ page: 0, size: 3, crewId, sort: 'registerByAsc' })
+  // const { data: _crewSessions } = useQuery(
+  //   sessionQueries.list({ page: 0, size: 100, crewId, sort: 'sessionAtAsc' })
+  // );
+
+  // 모집중인 세션
+  const {
+    data: recruitingSessions,
+    fetchNextPage: fetchNextRecruitingSessions,
+    hasNextPage: hasNextRecruitingSessions,
+    isFetching: isFetchingRecruitingSessions,
+  } = useInfiniteQuery(
+    sessionQueries.infiniteList({
+      size: 10,
+      crewId,
+      sort: 'registerByAsc',
+      // status: "CLOSED"
+    })
   );
+
+  const recruitingRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const el = recruitingRef.current;
+    if (!el || !hasNextRecruitingSessions) return;
+
+    const handleScroll = () => {
+      const isEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 20;
+
+      if (isEnd && !isFetchingRecruitingSessions) {
+        fetchNextRecruitingSessions();
+      }
+    };
+
+    el.addEventListener('scroll', handleScroll);
+    return () => el.removeEventListener('scroll', handleScroll);
+  }, [
+    hasNextRecruitingSessions,
+    isFetchingRecruitingSessions,
+    fetchNextRecruitingSessions,
+  ]);
+
+  // 마감된 세션
+  const { data: completedSessions } = useQuery(
+    sessionQueries.list({
+      page: 0,
+      size: 3,
+      crewId,
+      sort: 'sessionAtAsc',
+    })
+  );
+
   const { data: myProfile } = useQuery(userQueries.me.info());
   const { data: myRoleData } = useQuery({
     ...crewQueries.members(crewId).detail(myProfile?.id ?? 0),
@@ -83,6 +132,8 @@ export default function Page() {
   const reviews = crewReviewsData?.content || [];
   const totalElements = crewReviewsData?.totalElements ?? 0;
   const totalPages = crewReviewsData?.totalPages ?? 0;
+
+  if (!crew) return null;
 
   return (
     <>
@@ -169,16 +220,31 @@ export default function Page() {
                     >
                       모집중인 세션
                     </span>
-                    {crewSessions && crewSessions.content.length > 0 ? (
-                      <div className="grid grid-cols-3 gap-3">
-                        {crewSessions.content.slice(0, 3).map((session) => (
-                          <SessionCard
-                            key={session.id}
-                            session={session}
-                            displayParticipants={false}
-                          />
-                        ))}
-                      </div>
+                    {recruitingSessions &&
+                    recruitingSessions.sessions.length > 0 ? (
+                      <>
+                        <div
+                          ref={recruitingRef}
+                          className="flex gap-3 overflow-x-auto"
+                        >
+                          {recruitingSessions.sessions.map((session) => (
+                            <div
+                              key={session.id}
+                              className="w-[calc((100%/3)-8px)] shrink-0"
+                            >
+                              <SessionCard
+                                session={session}
+                                displayParticipants={false}
+                              />
+                            </div>
+                          ))}
+                          {isFetchingRecruitingSessions && (
+                            <div className="flex shrink-0 items-center px-4">
+                              <Spinner className="text-brand-500 size-5" />
+                            </div>
+                          )}
+                        </div>
+                      </>
                     ) : (
                       <span
                         className={cn(
@@ -200,15 +266,31 @@ export default function Page() {
                     >
                       마감된 세션
                     </span>
-                    {crewSessions && crewSessions.content.length > 0 ? (
-                      <div className="flex flex-col divide-y divide-gray-700 *:py-2">
-                        {crewSessions?.content.slice(0, 3).map((session) => (
-                          <CompletedSessionCard
-                            key={session.id}
-                            session={session}
-                          />
-                        ))}
-                      </div>
+                    {completedSessions &&
+                    completedSessions.content.length > 0 ? (
+                      <>
+                        <div className="flex flex-col divide-y divide-gray-700 *:py-2">
+                          {completedSessions.content
+                            .filter((session) => session.status === 'CLOSED')
+                            .map((session) => (
+                              <CompletedSessionCard
+                                key={session.id}
+                                session={session}
+                              />
+                            ))}
+                        </div>
+                        <Button
+                          variant="neutral"
+                          size="xs"
+                          className={cn(
+                            'self-center rounded-[10px]',
+                            'tablet:w-[620px] laptop:w-[140px] w-[270px]'
+                          )}
+                          disabled={!completedSessions.hasNext}
+                        >
+                          더 보기
+                        </Button>
+                      </>
                     ) : (
                       <span
                         className={cn(
