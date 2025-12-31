@@ -327,7 +327,7 @@ function PageAction({ className }: { className?: string }) {
   };
 
   const handleCreateSession = () => {
-    router.push('/sessions/create');
+    router.push(`/crews/${crewId}/create-session`);
   };
 
   const handleJoinCrew = () => {
