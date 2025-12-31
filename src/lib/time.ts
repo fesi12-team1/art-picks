@@ -1,4 +1,9 @@
-import { differenceInDays, format } from 'date-fns';
+import {
+  differenceInDays,
+  differenceInHours,
+  differenceInMinutes,
+  format,
+} from 'date-fns';
 import { ko } from 'date-fns/locale';
 
 export function formatMinutesToKoreanTime(totalMinutes: number): string {
@@ -45,11 +50,18 @@ export function formatDDay(
   endDate: string | number | Date,
   startDate: string | number | Date = new Date()
 ) {
-  const diffDays = differenceInDays(new Date(endDate), new Date(startDate));
+  const end = new Date(endDate);
+  const start = new Date(startDate);
 
-  if (diffDays === 0) return 'D-Day';
-  if (diffDays > 0) return `D-${diffDays}`;
-  return `D+${Math.abs(diffDays)}`;
+  const diffMinutes = differenceInMinutes(end, start);
+  const diffHours = differenceInHours(end, start);
+  const diffDays = differenceInDays(end, start);
+
+  if (diffMinutes <= 0) return '마감됨';
+  if (diffMinutes < 60) return '곧 마감';
+  if (diffHours < 24) return `${diffHours}시간 후 마감`;
+
+  return `마감 D-${diffDays}`;
 }
 
 /** "2025-12-17T09:39:44.324" -> "12월 17일 • 오전 9:39" */
