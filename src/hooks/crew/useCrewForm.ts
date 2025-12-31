@@ -35,10 +35,13 @@ export function useCrewForm(options: UseCrewFormOptions) {
     mode: 'onSubmit',
     defaultValues,
   });
+
   const uploadImage = useUploadImage();
+
   const createMutation = useCreateCrew({ onSuccess, onError });
   const updateMutation = useUpdateCrewDetail(
-    mode === 'edit' ? options.crewId : undefined
+    mode === 'edit' ? options.crewId : undefined,
+    { onSuccess, onError }
   );
 
   const submit = form.handleSubmit(async (values) => {

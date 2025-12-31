@@ -20,10 +20,8 @@ export default function CrewModal({
   crewData,
   onSuccess,
 }: CrewModalProps) {
-  const closeModal = () => onOpenChange(false);
-
   const handleSuccess = () => {
-    closeModal();
+    onOpenChange(false);
     onSuccess?.();
   };
 
@@ -33,7 +31,7 @@ export default function CrewModal({
         <Modal.Header className="relative flex items-center justify-center">
           <button
             className="tablet:hidden absolute left-0"
-            onClick={closeModal}
+            onClick={() => onOpenChange(false)}
           >
             <ChevronLeft aria-label="뒤로 가기" className="size-6 text-white" />
           </button>
@@ -44,7 +42,7 @@ export default function CrewModal({
         </Modal.Header>
 
         <Modal.CloseButton
-          onClick={closeModal}
+          onClick={() => onOpenChange(false)}
           className="tablet:block top-[26px] right-6 hidden"
         />
 
