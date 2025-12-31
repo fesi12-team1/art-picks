@@ -6,7 +6,7 @@ export default async function Page({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = await params;
+  const crewId = Number((await params).id);
 
   return (
     <main className="h-main laptop:my-[50px] laptop:py-0 laptop:px-8 mx-auto flex max-w-[1120px] flex-col items-center p-6">
@@ -16,7 +16,7 @@ export default async function Page({
           세션 생성하기
         </h1>
       </div>
-      <SessionCreateForm crewId={Number(id)} />
+      <SessionCreateForm crewId={crewId} />
     </main>
   );
 }
