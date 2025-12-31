@@ -9,7 +9,8 @@ import { signInModal } from '@/store/signinModal';
 export default function SigninModalProvider() {
   const isOpen = useSyncExternalStore(
     signInModal.subscribe,
-    signInModal.getState
+    signInModal.getState,
+    () => false
   );
 
   return (
