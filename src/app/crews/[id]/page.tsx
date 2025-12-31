@@ -67,9 +67,6 @@ export default function Page() {
   const members = [...(crewMembers?.members || [])].filter(
     (member): member is CrewMember => member !== undefined
   );
-  // const { data: _crewSessions } = useQuery(
-  //   sessionQueries.list({ page: 0, size: 100, crewId, sort: 'sessionAtAsc' })
-  // );
 
   // 모집중인 세션
   const {
@@ -82,7 +79,7 @@ export default function Page() {
       size: 10,
       crewId,
       sort: 'registerByAsc',
-      // status: "CLOSED"
+      status: 'OPEN',
     })
   );
 
@@ -156,226 +153,223 @@ export default function Page() {
               />
             </div>
             {/* Crew Page Main */}
-            <div className="laptop:max-w-[1120px] w-full">
-              <div className="laptop:flex-row laptop:gap-10 flex w-full flex-col-reverse">
-                {/* Crew Crew Info */}
-                <div
-                  className={cn(
-                    'laptop:px-3 flex w-full flex-col px-6',
-                    'tablet:gap-y-8 laptop:gap-y-10 gap-y-6'
-                  )}
+            <div className="laptop:max-w-[1120px] laptop:flex-row laptop:gap-10 flex w-full flex-col-reverse">
+              {/* Crew Crew Info */}
+              <div
+                className={cn(
+                  'laptop:px-3 flex w-full flex-col px-6',
+                  'tablet:gap-y-8 laptop:gap-y-10 gap-y-6'
+                )}
+              >
+                <Tabs
+                  defaultValue="1"
+                  className="tablet:top-15 laptop:bg-gray-850 sticky top-14 z-10 bg-gray-800"
                 >
-                  <Tabs
-                    defaultValue="1"
-                    className="tablet:top-15 laptop:bg-gray-850 sticky top-14 z-10 bg-gray-800"
+                  <Tabs.List>
+                    <Tabs.Trigger
+                      value="1"
+                      onClick={() => router.push('#detail')}
+                      className="laptop:bg-gray-850 bg-gray-800"
+                    >
+                      상세 정보
+                    </Tabs.Trigger>
+                    <Tabs.Trigger
+                      value="2"
+                      onClick={() => router.push('#session')}
+                      className="laptop:bg-gray-850 bg-gray-800"
+                    >
+                      모집 중인 세션
+                    </Tabs.Trigger>
+                    <Tabs.Trigger
+                      value="3"
+                      onClick={() => router.push('#review')}
+                      className="laptop:bg-gray-850 bg-gray-800"
+                    >
+                      후기
+                    </Tabs.Trigger>
+                  </Tabs.List>
+                </Tabs>
+                <div id="detail" className="flex flex-col gap-2">
+                  <span
+                    className={cn(
+                      'text-gray-50',
+                      'tablet:text-title3-semibold text-body2-semibold'
+                    )}
                   >
-                    <Tabs.List>
-                      <Tabs.Trigger
-                        value="1"
-                        onClick={() => router.push('#detail')}
-                        className="laptop:bg-gray-850 bg-gray-800"
-                      >
-                        상세 정보
-                      </Tabs.Trigger>
-                      <Tabs.Trigger
-                        value="2"
-                        onClick={() => router.push('#session')}
-                        className="laptop:bg-gray-850 bg-gray-800"
-                      >
-                        모집 중인 세션
-                      </Tabs.Trigger>
-                      <Tabs.Trigger
-                        value="3"
-                        onClick={() => router.push('#review')}
-                        className="laptop:bg-gray-850 bg-gray-800"
-                      >
-                        후기
-                      </Tabs.Trigger>
-                    </Tabs.List>
-                  </Tabs>
-                  <div id="detail" className="flex flex-col gap-2">
-                    <span
-                      className={cn(
-                        'text-gray-50',
-                        'tablet:text-title3-semibold text-body2-semibold'
-                      )}
-                    >
-                      크루 소개
-                    </span>
-                    <div
-                      className={cn(
-                        'tablet:text-body2-regular tablet:text-gray-100',
-                        'text-body3-regular text-gray-200'
-                      )}
-                    >
-                      {crew?.description}
-                    </div>
-                  </div>
-                  <div id="session" className="flex flex-col gap-4">
-                    <span
-                      className={cn(
-                        'text-gray-50',
-                        'tablet:text-title3-semibold text-body2-semibold'
-                      )}
-                    >
-                      모집중인 세션
-                    </span>
-                    {recruitingSessions &&
-                    recruitingSessions.sessions.length > 0 ? (
-                      <>
-                        <div
-                          ref={recruitingRef}
-                          className="flex gap-3 overflow-x-auto"
-                        >
-                          {recruitingSessions.sessions.map((session) => (
-                            <div
-                              key={session.id}
-                              className="w-[calc((100%/3)-8px)] shrink-0"
-                            >
-                              <SessionCard
-                                session={session}
-                                displayParticipants={false}
-                              />
-                            </div>
-                          ))}
-                          {isFetchingRecruitingSessions && (
-                            <div className="flex shrink-0 items-center px-4">
-                              <Spinner className="text-brand-500 size-5" />
-                            </div>
-                          )}
-                        </div>
-                      </>
-                    ) : (
-                      <span
-                        className={cn(
-                          'self-center justify-self-center text-gray-300',
-                          'text-body3-regular py-2.5',
-                          'tablet:text-body2-medium tablet:py-5 tablet:mb-4'
-                        )}
-                      >
-                        현재 모집중인 세션이 없어요
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex flex-col gap-4">
-                    <span
-                      className={cn(
-                        'text-gray-50',
-                        'tablet:text-title3-semibold text-body2-semibold'
-                      )}
-                    >
-                      마감된 세션
-                    </span>
-                    {completedSessions &&
-                    completedSessions.content.length > 0 ? (
-                      <>
-                        <div className="flex flex-col divide-y divide-gray-700 *:py-2">
-                          {completedSessions.content
-                            .filter((session) => session.status === 'CLOSED')
-                            .map((session) => (
-                              <CompletedSessionCard
-                                key={session.id}
-                                session={session}
-                              />
-                            ))}
-                        </div>
-                        <Button
-                          variant="neutral"
-                          size="xs"
-                          className={cn(
-                            'self-center rounded-[10px]',
-                            'tablet:w-[620px] laptop:w-[140px] w-[270px]'
-                          )}
-                          disabled={!completedSessions.hasNext}
-                        >
-                          더 보기
-                        </Button>
-                      </>
-                    ) : (
-                      <span
-                        className={cn(
-                          'self-center justify-self-center text-gray-300',
-                          'text-body3-regular py-2.5',
-                          'tablet:text-body2-medium tablet:py-5 tablet:mb-4'
-                        )}
-                      >
-                        아직 마감된 세션이 없어요
-                      </span>
-                    )}
-                  </div>
+                    크루 소개
+                  </span>
                   <div
-                    id="review"
-                    className="flex flex-col gap-3 border-t border-t-gray-700 py-5"
-                  >
-                    <div className="flex gap-2">
-                      <span
-                        className={cn(
-                          'text-gray-50',
-                          'tablet:text-title3-semibold text-body2-semibold'
-                        )}
-                      >
-                        후기
-                      </span>
-                      <span className="text-title3-semibold text-brand-300">
-                        {totalElements}
-                      </span>
-                    </div>
-                    {reviews && totalElements > 0 ? (
-                      <>
-                        <div
-                          className={cn(
-                            'flex flex-col divide-y divide-dashed divide-gray-500',
-                            '*:pb-4 not-first:*:pt-4'
-                          )}
-                        >
-                          {reviews.map((review) => (
-                            <ReviewCard key={review.id} data={review} />
-                          ))}
-                        </div>
-                        <ReviewPagination
-                          currentPage={currentPage}
-                          totalPages={totalPages}
-                          onPageChange={(page) => {
-                            setCurrentPage(page);
-                            router.push(`/crews/${crewId}?page=${page + 1}`, {
-                              scroll: false,
-                            });
-                          }}
-                          isMobile={isMobile}
-                          isLoading={isLoading}
-                        />
-                      </>
-                    ) : (
-                      <span
-                        className={cn(
-                          'self-center justify-self-center text-gray-300',
-                          'text-body3-regular py-2.5',
-                          'tablet:text-body2-medium tablet:py-5 tablet:mb-4'
-                        )}
-                      >
-                        아직 작성된 후기가 없어요
-                      </span>
+                    className={cn(
+                      'tablet:text-body2-regular tablet:text-gray-100',
+                      'text-body3-regular text-gray-200'
                     )}
+                  >
+                    {crew?.description}
                   </div>
                 </div>
-
-                {/* Crew Title */}
-                <div className="laptop:w-[360px] laptop:shrink-0 laptop:bg-gray-850 z-1 -mt-8 w-full flex-col self-start rounded-[20px] bg-gray-800 px-6 py-7 shadow-[0px_10px_30px_-5px_rgba(0,0,0,0.20)]">
-                  <CrewMemberList crew={crew} members={members}>
-                    <div className="laptop:flex hidden flex-col">
-                      <PageAction className="my-8" />
-                      <div className="h-0 self-stretch outline-1 outline-offset-[-0.50px] outline-zinc-700" />
-                      <div className="flex items-center gap-1">
-                        <span className="text-body2-semibold my-4 text-gray-50">
-                          멤버
-                        </span>
-                        <span className="text-body1-semibold text-brand-300">
-                          {crewMembers?.members.length}
-                        </span>
+                <div id="session" className="flex flex-col gap-4">
+                  <span
+                    className={cn(
+                      'text-gray-50',
+                      'tablet:text-title3-semibold text-body2-semibold'
+                    )}
+                  >
+                    모집중인 세션
+                  </span>
+                  {recruitingSessions &&
+                  recruitingSessions.sessions.length > 0 ? (
+                    <>
+                      <div
+                        ref={recruitingRef}
+                        className="flex gap-3 overflow-x-auto"
+                      >
+                        {recruitingSessions.sessions.map((session) => (
+                          <div
+                            key={session.id}
+                            className="laptop:w-[calc((100%-24px)/3)] w-[calc((100%-12px)/2)] shrink-0"
+                          >
+                            <SessionCard
+                              session={session}
+                              displayParticipants={false}
+                            />
+                          </div>
+                        ))}
+                        {isFetchingRecruitingSessions && (
+                          <div className="flex shrink-0 items-center px-4">
+                            <Spinner className="text-brand-500 size-5" />
+                          </div>
+                        )}
                       </div>
-                    </div>
-                  </CrewMemberList>
+                    </>
+                  ) : (
+                    <span
+                      className={cn(
+                        'self-center justify-self-center text-gray-300',
+                        'text-body3-regular py-2.5',
+                        'tablet:text-body2-medium tablet:py-5 tablet:mb-4'
+                      )}
+                    >
+                      현재 모집중인 세션이 없어요
+                    </span>
+                  )}
                 </div>
+                <div className="flex flex-col gap-4">
+                  <span
+                    className={cn(
+                      'text-gray-50',
+                      'tablet:text-title3-semibold text-body2-semibold'
+                    )}
+                  >
+                    마감된 세션
+                  </span>
+                  {completedSessions && completedSessions.content.length > 0 ? (
+                    <>
+                      <div className="flex flex-col divide-y divide-gray-700 *:py-2">
+                        {completedSessions.content
+                          .filter((session) => session.status === 'CLOSED')
+                          .map((session) => (
+                            <CompletedSessionCard
+                              key={session.id}
+                              session={session}
+                            />
+                          ))}
+                      </div>
+                      <Button
+                        variant="neutral"
+                        size="xs"
+                        className={cn(
+                          'self-center rounded-[10px]',
+                          'tablet:w-[620px] laptop:w-[140px] w-[270px]'
+                        )}
+                        disabled={!completedSessions.hasNext}
+                      >
+                        더 보기
+                      </Button>
+                    </>
+                  ) : (
+                    <span
+                      className={cn(
+                        'self-center justify-self-center text-gray-300',
+                        'text-body3-regular py-2.5',
+                        'tablet:text-body2-medium tablet:py-5 tablet:mb-4'
+                      )}
+                    >
+                      아직 마감된 세션이 없어요
+                    </span>
+                  )}
+                </div>
+                <div
+                  id="review"
+                  className="flex flex-col gap-3 border-t border-t-gray-700 py-5"
+                >
+                  <div className="flex gap-2">
+                    <span
+                      className={cn(
+                        'text-gray-50',
+                        'tablet:text-title3-semibold text-body2-semibold'
+                      )}
+                    >
+                      후기
+                    </span>
+                    <span className="text-title3-semibold text-brand-300">
+                      {totalElements}
+                    </span>
+                  </div>
+                  {reviews && totalElements > 0 ? (
+                    <>
+                      <div
+                        className={cn(
+                          'flex flex-col divide-y divide-dashed divide-gray-500',
+                          '*:pb-4 not-first:*:pt-4'
+                        )}
+                      >
+                        {reviews.map((review) => (
+                          <ReviewCard key={review.id} data={review} />
+                        ))}
+                      </div>
+                      <ReviewPagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={(page) => {
+                          setCurrentPage(page);
+                          router.push(`/crews/${crewId}?page=${page + 1}`, {
+                            scroll: false,
+                          });
+                        }}
+                        isMobile={isMobile}
+                        isLoading={isLoading}
+                      />
+                    </>
+                  ) : (
+                    <span
+                      className={cn(
+                        'self-center justify-self-center text-gray-300',
+                        'text-body3-regular py-2.5',
+                        'tablet:text-body2-medium tablet:py-5 tablet:mb-4'
+                      )}
+                    >
+                      아직 작성된 후기가 없어요
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Crew Title */}
+              <div className="laptop:w-[360px] laptop:shrink-0 laptop:bg-gray-850 z-1 -mt-8 w-full flex-col self-start rounded-[20px] bg-gray-800 px-6 py-7 shadow-[0px_10px_30px_-5px_rgba(0,0,0,0.20)]">
+                <CrewMemberList crew={crew} members={members}>
+                  <div className="laptop:flex hidden flex-col">
+                    <PageAction className="my-8" />
+                    <div className="h-0 self-stretch outline-1 outline-offset-[-0.50px] outline-zinc-700" />
+                    <div className="flex items-center gap-1">
+                      <span className="text-body2-semibold my-4 text-gray-50">
+                        멤버
+                      </span>
+                      <span className="text-body1-semibold text-brand-300">
+                        {crewMembers?.members.length}
+                      </span>
+                    </div>
+                  </div>
+                </CrewMemberList>
               </div>
             </div>
           </div>

@@ -178,7 +178,8 @@ export const sessions: Session[] = [
 
     return {
       id: i + 1,
-      crewId: faker.number.int({ min: 1, max: crews.length }),
+      // crewId: faker.number.int({ min: 1, max: crews.length }),
+      crewId: 1,
       hostUserId: faker.number.int({ min: 1, max: users.length }),
       name: faker.lorem.words(3),
       description: faker.lorem.sentence(),
@@ -215,7 +216,8 @@ export const sessions: Session[] = [
 
     return {
       id: i + 101,
-      crewId: faker.number.int({ min: 1, max: crews.length }),
+      // crewId: faker.number.int({ min: 1, max: crews.length }),
+      crewId: 1,
       hostUserId: faker.number.int({ min: 1, max: users.length }),
       name: faker.lorem.words(3),
       description: faker.lorem.sentence(),
@@ -258,7 +260,8 @@ export const sessions: Session[] = [
 
     return {
       id: i + 201,
-      crewId: faker.number.int({ min: 1, max: crews.length }),
+      // crewId: faker.number.int({ min: 1, max: crews.length }),
+      crewId: 1,
       hostUserId: faker.number.int({ min: 1, max: users.length }),
       name: faker.lorem.words(3),
       description: faker.lorem.sentence(),
