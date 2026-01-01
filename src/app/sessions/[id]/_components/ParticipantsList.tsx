@@ -73,7 +73,7 @@ export default function ParticipantsList({ sessionId }: { sessionId: number }) {
             <Modal.CloseButton className="tablet:flex absolute top-0 right-0 my-0.5 hidden" />
           </Modal.Title>
           <hr className="w-full text-gray-700" />
-          <ul className="flex h-full flex-col gap-4">
+          <ul className="flex h-full w-full flex-col gap-4">
             {participants.map((participant) => (
               <li key={participant.userId} className="flex items-center gap-3">
                 <UserAvatar
