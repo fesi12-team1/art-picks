@@ -39,7 +39,7 @@ export default async function request<T>(
     typeof window === 'undefined'
   ) {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-    absoluteUrl = `${baseUrl}${url}`;
+    absoluteUrl = new URL(url, baseUrl).toString();
   }
 
   const response = await fetch(absoluteUrl, options);
