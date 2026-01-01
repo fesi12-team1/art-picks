@@ -8,7 +8,6 @@ import {
 import ChevronLeft from '@/assets/icons/chevron-left.svg?react';
 import Settings from '@/assets/icons/settings.svg?react';
 import VerticalEllipsis from '@/assets/icons/vertical-ellipsis.svg?react';
-import X from '@/assets/icons/x.svg';
 import { RoleBadge } from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import Dropdown from '@/components/ui/Dropdown';

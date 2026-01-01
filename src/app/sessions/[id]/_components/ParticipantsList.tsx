@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { sessionQueries } from '@/api/queries/sessionQueries';
 import ChevronLeft from '@/assets/icons/chevron-left.svg?react';
-import X from '@/assets/icons/x.svg';
 import { RoleBadge } from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
