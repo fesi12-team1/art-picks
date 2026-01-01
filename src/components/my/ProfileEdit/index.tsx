@@ -67,7 +67,7 @@ export default function ProfileEdit({ open, setOpen, user }: ProfileEditProps) {
             <div className="flex justify-center">
               <ProfileImageUploader
                 imageUrl={user?.image}
-                onChange={(file) => setValue('image', file)}
+                onChange={(file) => setValue('image', file ?? undefined)}
               />
             </div>
             <div className="laptop:gap-5 mb-4 flex flex-col gap-6">
@@ -100,7 +100,7 @@ export default function ProfileEdit({ open, setOpen, user }: ProfileEditProps) {
                   render={({ field }) => (
                     <PaceSlider
                       className={isPc ? 'bg-gray-750' : 'bg-gray-800'}
-                      value={field.value}
+                      value={field.value ?? null}
                       onValueChange={field.onChange}
                     />
                   )}
