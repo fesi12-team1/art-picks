@@ -126,8 +126,6 @@ function CrewMenuActions({ crew: crewData }: { crew?: Crew }) {
   >(null);
 
   const leaveCrew = useLeaveCrew(crewId ?? 0);
-  // TODO: updateCrewDetail: 크루 생성 추가 후 구현 예정
-  // const updateCrewDetail = useUpdateCrewDetail(crewId ?? 0);
   // TODO: delegateCrewLeader: 현재 - 디자인 없음, API 있음; 추후 구현
   // const delegateCrewLeader = useDelegateCrewLeader(crewId ?? 0);
   const deleteCrew = useDeleteCrew(crewId ?? 0);
@@ -146,10 +144,10 @@ function CrewMenuActions({ crew: crewData }: { crew?: Crew }) {
           )}
           {myRole === 'LEADER' && (
             <>
-              {/* TODO: 수정 및 변경은 Modal이 떠야함 */}
               <Dropdown.Item onSelect={() => setCurrentModal('edit')}>
                 수정하기
               </Dropdown.Item>
+              {/* TODO: 크루장 변경은 Modal이 떠야함 */}
               <Dropdown.Item
                 className="text-error-100"
                 onSelect={() => setCurrentModal('delegate')}
