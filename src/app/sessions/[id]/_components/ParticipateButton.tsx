@@ -50,6 +50,7 @@ export function useSessionAction(sessionId: number) {
   const isFull = detail
     ? detail.currentParticipantCount >= detail.maxParticipantCount
     : false;
+  const isHost = detail?.hostUserId === user?.id;
 
   const registerMutation = useRegisterSession(sessionId, {
     onError: (error) => {
@@ -88,6 +89,7 @@ export function useSessionAction(sessionId: number) {
       isParticipating,
       isClosed,
       isFull,
+      isHost,
       isLoading: !detail || (!!user && !participantsData), // 유저가 있는데 데이터가 없으면 로딩
       isLoginModalOpen,
       isCrewModalOpen,
@@ -121,6 +123,7 @@ export default function ParticipateButton({
         variant="outlined"
         className={className}
         onClick={() => actions.unregister()}
+        disabled={states.isHost}
       >
         참여 취소하기
       </Button>
