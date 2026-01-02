@@ -1,5 +1,5 @@
 import Pagination from '@/components/ui/Pagination';
-import { usePagination } from '@/hooks/usePagination';
+import { usePagination } from '@/hooks/utils/usePagination';
 import { cn } from '@/lib/utils';
 
 interface ReviewPaginationProps {

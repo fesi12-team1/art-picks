@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { getDisplayedPages } from '@/lib/pagination';
+import { getDisplayedPages } from '@/lib/utils/pagination';
 
 export interface usePaginationProps {
   currentPage: number; // 0-indexed internally
