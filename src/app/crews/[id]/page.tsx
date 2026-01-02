@@ -22,11 +22,11 @@ import CompletedSessionCard from '@/components/session/CompletedSessionCard';
 import SessionCard from '@/components/session/SessionCard';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
-import Tabs from '@/components/ui/Tabs';
 import { CrewDetailContext, useCrewRole } from '@/context/CrewDetailContext';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { cn } from '@/lib/utils';
 import { CrewMember } from '@/types';
+import CrewDetailSectionsTabs from './_components/CrewDetailSectionsTabs';
 
 export default function Page() {
   const params = useParams<{ id: string }>();
@@ -76,6 +76,8 @@ export default function Page() {
   const totalElements = crewReviewsData?.totalElements ?? 0;
   const totalPages = crewReviewsData?.totalPages ?? 0;
 
+  const sections = ['detail', 'session', 'review'];
+
   return (
     <>
       <CrewDetailContext value={{ crewId: crew?.id, myRole: myRoleData?.role }}>
@@ -100,34 +102,7 @@ export default function Page() {
               <div className="laptop:flex-row laptop:gap-10 flex w-full flex-col-reverse">
                 {/* Crew Crew Info */}
                 <div className="laptop:px-3 flex w-full flex-col gap-y-10 px-6">
-                  <Tabs
-                    defaultValue="1"
-                    className="tablet:top-15 sticky top-14"
-                  >
-                    <Tabs.List>
-                      <Tabs.Trigger
-                        value="1"
-                        onClick={() => router.push('#detail')}
-                        className="bg-gray-900"
-                      >
-                        상세 정보
-                      </Tabs.Trigger>
-                      <Tabs.Trigger
-                        value="2"
-                        onClick={() => router.push('#session')}
-                        className="bg-gray-900"
-                      >
-                        모집 중인 세션
-                      </Tabs.Trigger>
-                      <Tabs.Trigger
-                        value="3"
-                        onClick={() => router.push('#review')}
-                        className="bg-gray-900"
-                      >
-                        후기
-                      </Tabs.Trigger>
-                    </Tabs.List>
-                  </Tabs>
+                  <CrewDetailSectionsTabs sections={sections} />
                   <div id="detail" className="flex flex-col gap-2">
                     <span className="text-title3-semibold text-gray-50">
                       크루 소개
