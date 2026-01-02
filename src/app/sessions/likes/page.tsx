@@ -12,7 +12,7 @@ export default function Page() {
         </p>
       </div>
       <ErrorBoundary fallback={<div>세션 목록을 불러오는데 실패했습니다.</div>}>
-        <Suspense fallback={<Spinner />}>
+        <Suspense fallback={<Spinner />} clientOnly>
           <SessionList />
         </Suspense>
       </ErrorBoundary>
