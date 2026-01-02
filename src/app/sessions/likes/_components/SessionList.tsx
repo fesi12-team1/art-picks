@@ -7,10 +7,7 @@ import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 
 export default function SessionList() {
   const query = useSuspenseInfiniteQuery(userQueries.me.likes());
-  const loadMoreRef = useInfiniteScroll(
-    () => query.fetchNextPage(),
-    query.hasNextPage
-  );
+  const loadMoreRef = useInfiniteScroll(query.fetchNextPage, query.hasNextPage);
 
   return (
     <>
