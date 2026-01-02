@@ -179,14 +179,14 @@ export default function Page() {
                     session={normalizeSession(session)}
                     size={isMobile ? 'sm' : 'lg'}
                     showRanks={false}
-                    showBadges={!isMobile}
                     action={
                       showReviewButton ? (
                         <Button
                           variant={'outlined'}
                           size={isMobile ? 'sm' : 'default'}
                           className="tablet:px-6 px-3"
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.preventDefault();
                             handleOpenReview(session);
                           }}
                         >
