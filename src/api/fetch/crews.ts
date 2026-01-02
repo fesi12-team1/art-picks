@@ -1,3 +1,5 @@
+import { UseMutationOptions } from '@tanstack/react-query';
+import { ApiError } from '@/lib/error';
 import { buildQueryParams } from '@/lib/utils';
 import {
   Crew,
@@ -18,21 +20,25 @@ export type CrewRequestBody = Pick<
   'name' | 'description' | 'city' | 'image'
 >;
 
-export type CreateCrewResponse = Crew;
 export async function createCrew(body: CrewRequestBody) {
-  return request<CreateCrewResponse>('/api/crews', {
+  return request<Crew>('/api/crews', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   });
 }
 
-export type JoinCrewResponse = {
+type JoinCrewResponse = {
   crewId: number;
   userId: number;
   role: 'MEMBER';
   joinedAt: string;
 };
+export type JoinCrewMutationOptions = UseMutationOptions<
+  JoinCrewResponse,
+  ApiError,
+  null
+>;
 export async function joinCrew(crewId: number) {
   return request<JoinCrewResponse>(`/api/crews/${crewId}/join`, {
     method: 'POST',
@@ -87,12 +93,12 @@ export async function getCrewMemberDetailById(crewId: number, userId: number) {
 export type DelegateCrewLeaderRequestBody = {
   newLeaderId: CrewMember['userId'];
 };
-
 export type DelegateCrewLeaderResponse = {
   message: '크루장이 변경되었습니다.';
   oldLeaderId: number;
   newLeaderId: number;
 };
+
 export async function delegateCrewLeader(
   crewId: number,
   body: DelegateCrewLeaderRequestBody
