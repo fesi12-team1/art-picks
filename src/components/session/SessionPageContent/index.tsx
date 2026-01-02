@@ -1,9 +1,9 @@
 'use client';
 
 import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
-import { sessionQueries } from '@/api/queries/sessionQueries';
 import { useSessionFilters } from '@/hooks/session/useSessionFilters';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import { sessionQueries } from '@/lib/api/queries/sessionQueries';
 import { SessionFilterProvider } from '@/provider/SessionFilterProvider';
 import FilterBar from '../FilterBar';
 import SessionList from '../SessionList';

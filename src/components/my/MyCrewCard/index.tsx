@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
-import { crewQueries } from '@/api/queries/crewQueries';
 import MemberIcon from '@/assets/icons/member.svg?react';
 import SafeImage from '@/components/ui/SafeImage';
 import ProfileList from '@/components/user/ProfileList';
+import { crewQueries } from '@/lib/api/queries/crewQueries';
 import { Crew } from '@/types';
 
 const ROLE_NAME = {

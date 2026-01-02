@@ -2,14 +2,14 @@ import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import Button from '@/components/ui/Button';
+import Modal from '@/components/ui/Modal';
 import {
   useRegisterSession,
   useUnregisterSession,
-} from '@/api/mutations/sessionMutations';
-import { sessionQueries } from '@/api/queries/sessionQueries';
-import { userQueries } from '@/api/queries/userQueries';
-import Button from '@/components/ui/Button';
-import Modal from '@/components/ui/Modal';
+} from '@/lib/api/mutations/sessionMutations';
+import { sessionQueries } from '@/lib/api/queries/sessionQueries';
+import { userQueries } from '@/lib/api/queries/userQueries';
 
 interface ParticipateButtonProps {
   className?: string;

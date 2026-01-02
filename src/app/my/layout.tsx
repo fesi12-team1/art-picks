@@ -1,11 +1,11 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { userQueries } from '@/api/queries/userQueries';
 import MyInfo from '@/components/my/MyInfo';
 import MyTabs from '@/components/my/MyTabs';
 import Spinner from '@/components/ui/Spinner';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { userQueries } from '@/lib/api/queries/userQueries';
 
 export default function MyLayout({ children }: { children: React.ReactNode }) {
   const isSmallDevice = useMediaQuery({ max: 'laptop' });

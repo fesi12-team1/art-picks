@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { sessionQueries } from '@/api/queries/sessionQueries';
 import ChevronLeft from '@/assets/icons/chevron-left.svg?react';
 import { RoleBadge } from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
 import UserAvatar from '@/components/ui/UserAvatar';
+import { sessionQueries } from '@/lib/api/queries/sessionQueries';
 
 export default function ParticipantsList({ sessionId }: { sessionId: number }) {
   const participantsQuery = useQuery(sessionQueries.participants(sessionId));

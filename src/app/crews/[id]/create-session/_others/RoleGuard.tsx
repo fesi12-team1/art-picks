@@ -4,8 +4,8 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
 import { toast } from 'sonner';
-import { crewQueries } from '@/api/queries/crewQueries';
-import { userQueries } from '@/api/queries/userQueries';
+import { crewQueries } from '@/lib/api/queries/crewQueries';
+import { userQueries } from '@/lib/api/queries/userQueries';
 
 interface RoleGuardProps {
   crewId: number;

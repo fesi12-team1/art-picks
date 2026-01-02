@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { crewQueries } from '@/api/queries/crewQueries';
-import { userQueries } from '@/api/queries/userQueries';
 import VerticalEllipsisIcon from '@/assets/icons/vertical-ellipsis.svg?react';
 import { DdayBadge, LevelBadge, PaceBadge } from '@/components/ui/Badge';
 import Dropdown from '@/components/ui/Dropdown';
 import ProgressBar from '@/components/ui/ProgressBar';
+import { crewQueries } from '@/lib/api/queries/crewQueries';
+import { userQueries } from '@/lib/api/queries/userQueries';
 import { formatDDay, formatKoYYMDMeridiemTime } from '@/lib/time';
 import { Session } from '@/types/session';
 import CopyUrlButton from './CopyUrlButton';

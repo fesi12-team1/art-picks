@@ -1,9 +1,9 @@
 'use client';
 
 import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
-import { userQueries } from '@/api/queries/userQueries';
 import SessionCard from '@/components/session/SessionCard';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import { userQueries } from '@/lib/api/queries/userQueries';
 
 export default function SessionList() {
   const query = useSuspenseInfiniteQuery(userQueries.me.likes());

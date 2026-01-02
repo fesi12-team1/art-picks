@@ -1,10 +1,10 @@
 'use client';
 
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { userQueries } from '@/api/queries/userQueries';
 import ReviewCard from '@/components/crew/ReviewCard';
 import Spinner from '@/components/ui/Spinner';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import { userQueries } from '@/lib/api/queries/userQueries';
 
 export default function MyReviewsPage() {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =

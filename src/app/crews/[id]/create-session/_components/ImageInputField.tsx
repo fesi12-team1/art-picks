@@ -1,6 +1,6 @@
 import { useFormContext } from 'react-hook-form';
-import { useUploadImage } from '@/api/mutations/imageMutations';
 import { CoverImageUploader } from '@/components/ui/ImageUploader';
+import { useUploadImage } from '@/lib/api/mutations/imageMutations';
 import { SessionCreateFormValues } from '../_others/schema';
 
 interface ImageInputFieldProps {

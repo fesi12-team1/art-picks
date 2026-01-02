@@ -1,11 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import z from 'zod';
-import { useUpdateSession } from '@/api/mutations/sessionMutations';
 import ChevronLeft from '@/assets/icons/chevron-left.svg?react';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
 import Spinner from '@/components/ui/Spinner';
+import { useUpdateSession } from '@/lib/api/mutations/sessionMutations';
 import { Session } from '@/types';
 import SessionUpdateFields from './SessionUpdateForm';
 

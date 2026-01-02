@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
-import { crewQueries } from '@/api/queries/crewQueries';
-import { sessionQueries } from '@/api/queries/sessionQueries';
 import ProfileList from '@/components/user/ProfileList';
+import { crewQueries } from '@/lib/api/queries/crewQueries';
+import { sessionQueries } from '@/lib/api/queries/sessionQueries';
 import type { Crew, CrewMember, Session } from '@/types';
 
 export default function CrewCard({ crew }: { crew: Crew }) {

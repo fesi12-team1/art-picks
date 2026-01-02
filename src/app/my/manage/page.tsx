@@ -2,11 +2,11 @@
 
 import { useInfiniteQuery } from '@tanstack/react-query';
 import Image from 'next/image';
-import { userQueries } from '@/api/queries/userQueries';
 import SessionCard from '@/components/session/SessionCard';
 import Spinner from '@/components/ui/Spinner';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { userQueries } from '@/lib/api/queries/userQueries';
 import { Session } from '@/types';
 
 export default function MyCreatedSessionsPage() {

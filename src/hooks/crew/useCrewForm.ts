@@ -1,14 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import {
-  useCreateCrew,
-  useUpdateCrewDetail,
-} from '@/api/mutations/crewMutations';
-import { useUploadImage } from '@/api/mutations/imageMutations';
-import {
   crewFormSchema,
   CrewFormValues,
 } from '@/components/crew/CrewForm/_schema';
+import {
+  useCreateCrew,
+  useUpdateCrewDetail,
+} from '@/lib/api/mutations/crewMutations';
+import { useUploadImage } from '@/lib/api/mutations/imageMutations';
 
 type CreateModeOptions = {
   mode: 'create';

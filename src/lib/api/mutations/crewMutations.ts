@@ -12,8 +12,8 @@ import {
   updateCrewDetail,
   updateMemberRole,
   UpdateMemberRoleRequestBody,
-} from '@/api/fetch/crews';
-import { crewQueries } from '@/api/queries/crewQueries';
+} from '@/lib/api/fetch/crews';
+import { crewQueries } from '@/lib/api/queries/crewQueries';
 
 export interface UseCrewMutationOptions {
   onSuccess?: () => void;

@@ -1,11 +1,11 @@
 import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
-import { crewQueries } from '@/api/queries/crewQueries';
 import CrewList from '@/components/crew/CrewList';
 import RegionFilter from '@/components/crew/RegionFilter';
 import OptionDropdown from '@/components/ui/OptionDropdown';
 import { CREW_SORT_OPTIONS } from '@/constants/crew';
 import { useCrewFilters } from '@/hooks/crew/useCrewFilters';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import { crewQueries } from '@/lib/api/queries/crewQueries';
 import { CrewListFilters } from '@/types';
 
 export default function CrewPageContent() {

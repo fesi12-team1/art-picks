@@ -5,11 +5,11 @@ import { PlusIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Suspense, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { userQueries } from '@/api/queries/userQueries';
 import CrewModal from '@/components/crew/CrewModal';
 import CrewPageContent from '@/components/crew/CrewPageContent';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
+import { userQueries } from '@/lib/api/queries/userQueries';
 
 export default function Page() {
   return (

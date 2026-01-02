@@ -2,9 +2,9 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
-import { CreateSessionRequestBody } from '@/api/fetch/sessions';
-import { useCreateSession } from '@/api/mutations/sessionMutations';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { CreateSessionRequestBody } from '@/lib/api/fetch/sessions';
+import { useCreateSession } from '@/lib/api/mutations/sessionMutations';
 import { formSchema, SessionCreateFormValues } from '../_others/schema';
 import AddressInput from './AddressInput';
 import DetailInputField from './DescriptionInputField';

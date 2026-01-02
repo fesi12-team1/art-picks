@@ -10,10 +10,6 @@ import {
 } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import { useJoinCrew, useLeaveCrew } from '@/api/mutations/crewMutations';
-import { crewQueries } from '@/api/queries/crewQueries';
-import { sessionQueries } from '@/api/queries/sessionQueries';
-import { userQueries } from '@/api/queries/userQueries';
 import Share from '@/assets/icons/share.svg';
 import CrewMemberList from '@/components/crew/CrewMemberList';
 import ReviewCard from '@/components/crew/ReviewCard';
@@ -27,6 +23,10 @@ import Spinner from '@/components/ui/Spinner';
 import Tabs from '@/components/ui/Tabs';
 import { CrewDetailContext, useCrewRole } from '@/context/CrewDetailContext';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { useJoinCrew, useLeaveCrew } from '@/lib/api/mutations/crewMutations';
+import { crewQueries } from '@/lib/api/queries/crewQueries';
+import { sessionQueries } from '@/lib/api/queries/sessionQueries';
+import { userQueries } from '@/lib/api/queries/userQueries';
 import { cn, copyStringToClipboard } from '@/lib/utils';
 import { CrewMember } from '@/types';
 

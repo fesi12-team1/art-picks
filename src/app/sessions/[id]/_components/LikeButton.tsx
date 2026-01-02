@@ -1,9 +1,9 @@
 'use client';
 
 import { toast } from 'sonner';
-import { useLikeSession } from '@/api/mutations/likeMutations';
 import HeartFill from '@/assets/icons/heart-fill.svg?react';
 import HeartOutline from '@/assets/icons/heart-outline.svg?react';
+import { useLikeSession } from '@/lib/api/mutations/likeMutations';
 import { signInModal } from '@/store/signinModal';
 
 interface LikeButtonProps {
