@@ -1,8 +1,10 @@
 'use client';
 
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import Link from 'next/dist/client/link';
 import Image from 'next/image';
 import {
+  notFound,
   useParams,
   usePathname,
   useRouter,
@@ -50,16 +52,14 @@ export default function Page() {
   const isMobile = useMediaQuery({ max: 'tablet' });
 
   // fetch queries
-  const { data: crew, isError: isCrewQueriesError } = useQuery(
-    crewQueries.detail(crewId)
-  );
+  const { data: crew } = useQuery(crewQueries.detail(crewId));
 
-  // Redirect to /crews if there's no crew data or error
-  useEffect(() => {
-    if (isCrewQueriesError) {
-      router.push('/crews');
-    }
-  }, [isCrewQueriesError, router]);
+  // // Redirect to /crews if there's no crew data or error
+  // useEffect(() => {
+  //   if (isCrewQueriesError) {
+  //     router.push('/crews');
+  //   }
+  // }, [isCrewQueriesError, router]);
 
   const { data: crewMembers } = useQuery(
     crewQueries.members(crewId).list({
@@ -142,7 +142,32 @@ export default function Page() {
     { id: 'review', name: '후기' },
   ];
 
-  if (!crew) return null;
+  if (isNaN(crewId)) {
+    return notFound();
+  }
+
+  if (!crew)
+    return (
+      <main className="tablet:h-[calc(100vh-60px)] mx-auto flex h-[calc(100vh-56px)] max-w-[1120px] flex-1 flex-col items-center justify-center gap-10 bg-gray-900 py-10">
+        <section className="flex h-[60vh] flex-col items-center justify-center gap-6">
+          <div className="relative h-54 w-60 md:h-72 md:w-80">
+            <Image
+              fill
+              className="object-contain"
+              src={'/assets/session-default.png'}
+              alt="세션 없음"
+              sizes="(max-width: 768px) 240px, 300px"
+            />
+          </div>
+          <p className="tablet:text-body2-medium text-body3-regular text-center text-gray-300">
+            {'크루 정보를 불러오는 중 오류가 발생했습니다.'}
+          </p>
+          <Button asChild>
+            <Link href="/crews">크루 목록으로 돌아가기</Link>
+          </Button>
+        </section>
+      </main>
+    );
 
   return (
     <>
