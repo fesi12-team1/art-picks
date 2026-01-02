@@ -1,16 +1,27 @@
 import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 import {
   createSession,
+  CreateSessionRequestBody,
+  CreateSessionResponse,
   deleteSession,
   registerForSession,
   unregisterFromSession,
   updateSessionDetail,
   UpdateSessionDetailRequestBody,
+  UpdateSessionDetailResponse,
 } from '@/api/fetch/sessions';
 import { sessionQueries } from '@/api/queries/sessionQueries';
+import { ApiError } from '@/lib/error';
 
 // 세션 생성
-export function useCreateSession(options?: UseMutationOptions) {
+export function useCreateSession(
+  options?: UseMutationOptions<
+    CreateSessionResponse, // TData = unknown,
+    ApiError, // TError = DefaultError,
+    CreateSessionRequestBody // TVariables = void,
+    // TOnMutateResult = unknown
+  >
+) {
   return useMutation({
     mutationFn: createSession,
     ...options,
@@ -26,11 +37,15 @@ export function useCreateSession(options?: UseMutationOptions) {
 // 세션 정보 수정
 export function useUpdateSession(
   sessionId: number,
-  options?: UseMutationOptions
+  options?: UseMutationOptions<
+    UpdateSessionDetailResponse, // TData = unknown,
+    ApiError, // TError = DefaultError,
+    UpdateSessionDetailRequestBody // TVariables = void,
+    // TOnMutateResult = unknown
+  >
 ) {
   return useMutation({
-    mutationFn: (body: UpdateSessionDetailRequestBody) =>
-      updateSessionDetail(sessionId, body),
+    mutationFn: (body) => updateSessionDetail(sessionId, body),
     ...options,
     onSuccess: (data, variables, onMutateResult, context) => {
       context.client.invalidateQueries({

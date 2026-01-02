@@ -7,7 +7,7 @@ import {
 } from '@/types';
 import request from './request';
 
-export type GetSessionsResponse = SliceData<Session>;
+type GetSessionsResponse = SliceData<Session>;
 export async function getSessions(queryParams?: SessionListFilters) {
   const searchParams = new URLSearchParams();
 
@@ -44,7 +44,6 @@ export type CreateSessionRequestBody = Pick<
   | 'maxParticipantCount'
   | 'pace'
 >;
-
 export type CreateSessionResponse = Omit<Session, 'liked'>;
 export async function createSession(body: CreateSessionRequestBody) {
   return request<CreateSessionResponse>('/api/sessions', {
@@ -56,7 +55,7 @@ export async function createSession(body: CreateSessionRequestBody) {
   });
 }
 
-export type GetSessionDetailResponse = Session;
+type GetSessionDetailResponse = Session;
 export async function getSessionDetail(sessionId: number) {
   return request<GetSessionDetailResponse>(`/api/sessions/${sessionId}`);
 }
@@ -88,7 +87,7 @@ export async function unregisterFromSession(sessionId: number) {
   );
 }
 
-export type GetSessionParticipantsResponse = {
+type GetSessionParticipantsResponse = {
   participants: CrewMember[];
   totalCount: number;
 };
@@ -109,7 +108,6 @@ export type UpdateSessionDetailRequestBody = Pick<
   Session,
   'name' | 'description' | 'image'
 >;
-
 export type UpdateSessionDetailResponse = Session;
 export async function updateSessionDetail(
   sessionId: number,

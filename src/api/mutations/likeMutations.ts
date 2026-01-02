@@ -1,10 +1,23 @@
 import { useMutation, UseMutationOptions } from '@tanstack/react-query';
-import { deleteLikeSession, postLikeSession } from '@/api/fetch/sessions';
+import {
+  deleteLikeSession,
+  LikeSessionResponse,
+  postLikeSession,
+  UnlikeSessionResponse,
+} from '@/api/fetch/sessions';
 import { sessionQueries } from '@/api/queries/sessionQueries';
 import { userQueries } from '@/api/queries/userQueries';
+import { ApiError } from '@/lib/error';
 
 // 세션 찜/취소
-export function useLikeSession(options?: UseMutationOptions) {
+export function useLikeSession(
+  options?: UseMutationOptions<
+    LikeSessionResponse | UnlikeSessionResponse, // TData = unknown,
+    ApiError, // TError = DefaultError,
+    { sessionId: number; liked: boolean } // TVariables = void,
+    // TOnMutateResult = unknown
+  >
+) {
   return useMutation({
     mutationFn: ({
       sessionId,
@@ -35,10 +48,12 @@ export function useLikeSession(options?: UseMutationOptions) {
         );
       }
 
+      options?.onMutate?.({ sessionId, liked }, context);
+
       return { previousSessionData };
     },
 
-    onError: (_err, variables, onMutateResult, context) => {
+    onError: (error, variables, onMutateResult, context) => {
       const sessionId = variables.sessionId;
 
       if (onMutateResult?.previousSessionData) {
@@ -47,9 +62,11 @@ export function useLikeSession(options?: UseMutationOptions) {
           onMutateResult.previousSessionData
         );
       }
+
+      options?.onError?.(error, variables, onMutateResult, context);
     },
 
-    onSettled: (_data, _error, variables, _onMutateResult, context) => {
+    onSettled: (data, error, variables, onMutateResult, context) => {
       const sessionId = variables.sessionId;
 
       context.client.invalidateQueries({
@@ -61,6 +78,8 @@ export function useLikeSession(options?: UseMutationOptions) {
       context.client.invalidateQueries({
         queryKey: userQueries.me.likeAll(),
       });
+
+      options?.onSettled?.(data, error, variables, onMutateResult, context);
     },
   });
 }

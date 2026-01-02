@@ -1,5 +1,3 @@
-import { UseMutationOptions } from '@tanstack/react-query';
-import { ApiError } from '@/lib/error';
 import { buildQueryParams } from '@/lib/utils';
 import {
   Crew,
@@ -34,11 +32,6 @@ type JoinCrewResponse = {
   role: 'MEMBER';
   joinedAt: string;
 };
-export type JoinCrewMutationOptions = UseMutationOptions<
-  JoinCrewResponse,
-  ApiError,
-  null
->;
 export async function joinCrew(crewId: number) {
   return request<JoinCrewResponse>(`/api/crews/${crewId}/join`, {
     method: 'POST',
