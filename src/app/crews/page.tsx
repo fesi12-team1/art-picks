@@ -83,7 +83,7 @@ function CreateCrewButton() {
   return (
     <>
       <Button
-        className="fixed right-16 bottom-16 flex size-18 items-center justify-center rounded-3xl"
+        className="tablet:right-16 tablet:bottom-16 fixed right-6 bottom-8 flex size-16 items-center justify-center rounded-3xl"
         onClick={handleOpen}
         aria-label="크루 생성하기"
       >
