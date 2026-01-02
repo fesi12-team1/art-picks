@@ -99,7 +99,7 @@ function CrewCreateModal() {
           <Modal.Title />
           <Modal.CloseButton />
           <Modal.Description>
-            크루에 가입하려면 로그인이 필요해요!
+            크루를 생성하려면 로그인이 필요해요!
           </Modal.Description>
           <Modal.Footer>
             <Modal.Close asChild>
