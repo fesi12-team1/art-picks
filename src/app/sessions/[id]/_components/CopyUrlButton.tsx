@@ -5,7 +5,7 @@ import { copyStringToClipboard } from '@/lib/utils';
 export default function CopyUrlButton() {
   const handleClick = async () => {
     await copyStringToClipboard(window.location.href);
-    toast.success('세션 크루 URL 주소가 복사되었어요!');
+    toast.success('세션 URL 주소가 복사되었어요!');
   };
 
   return (

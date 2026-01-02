@@ -227,7 +227,7 @@ function CrewMemberListItem({
   const expelMember = useExpelMember(crewId ?? 0);
   const updateMemberRole = useUpdateMemberRole(crewId ?? 0);
   const handleSelect = (roleTo: 'STAFF' | 'MEMBER') => {
-    if (updateMemberRole.isPending) return;
+    if (updateMemberRole.isPending || roleTo === member.role) return;
 
     updateMemberRole.mutate({ userId: member.userId, body: { role: roleTo } });
   };

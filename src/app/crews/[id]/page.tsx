@@ -50,14 +50,16 @@ export default function Page() {
   const isMobile = useMediaQuery({ max: 'tablet' });
 
   // fetch queries
-  const { data: crew, isError } = useQuery(crewQueries.detail(crewId));
+  const { data: crew, isError: isCrewQueriesError } = useQuery(
+    crewQueries.detail(crewId)
+  );
 
   // Redirect to /crews if there's no crew data or error
   useEffect(() => {
-    if (isError && !crew) {
+    if (isCrewQueriesError) {
       router.push('/crews');
     }
-  }, [crew, isError, router]);
+  }, [isCrewQueriesError, router]);
 
   const { data: crewMembers } = useQuery(
     crewQueries.members(crewId).list({
@@ -112,6 +114,7 @@ export default function Page() {
       size: 3,
       crewId,
       sort: 'sessionAtAsc',
+      status: 'CLOSED',
     })
   );
 
@@ -122,7 +125,7 @@ export default function Page() {
   });
 
   // Fetch crew reviews with simple useQuery
-  const { data: crewReviewsData, isLoading } = useQuery(
+  const { data: crewReviewsData, isLoading: isLoadingCrewReviews } = useQuery(
     crewQueries.reviews(crewId).list({ page: currentPage, size: 4 })
   );
 
@@ -265,14 +268,12 @@ export default function Page() {
                   {completedSessions && completedSessions.content.length > 0 ? (
                     <>
                       <div className="flex flex-col divide-y divide-gray-700 *:py-2">
-                        {completedSessions.content
-                          .filter((session) => session.status === 'CLOSED')
-                          .map((session) => (
-                            <CompletedSessionCard
-                              key={session.id}
-                              session={session}
-                            />
-                          ))}
+                        {completedSessions.content.map((session) => (
+                          <CompletedSessionCard
+                            key={session.id}
+                            session={session}
+                          />
+                        ))}
                       </div>
                       <Button
                         variant="neutral"
@@ -337,7 +338,7 @@ export default function Page() {
                           });
                         }}
                         isMobile={isMobile}
-                        isLoading={isLoading}
+                        isLoading={isLoadingCrewReviews}
                       />
                     </>
                   ) : (
