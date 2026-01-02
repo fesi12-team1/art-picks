@@ -35,7 +35,7 @@ export function DaumPostcodeProvider({
         onSelectComplete({
           address: data.address,
           sido: data.sido,
-          sigungu: data.sigungu.split(' ')[0],
+          sigungu: data.sigungu?.split(' ')[0] ?? data.sido,
         });
       },
     }).open({
