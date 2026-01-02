@@ -1,17 +1,25 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, UseMutationOptions } from '@tanstack/react-query';
 import {
   postSignin,
   postSignout,
   postSignup,
-  SigninMutationOption,
-  SignoutMutationOption,
-  SignupMutationOption,
+  SigninResponseData,
+  SignupRequestBody,
 } from '@/api/fetch/auth';
 import { userQueries } from '@/api/queries/userQueries';
+import { ApiError } from '@/lib/error';
+import { User, UserCredentials } from '@/types';
 import { sessionQueries } from '../queries/sessionQueries';
 
 // 회원가입
-export function useSignup(options?: SignupMutationOption) {
+export function useSignup(
+  options?: UseMutationOptions<
+    User, // TData = unknown,
+    ApiError, // TError = DefaultError,
+    SignupRequestBody // TVariables = void,
+    // TOnMutateResult = unknown
+  >
+) {
   return useMutation({
     mutationFn: postSignup,
     ...options,
@@ -25,7 +33,14 @@ export function useSignup(options?: SignupMutationOption) {
 }
 
 // 로그인
-export function useSignin(options?: SigninMutationOption) {
+export function useSignin(
+  options?: UseMutationOptions<
+    SigninResponseData, // TData = unknown,
+    ApiError, // TError = DefaultError,
+    UserCredentials // TVariables = void,
+    // TOnMutateResult = unknown
+  >
+) {
   return useMutation({
     mutationFn: postSignin,
     ...options,
@@ -43,7 +58,7 @@ export function useSignin(options?: SigninMutationOption) {
 }
 
 // 로그아웃
-export function useSignout(options?: SignoutMutationOption) {
+export function useSignout(options?: UseMutationOptions) {
   return useMutation({
     mutationFn: postSignout,
     ...options,

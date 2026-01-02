@@ -1,12 +1,18 @@
-import { useMutation } from '@tanstack/react-query';
-import {
-  updateMyProfile,
-  UpdateMyProfileMutationOption,
-} from '@/api/fetch/user';
+import { useMutation, UseMutationOptions } from '@tanstack/react-query';
+import { updateMyProfile, UpdateMyProfileRequestBody } from '@/api/fetch/user';
 import { userQueries } from '@/api/queries/userQueries';
+import { ApiError } from '@/lib/error';
+import { Profile } from '@/types';
 
 // 내 정보 수정
-export function useUpdateMyProfile(options?: UpdateMyProfileMutationOption) {
+export function useUpdateMyProfile(
+  options?: UseMutationOptions<
+    Profile, // TData = unknown,
+    ApiError, // TError = DefaultError,
+    UpdateMyProfileRequestBody // TVariables = void,
+    // TOnMutateResult = unknown
+  >
+) {
   return useMutation({
     mutationFn: updateMyProfile,
     ...options,
