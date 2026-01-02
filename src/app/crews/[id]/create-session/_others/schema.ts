@@ -73,7 +73,7 @@ export const formSchema = z
     message: '세션 시작일은 현재 시간 이후여야 합니다',
     path: ['sessionAt'],
   })
-  .refine((data) => new Date(data.registerBy) > new Date(data.sessionAt), {
+  .refine((data) => new Date(data.registerBy) < new Date(data.sessionAt), {
     message: '신청 마감일은 세션 시작일보다 이전이어야 합니다',
     path: ['registerBy'],
   });
