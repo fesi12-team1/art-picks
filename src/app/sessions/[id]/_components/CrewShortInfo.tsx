@@ -17,14 +17,13 @@ export default function CrewShortInfo({ crew }: { crew: Crew }) {
   return (
     <div className="laptop:mx-0 tablet:mx-12 tablet:rounded-[20px] tablet:px-6 tablet:py-4 tablet:bg-gray-750 mx-6 flex flex-col gap-4 rounded-xl border-gray-700 bg-gray-700 p-3 px-3 py-3">
       <Link href={`/crews/${crew.id}`} className="flex items-center gap-3">
-        <div className="tablet:aspect-84/56 relative aspect-66/44 w-20">
+        <div className="tablet:aspect-84/56 relative flex aspect-66/44 w-20 items-center justify-center">
           <SafeImage
             src={image}
             alt={name}
             fallbackSrc="/assets/crew-default.png"
-            height={44}
-            width={66}
-            className="object-cover"
+            fill
+            className="rounded-lg object-cover"
           />
         </div>
         <div>
