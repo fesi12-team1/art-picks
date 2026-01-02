@@ -10,6 +10,7 @@ import CrewModal from '@/components/crew/CrewModal';
 import CrewPageContent from '@/components/crew/CrewPageContent';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
+import Spinner from '@/components/ui/Spinner';
 
 export default function Page() {
   return (
@@ -23,8 +24,8 @@ export default function Page() {
       >
         <Suspense
           fallback={
-            <div className="h-main flex items-center justify-center text-gray-300">
-              로딩 중...
+            <div className="h-main flex items-center justify-center">
+              <Spinner />
             </div>
           }
         >
