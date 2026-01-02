@@ -100,3 +100,16 @@
     display: none; /* Chrome/Safari/Edge */
   }
 }
+
+/* 에러 메시지 */
+@utility error-message {
+  color: var(--color-error-100);
+  font: var(--caption);
+  font-weight: 600;
+  margin-top: 0.5rem;
+
+  @variant tablet {
+    font: var(--body3);
+    font-weight: 600;
+  }
+}
