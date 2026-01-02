@@ -48,7 +48,10 @@ export const formSchema = z
       .string()
       .min(1, '세션 설명을 입력해주세요')
       .max(500, '세션 설명은 최대 500자입니다'),
-    image: z.url('유효한 이미지 URL을 입력해주세요'),
+    image: z
+      .string()
+      .min(1, '이미지를 업로드해주세요')
+      .url('유효한 이미지 URL을 입력해주세요'),
     location: z.string().min(1, '주소를 입력해주세요'),
     district: districtSchema,
     city: citySchema,
@@ -58,15 +61,19 @@ export const formSchema = z
     level: levelSchema,
     maxParticipantCount: z
       .number()
-      .int()
-      .min(1, '최소 1명 이상의 참가자가 필요합니다'),
+      .int('정수를 입력해주세요')
+      .min(1, '최소 1명 이상의 참가자가 필요합니다')
+      .optional()
+      .refine((val) => val !== undefined, {
+        message: '모집 정원을 입력해주세요',
+      }),
     pace: z.number().int().min(1, '유효한 페이스를 입력해주세요'),
   })
   .refine((data) => new Date(data.sessionAt) > new Date(), {
     message: '세션 시작일은 현재 시간 이후여야 합니다',
     path: ['sessionAt'],
   })
-  .refine((data) => new Date(data.registerBy) < new Date(data.sessionAt), {
+  .refine((data) => new Date(data.registerBy) > new Date(data.sessionAt), {
     message: '신청 마감일은 세션 시작일보다 이전이어야 합니다',
     path: ['registerBy'],
   });
