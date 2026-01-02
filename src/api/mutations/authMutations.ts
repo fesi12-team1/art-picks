@@ -1,54 +1,55 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { postSignin, postSignout, postSignup } from '@/api/fetch/auth';
+import { useMutation } from '@tanstack/react-query';
+import {
+  postSignin,
+  postSignout,
+  postSignup,
+  SigninMutationOption,
+  SignoutMutationOption,
+  SignupMutationOption,
+} from '@/api/fetch/auth';
 import { userQueries } from '@/api/queries/userQueries';
 import { sessionQueries } from '../queries/sessionQueries';
 
-export interface UseAuthFormOptions {
-  onSuccess?: () => void;
-  onError?: (message: string) => void;
-}
-
 // 회원가입
-export function useSignup(options?: UseAuthFormOptions) {
+export function useSignup(options?: SignupMutationOption) {
   return useMutation({
     mutationFn: postSignup,
-    onSuccess: () => {
-      options?.onSuccess?.();
+    ...options,
+    onSuccess: (data, variables, onMutateResult, context) => {
+      options?.onSuccess?.(data, variables, onMutateResult, context);
     },
-    onError: (error) => {
-      options?.onError?.(error.message);
+    onError: (error, variables, onMutateResult, context) => {
+      options?.onError?.(error, variables, onMutateResult, context);
     },
   });
 }
 
 // 로그인
-export function useSignin(options?: UseAuthFormOptions) {
-  const queryClient = useQueryClient();
-
+export function useSignin(options?: SigninMutationOption) {
   return useMutation({
     mutationFn: postSignin,
-    onSuccess: () => {
+    ...options,
+    onSuccess: (data, variables, onMutateResult, context) => {
       // 1. 내 정보 관련 캐시 삭제
-      queryClient.removeQueries({ queryKey: userQueries.me.all() });
+      context.client.removeQueries({ queryKey: userQueries.me.all() });
       // 2. 세션 관련 캐시 전체 삭제
-      queryClient.removeQueries({ queryKey: sessionQueries.all() });
-      options?.onSuccess?.();
+      context.client.removeQueries({ queryKey: sessionQueries.all() });
+      options?.onSuccess?.(data, variables, onMutateResult, context);
     },
-    onError: (error) => {
-      options?.onError?.(error.message);
+    onError: (error, variables, onMutateResult, context) => {
+      options?.onError?.(error, variables, onMutateResult, context);
     },
   });
 }
 
 // 로그아웃
-export function useSignout(options?: UseAuthFormOptions) {
-  const queryClient = useQueryClient();
-
+export function useSignout(options?: SignoutMutationOption) {
   return useMutation({
     mutationFn: postSignout,
-    onSuccess: () => {
-      queryClient.clear();
-      options?.onSuccess?.();
+    ...options,
+    onSuccess: (data, variables, onMutateResult, context) => {
+      context.client.clear();
+      options?.onSuccess?.(data, variables, onMutateResult, context);
     },
   });
 }
