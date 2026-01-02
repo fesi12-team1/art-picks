@@ -1,7 +1,6 @@
 'use client';
 
-import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
-import { crewQueries } from '@/api/queries/crewQueries';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { sessionQueries } from '@/api/queries/sessionQueries';
 import { cn } from '@/lib/utils';
 import { Session } from '@/types';
@@ -10,32 +9,24 @@ import SessionDetailInfo from './SessionDetailInfo';
 import SessionImage from './SessionImage';
 import SessionShortInfo from './SessionShortInfo';
 
-export default function SessionDetail({
-  sessionId,
-}: {
+interface SessionDetailProps {
   sessionId: Session['id'];
-}) {
+}
+
+export default function SessionDetail({ sessionId }: SessionDetailProps) {
   const sessionQuery = useSuspenseQuery(
     sessionQueries.detail(Number(sessionId))
   );
   const session = sessionQuery.data;
   const crewId = session?.crewId;
-  const crewQuery = useQuery({
-    ...crewQueries.detail(Number(crewId)),
-    enabled: !!crewId,
-  });
-
-  if (crewQuery.isLoading) return null;
-  if (crewQuery.isError) return null;
-  if (!crewQuery.data) return null;
 
   return (
     <>
       <div className={cn('laptop:hidden flex', 'flex-col bg-gray-800 py-10')}>
         <SessionImage image={session.image} name={session.name} />
-        <SessionShortInfo session={session} crewId={crewQuery.data.id} />
+        <SessionShortInfo session={session} crewId={crewId} />
         <SessionDetailInfo session={session} />
-        <CrewShortInfo crew={crewQuery.data} />
+        <CrewShortInfo crewId={crewId} />
       </div>
 
       <div
@@ -49,8 +40,8 @@ export default function SessionDetail({
           <SessionDetailInfo session={session} />
         </div>
         <div className="laptop:w-[360px] flex flex-col gap-10">
-          <SessionShortInfo session={session} crewId={crewQuery.data.id} />
-          <CrewShortInfo crew={crewQuery.data} />
+          <SessionShortInfo session={session} crewId={crewId} />
+          <CrewShortInfo crewId={crewId} />
         </div>
       </div>
     </>
