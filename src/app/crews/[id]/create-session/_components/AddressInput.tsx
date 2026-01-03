@@ -1,7 +1,7 @@
 import { useFormContext } from 'react-hook-form';
+import { useDaumPostcode } from '@/components/provider/DaumPostcodeProvider';
+import { useKakaoMap } from '@/components/provider/KakaoMapProvider';
 import { cn } from '@/lib/utils';
-import { useDaumPostcode } from '@/provider/DaumPostcodeProvider';
-import { useKakaoMap } from '@/provider/KakaoMapProvider';
 import {
   citySchema,
   districtSchema,

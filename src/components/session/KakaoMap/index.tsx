@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { cn, createKakaoMapLink } from '@/lib/utils';
-import { useKakaoMap } from '@/provider/KakaoMapProvider';
+import { useKakaoMap } from '@/components/provider/KakaoMapProvider';
 
 interface KakaoMapProps {
   address: string;

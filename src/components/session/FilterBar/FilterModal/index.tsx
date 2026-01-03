@@ -13,7 +13,7 @@ import {
   SESSION_FILTER_TABS,
   SESSION_LEVEL_OPTIONS,
 } from '@/constants/session';
-import { useSessionFilterContext } from '@/provider/SessionFilterProvider';
+import { useSessionFilterContext } from '@/components/provider/SessionFilterProvider';
 import { SessionFilterState } from '@/types';
 import { Sido, SIDO_LIST, SIGUNGU_MAP } from '@/types/region';
 

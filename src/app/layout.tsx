@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
-import { QueryProvider } from '@/provider/QueryProvider';
 import './globals.css';
 import Header from '@/components/layout/Header';
+import KakaoMapProvider from '@/components/provider/KakaoMapProvider';
+import QueryProvider from '@/components/provider/QueryProvider';
+import SuspensiveDefaultPropsProvider from '@/components/provider/SuspensiveDefaultPropsProvider';
+import ToastProvider from '@/components/provider/ToastProvider';
 import MockProvider from '@/mocks/browser/Provider';
-import { KakaoMapProvider } from '@/provider/KakaoMapProvider';
-import SuspensiveDefaultPropsProvider from '@/provider/SuspensiveDefaultPropsProvider';
-import ToastProvider from '@/provider/ToastProvider';
 
 export const metadata: Metadata = {
   title: 'RunFit - 러너를 위한 지역 기반 러닝 모임 플랫폼',

@@ -1,4 +1,4 @@
-import { DaumPostcodeProvider } from '@/provider/DaumPostcodeProvider';
+import { DaumPostcodeProvider } from '@/components/provider/DaumPostcodeProvider';
 
 export default function Layout({
   children,

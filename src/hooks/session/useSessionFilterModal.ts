@@ -1,4 +1,4 @@
-import { useSessionFilterContext } from '@/provider/SessionFilterProvider';
+import { useSessionFilterContext } from '@/components/provider/SessionFilterProvider';
 import { SessionTabKey } from '@/types';
 import { useMediaQuery } from '../useMediaQuery';
 

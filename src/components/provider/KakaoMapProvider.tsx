@@ -43,7 +43,11 @@ interface KakaoMapContextValue {
 
 const KakaoMapContext = createContext<KakaoMapContextValue | null>(null);
 
-export function KakaoMapProvider({ children }: { children: React.ReactNode }) {
+export default function KakaoMapProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
