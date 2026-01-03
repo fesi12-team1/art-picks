@@ -50,9 +50,9 @@ export default function MyCrewCard({
           <span className="text-caption-regular tablet:text-body3-regular pointer-events-none text-gray-300">{`• 멤버 ${crew.memberCount}명`}</span>
           <ProfileList
             memberCount={crew.memberCount}
-            members={crewMembers.members}
+            members={crewMembers?.members.slice(0, 3)}
           />
-          <div className="tablet:block hidden h-4 w-px bg-gray-400" />
+          <div className="tablet:block mr-1 ml-1 hidden h-4 w-px bg-gray-400" />
           <div className="text-body3-regular tablet:flex hidden items-center gap-1 text-gray-200">
             <MemberIcon className="size-4 text-gray-200" />
             <p className="text-gray-200">{ROLE_NAME[crew.myRole]}</p>
