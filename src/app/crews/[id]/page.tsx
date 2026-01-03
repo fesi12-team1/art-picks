@@ -366,8 +366,7 @@ export default function Page() {
                 <CrewMemberList crew={crew} members={members}>
                   <div className="laptop:flex hidden flex-col">
                     <PageAction className="my-8" />
-                    <div className="h-0 self-stretch outline-1 outline-offset-[-0.50px] outline-zinc-700" />
-                    <div className="flex items-center gap-1">
+                    <div className="tablet:border-t-0 flex items-center gap-1 border-t border-t-gray-500">
                       <span className="text-body2-semibold my-4 text-gray-50">
                         멤버
                       </span>
