@@ -5,6 +5,8 @@ import MyInfo from '@/components/my/MyInfo';
 import MyTabs from '@/components/my/MyTabs';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 
+export const dynamic = 'force-dynamic';
+
 function ErrorFallback() {
   return (
     <div className="flex h-[60vh] flex-col items-center justify-center gap-4">
@@ -35,9 +37,7 @@ export default function MyLayout({ children }: { children: React.ReactNode }) {
           <MyTabs isSmallDevice={isSmallDevice} />
         </div>
         <main className="flex-1">
-          <ErrorBoundary fallback={ErrorFallback}>
-            {children}
-          </ErrorBoundary>
+          <ErrorBoundary fallback={ErrorFallback}>{children}</ErrorBoundary>
         </main>
       </div>
     </div>
