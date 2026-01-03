@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormProvider, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import z from 'zod';
 import { useUpdateSession } from '@/api/mutations/sessionMutations';
 import ChevronLeft from '@/assets/icons/chevron-left.svg?react';
@@ -41,9 +42,9 @@ export default function SessionUpdateModal({
     mode: 'onSubmit',
   });
 
-  const mutation = useUpdateSession(session.id);
+  const { mutate, isPending } = useUpdateSession(session.id);
   const onSubmit = (data: z.infer<typeof schema>) => {
-    mutation.mutate(data, {
+    mutate(data, {
       onSuccess: () => {
         toast.success('세션 정보가 수정되었습니다!');
         setIsUpdateModalOpen(false);
@@ -84,7 +85,7 @@ export default function SessionUpdateModal({
           <Modal.Footer className="w-full">
             <Button type="submit" form="update-session-form" className="w-full">
               완료
-              {mutation.isPending && <Spinner />}
+              {isPending && <Spinner />}
             </Button>
           </Modal.Footer>
         </FormProvider>
