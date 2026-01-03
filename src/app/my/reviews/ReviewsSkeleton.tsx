@@ -3,7 +3,7 @@ import Rating from '@/components/ui/Rating';
 export default function ReviewsSkeleton() {
   return (
     <section className="flex flex-col gap-4">
-      {[1, 2, 3].map((i) => (
+      {[1, 2, 3].map((i, index, arr) => (
         <div key={i} className="flex flex-col gap-4">
           {/* 리뷰 카드 */}
           <div className="flex flex-col gap-2">
@@ -12,7 +12,7 @@ export default function ReviewsSkeleton() {
 
             {/* 리뷰 텍스트 - text-body3-regular */}
             <div className="flex flex-col gap-2">
-              <div className="h-5 w-3/4 animate-pulse rounded bg-gray-600" />
+              <div className="h-5 w-1/3 animate-pulse rounded bg-gray-600" />
             </div>
 
             {/* 작성 날짜 - text-caption-regular */}
@@ -25,14 +25,14 @@ export default function ReviewsSkeleton() {
 
               {/* 세션 정보 텍스트 */}
               <div className="flex flex-1 flex-col justify-end gap-1">
-                <div className="h-4 w-3/4 animate-pulse rounded bg-gray-600" />
-                <div className="h-3.5 w-1/2 animate-pulse rounded bg-gray-600" />
+                <div className="h-4 w-1/4 animate-pulse rounded bg-gray-600" />
+                <div className="h-3.5 w-1/3 animate-pulse rounded bg-gray-600" />
               </div>
             </div>
           </div>
 
           {/* 점선 구분선 (마지막 제외) */}
-          {i !== 3 && (
+          {index !== arr.length - 1 && (
             <div
               className="h-px w-full"
               style={{

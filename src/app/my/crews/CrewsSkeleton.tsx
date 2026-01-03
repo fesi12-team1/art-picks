@@ -1,7 +1,7 @@
 export default function CrewsSkeleton() {
   return (
     <section className="flex flex-col gap-4">
-      {[1, 2, 3].map((i) => (
+      {[1, 2, 3].map((i, index, arr) => (
         <div key={i} className="flex flex-col gap-4">
           {/* 크루 카드 */}
           <div className="tablet:flex-row flex flex-col">
@@ -23,7 +23,9 @@ export default function CrewsSkeleton() {
           </div>
 
           {/* 구분선 (마지막 제외) */}
-          {i !== 5 && <hr className="w-full border-gray-700" />}
+          {index !== arr.length - 1 && (
+            <hr className="w-full border-gray-700" />
+          )}
         </div>
       ))}
     </section>
