@@ -9,6 +9,7 @@ import LogoDefault from '@/assets/icons/logo-default.svg?react';
 import LogoLarge from '@/assets/icons/logo-large.svg?react';
 import Dropdown from '@/components/ui/Dropdown';
 import SafeImage from '@/components/ui/SafeImage';
+import { generateNextImageSizes } from '@/lib/Image';
 import { cn } from '@/lib/utils';
 import { type Profile } from '@/types';
 
@@ -110,6 +111,9 @@ function UserMenu({ user }: { user: Profile }) {
             className="object-cover"
             fallbackSrc="/assets/profile-default.png"
             fill
+            sizes={generateNextImageSizes({
+              mobile: '40px',
+            })}
             src={user.image}
           />
         </div>

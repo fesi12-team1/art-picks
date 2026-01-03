@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { Suspense } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import SessionPageContent from '@/components/session/SessionPageContent';
-import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { generateNextImageSizes } from '@/lib/Image';
 
 export default function Page() {
   return (
@@ -44,8 +44,6 @@ function Layout({ children }: { children: React.ReactNode }) {
 }
 
 function Header() {
-  const isLaptopUp = useMediaQuery({ min: 'laptop' });
-
   return (
     <div
       className={
@@ -53,24 +51,29 @@ function Header() {
       }
     >
       <div>
-        <h2 className="text-title1-bold mb-4 italic">
-          <Image
-            src="/assets/session-list-title.png"
-            alt="Sessions"
-            width={245.18}
-            height={70}
-          />
-        </h2>
-        <span className="text-body3-regular text-gray-200">
+        <Image
+          src="/assets/session-list-title.png"
+          alt="나와 FIT한 러닝 메이트를 찾다"
+          width={245}
+          height={70}
+          className="mb-4 h-[70px] w-[245.175px]"
+        />
+        <p className="text-body3-regular text-gray-200">
           러닝 페이스와 선호하는 스타일에 딱 맞는 세션을 찾아보세요!
-        </span>
+        </p>
       </div>
-      <div className="pt-[30px] pb-5">
+      <div className="tablet:w-[302px] tablet:h-[170px] laptop:w-[417px] laptop:h-[235px] relative h-[170px] w-[302px] pt-[30px] pb-5">
         <Image
           src="/assets/session-list.png"
           alt="Session List"
-          width={isLaptopUp ? 417 : 302}
-          height={isLaptopUp ? 235 : 170}
+          fill
+          priority
+          sizes={generateNextImageSizes({
+            mobile: '302px',
+            tablet: '302px',
+            laptop: '417px',
+          })}
+          className="object-contain"
         />
       </div>
     </div>
