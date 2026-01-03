@@ -19,9 +19,11 @@ export default function CrewCard({ crew }: { crew: Crew }) {
     })
   );
 
+  if (!crewMembers || !crewSessionData) return null;
+
   return (
     <div className="tablet:py-5 flex justify-between">
-      <CrewCardLeft crew={crew} members={crewMembers?.members} />
+      <CrewCardLeft crew={crew} members={crewMembers.members} />
       <CrewCardRight sessions={crewSessionData?.content} />
     </div>
   );
@@ -32,7 +34,7 @@ function CrewCardLeft({
   members,
 }: {
   crew: Crew;
-  members?: CrewMember[];
+  members: CrewMember[];
 }) {
   return (
     <div className="tablet:flex-row flex w-full flex-col gap-3 rounded-xl">
@@ -90,7 +92,7 @@ function CrewCardInfo({
   description: string;
   city: string;
   memberCount: number;
-  members?: CrewMember[];
+  members: CrewMember[];
 }) {
   return (
     <div className="tablet:w-[500px] flex flex-col justify-evenly gap-2 p-3 pb-1">
@@ -121,7 +123,7 @@ function CrewCardMembers({
 }: {
   city: string;
   memberCount: number;
-  members?: CrewMember[];
+  members: CrewMember[];
 }) {
   return (
     <div className="flex items-center gap-1">
@@ -133,12 +135,12 @@ function CrewCardMembers({
         • 멤버 {memberCount}명
       </span>
 
-      <ProfileList members={members} />
+      <ProfileList memberCount={memberCount} members={members} />
     </div>
   );
 }
 
-function CrewCardRight({ sessions }: { sessions?: Session[] }) {
+function CrewCardRight({ sessions }: { sessions: Session[] }) {
   if (!sessions || sessions.length === 0) return null;
   return (
     <div className="laptop:flex hidden w-[300px] shrink-0 flex-col p-3">
@@ -150,10 +152,10 @@ function CrewCardRight({ sessions }: { sessions?: Session[] }) {
   );
 }
 
-function CrewCardSessions({ sessions }: { sessions?: Session[] }) {
+function CrewCardSessions({ sessions }: { sessions: Session[] }) {
   return (
     <div className="flex flex-col gap-2">
-      {sessions?.map((session) => {
+      {sessions.map((session) => {
         const date = new Date(session.sessionAt);
         const formatted = `${date.getMonth() + 1}월 ${date.getDate()}일`;
 
