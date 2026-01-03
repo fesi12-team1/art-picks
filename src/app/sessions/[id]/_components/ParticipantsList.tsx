@@ -15,11 +15,25 @@ export default function ParticipantsList({ sessionId }: { sessionId: number }) {
   const participants = participantsQuery.data?.participants || [];
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  if (participantsQuery.isLoading) return null;
+  if (participantsQuery.isLoading)
+    return (
+      <ul className="tablet:gap-5 mb-3 flex flex-col gap-2">
+        {[1, 2, 3].map((i) => (
+          <li key={i} className="flex items-center gap-3">
+            <div className="size-12 shrink-0 animate-pulse rounded-full bg-gray-600" />
+            <div className="flex flex-col gap-1">
+              <div className="h-4 w-24 animate-pulse rounded bg-gray-600" />
+              <div className="h-3 w-16 animate-pulse rounded bg-gray-600" />
+            </div>
+          </li>
+        ))}
+      </ul>
+    );
 
   if (participantsQuery.isError) {
     const isUnauthorized =
-      participantsQuery.error?.message === '인증이 필요합니다.';
+      participantsQuery.error?.code === 'UNAUTHORIZED' ||
+      participantsQuery.error?.status === '401';
 
     return (
       <div className="flex flex-col gap-3">
