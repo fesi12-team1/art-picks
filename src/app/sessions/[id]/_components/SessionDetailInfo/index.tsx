@@ -75,15 +75,17 @@ export default function SessionDetailInfo({ session }: { session: Session }) {
           </div>
         )}
 
-        <ErrorBoundary
-          fallback={({ error }) => (
-            <ParticipantsListErrorFallback error={error} />
-          )}
-        >
-          <Suspense fallback={<ParticipantsListSkeleton />}>
-            <ParticipantsList sessionId={session.id} />
-          </Suspense>
-        </ErrorBoundary>
+        {currentParticipantCount > 0 && (
+          <ErrorBoundary
+            fallback={({ error }) => (
+              <ParticipantsListErrorFallback error={error} />
+            )}
+          >
+            <Suspense fallback={<ParticipantsListSkeleton />}>
+              <ParticipantsList sessionId={session.id} />
+            </Suspense>
+          </ErrorBoundary>
+        )}
       </div>
     </div>
   );

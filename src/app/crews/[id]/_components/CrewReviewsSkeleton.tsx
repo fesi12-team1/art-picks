@@ -16,7 +16,7 @@ export default function CrewReviewsSkeleton() {
         <Skeleton className="text-title3-semibold h-7 w-8" />
       </div>
 
-      <div
+      <ul
         className={cn(
           'flex flex-col divide-y divide-dashed divide-gray-500',
           '*:pb-4 not-first:*:pt-4'
@@ -52,7 +52,7 @@ export default function CrewReviewsSkeleton() {
             </div>
           </li>
         ))}
-      </div>
+      </ul>
     </>
   );
 }

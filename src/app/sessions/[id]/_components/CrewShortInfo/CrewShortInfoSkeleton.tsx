@@ -12,7 +12,7 @@ export default function CrewShortInfoSkeleton() {
         </div>
       </div>
 
-      <hr className="text-gray-600" />
+      <hr className="border-gray-600" />
 
       {/* Review List */}
       <div>

@@ -3,7 +3,7 @@ import Skeleton from '@/components/ui/Skeleton';
 export default function ParticipantsListSkeleton() {
   return (
     <ul className="tablet:gap-5 mb-3 flex flex-col gap-2">
-      {[1, 2].map((i) => (
+      {[1, 2, 3, 4].map((i) => (
         <li key={i} className="flex items-center gap-3">
           {/* Avatar */}
           <Skeleton className="size-12 shrink-0 rounded-full" />
