@@ -1,11 +1,12 @@
 'use client';
 
 import { Suspense } from '@suspensive/react';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { crewQueries } from '@/api/queries/crewQueries';
+import { userQueries } from '@/api/queries/userQueries';
 import CrewMemberList from '@/components/crew/CrewMemberList';
 import FixedBottomBar from '@/components/layout/FixedBottomBar';
 import { CREW_DETAIL_SECTIONS } from '@/constants/crew';
@@ -25,13 +26,16 @@ import RecruitingSessionsSkeleton from './RecruitingSessionsSkeleton';
 
 interface CrewDetailContentProps {
   crewId: number;
-  myRole: CrewMember['role'] | null;
 }
 
-export default function CrewDetailContent({
-  crewId,
-  myRole,
-}: CrewDetailContentProps) {
+export default function CrewDetailContent({ crewId }: CrewDetailContentProps) {
+  const { data: myProfile } = useQuery(userQueries.me.info());
+  const { data: myRoleData } = useQuery({
+    ...crewQueries.members(crewId).detail(myProfile?.id ?? 0),
+    enabled: !!myProfile?.id,
+  });
+  const myRole = myRoleData?.role || undefined;
+
   const searchParams = useSearchParams();
   const pageFilter = Number(searchParams.get('page'))
     ? Number(searchParams.get('page')) - 1
@@ -55,7 +59,7 @@ export default function CrewDetailContent({
   );
 
   return (
-    <CrewDetailContext value={{ crewId: crew.id, myRole: myRole || undefined }}>
+    <CrewDetailContext value={{ crewId: crew.id, myRole }}>
       <div className="h-main laptop:bg-gray-850 flex flex-col items-center bg-gray-800 pb-20">
         {/* Crew Image */}
         <div
