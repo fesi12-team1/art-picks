@@ -3,6 +3,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import z from 'zod';
 import { useUpdateSession } from '@/api/mutations/sessionMutations';
+import { sessionQueries } from '@/api/queries/sessionQueries';
 import ChevronLeft from '@/assets/icons/chevron-left.svg?react';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
@@ -20,6 +21,7 @@ const schema = z.object({
     .string()
     .max(500, '세션 설명은 최대 500자까지 입력 가능합니다.'),
 });
+type values = z.infer<typeof schema>;
 
 export default function SessionUpdateModal({
   isUpdateModalOpen,
@@ -30,7 +32,7 @@ export default function SessionUpdateModal({
   setIsUpdateModalOpen: (open: boolean) => void;
   session: Session;
 }) {
-  const methods = useForm<z.infer<typeof schema>>({
+  const form = useForm<values>({
     resolver: zodResolver(schema),
 
     defaultValues: {
@@ -41,13 +43,21 @@ export default function SessionUpdateModal({
 
     mode: 'onSubmit',
   });
-
   const { mutate, isPending } = useUpdateSession(session.id);
-  const onSubmit = (data: z.infer<typeof schema>) => {
+  const onSubmit = (data: values) => {
     mutate(data, {
-      onSuccess: () => {
+      onSuccess: async (_data, _variables, _onMutateResult, context) => {
         toast.success('세션 정보가 수정되었습니다!');
         setIsUpdateModalOpen(false);
+        // 세션 상세 캐시 무효화 및 리페치
+        await context.client.invalidateQueries({
+          queryKey: sessionQueries.detail(session.id).queryKey,
+          refetchType: 'active',
+        });
+        // 세션 목록 캐시 무효화
+        context.client.invalidateQueries({
+          queryKey: sessionQueries.lists(),
+        });
       },
       onError: (error) => {
         toast.error(error.message || '세션 정보 수정에 실패했습니다.');
@@ -58,7 +68,7 @@ export default function SessionUpdateModal({
   return (
     <Modal open={isUpdateModalOpen} onOpenChange={setIsUpdateModalOpen}>
       <Modal.Content className="scrollbar-hidden laptop:max-w-[480px] laptop:rounded-xl laptop:h-auto laptop:max-h-[85dvh] h-dvh w-full bg-gray-900">
-        <FormProvider {...methods}>
+        <FormProvider {...form}>
           <Modal.CloseButton
             onClick={() => setIsUpdateModalOpen(false)}
             className="laptop:block top-[26px] right-6 hidden"
@@ -76,7 +86,7 @@ export default function SessionUpdateModal({
 
           <form
             id="update-session-form"
-            onSubmit={methods.handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit(onSubmit)}
             className="w-full"
           >
             <SessionUpdateFields />
