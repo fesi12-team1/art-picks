@@ -33,6 +33,7 @@ import { generateNextImageSizes } from '@/lib/Image';
 import { cn, copyStringToClipboard } from '@/lib/utils';
 import { CrewMember } from '@/types';
 import CrewDetailSectionsTabs from './_components/CrewDetailSectionsTabs';
+import CrewDetailSkeleton from './_components/CrewDetailSkeleton';
 
 export default function Page() {
   const params = useParams<{ id: string }>();
@@ -54,7 +55,11 @@ export default function Page() {
   const isMobile = useMediaQuery({ max: 'tablet' });
 
   // fetch queries
-  const { data: crew } = useQuery(crewQueries.detail(crewId));
+  const {
+    data: crew,
+    isLoading: isLoadingCrew,
+    isError: isCrewQueriesError,
+  } = useQuery(crewQueries.detail(crewId));
 
   // // Redirect to /crews if there's no crew data or error
   // useEffect(() => {
@@ -135,11 +140,15 @@ export default function Page() {
   const totalElements = crewReviewsData?.totalElements ?? 0;
   const totalPages = crewReviewsData?.totalPages ?? 0;
 
+  if (isLoadingCrew) {
+    return <CrewDetailSkeleton />;
+  }
+
   if (isNaN(crewId)) {
     return notFound();
   }
 
-  if (!crew)
+  if (isCrewQueriesError || !crew)
     return (
       <main className="tablet:h-[calc(100vh-60px)] mx-auto flex h-[calc(100vh-56px)] max-w-[1120px] flex-1 flex-col items-center justify-center gap-10 bg-gray-900 py-10">
         <section className="flex h-[60vh] flex-col items-center justify-center gap-6">
