@@ -53,7 +53,7 @@ export default function CompletedSessions({ crewId }: CompletedSessionsProps) {
         ))}
       </div>
       <Modal>
-        <Modal.Trigger aria-label="멤버 전체보기" asChild>
+        <Modal.Trigger aria-label="마감된 세션 전체보기" asChild>
           <Button
             variant="neutral"
             size="xs"
@@ -76,10 +76,7 @@ export default function CompletedSessions({ crewId }: CompletedSessionsProps) {
             <Modal.EmptyCloseButton className="tablet:hidden my-0.5 flex">
               <ChevronLeft className="size-6" />
             </Modal.EmptyCloseButton>
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center gap-2"></div>
-              <Modal.Description className="text-body3-regular tablet:pb-0 pb-1 text-gray-200"></Modal.Description>
-            </div>
+            <span className="sr-only">마감된 세션</span>
             <Modal.CloseButton className="tablet:flex absolute top-0 right-0 my-0.5 hidden" />
           </Modal.Title>
           {completedSessions.sessions.map((session) => (
