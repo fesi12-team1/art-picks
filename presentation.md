@@ -22,6 +22,10 @@ h2 {
 strong {
   color: #dc2626;
 }
+
+code {
+  font-size: 0.85em;
+}
 </style>
 
 <!-- _paginate: false -->
@@ -348,6 +352,257 @@ export default function SessionDetail({ sessionId }: Props) {
 | **컴포넌트 책임**  | 다중 책임    | 단일 책임         |
 | **코드 가독성**    | 복잡함       | 명확함            |
 | **조건부 렌더링**  | 많음         | 거의 없음         |
+
+---
+
+<!-- _class: lead -->
+
+## Next.js Proxy를 이용한 페이지 접근 제어
+
+---
+
+### 🤔 기존 방식의 문제점
+
+**각 페이지에서 반복되는 조건 분기**
+
+```tsx
+// src/app/my/page.tsx
+export default async function MyPage() {
+  const user = await getUser();
+
+  if (!user) {
+    redirect('/signin');
+  }
+
+  // 페이지 로직...
+}
+```
+
+- 📌 **중복 코드**: 모든 보호 페이지마다 동일한 체크 반복
+- 📌 **관심사 혼재**: 페이지의 책임이 명확하지 않음
+
+---
+
+## ✨ 개선된 방식
+
+### Middleware를 이용한 중앙 관리
+
+```tsx
+// src/middleware.ts
+import { NextRequest, NextResponse } from 'next/server';
+
+const PROTECTED_ROUTES = ['/my', '/sessions/[id]'];
+
+export function middleware(request: NextRequest) {
+  const token = request.cookies.get('token')?.value;
+  const pathname = request.nextUrl.pathname;
+
+  // 보호된 경로 접근 확인
+  const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
+    pathname.startsWith(route.replace('[id]', ''))
+  );
+
+  if (isProtectedRoute && !token) {
+    // 로그인 페이지로 리다이렉트하며 원래 경로 저장
+    const signInUrl = new URL('/signin', request.url);
+    signInUrl.searchParams.set('redirect', pathname);
+    return NextResponse.redirect(signInUrl);
+  }
+
+  return NextResponse.next();
+}
+
+export const config = { matcher: ['/my/:path*', '/sessions/:path*'] };
+```
+
+---
+
+## 로그인 후 원래 페이지로 복귀
+
+```tsx
+// src/app/signin/page.tsx
+import { useSearchParams } from 'next/navigation';
+
+export default function SignInPage() {
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get('redirect');
+
+  const handleSignInSuccess = async () => {
+    // 로그인 성공
+    toast.success('로그인했어요!');
+
+    // 원래 가려던 경로로 이동, 없으면 홈으로
+    router.push(redirect || '/');
+  };
+
+  return <div>{/* 로그인 폼 */}</div>;
+}
+```
+
+---
+
+## 개선의 이점
+
+| 항목            | 기존 방식        | 개선 방식               |
+| --------------- | ---------------- | ----------------------- |
+| **코드 중복**   | 모든 페이지 반복 | 중앙 관리 (1회만)       |
+| **접근 제어**   | 분산 관리        | 한 곳에서 통제          |
+| **관심사 분리** | 혼합             | 명확히 분리             |
+| **UX**          | 경로 정보 손실   | 원래 페이지로 복귀 가능 |
+| **유지보수**    | 어려움           | 간편함                  |
+
+---
+
+<!-- _class: lead -->
+
+## Mutation 리팩토링: Hook → Factory 방식 전환
+
+---
+
+### 🤔 기존 방식의 문제점
+
+**useQueryClient로 클라이언트를 주입받는 방식**
+
+```tsx
+// src/hooks/useLikeMutation.ts
+export function useLikeMutation() {
+  const queryClient = useQueryClient(); // 클라이언트 주입
+
+  return useMutation({
+    mutationFn: async (sessionId: string) => {
+      return await likeSession(sessionId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: sessionQueries.list() });
+    },
+  });
+}
+```
+
+- 📌 **리팩토링의 걸림돌**: useQueryClient 호출로 인한 의존성
+- 📌 **재사용성 제한**: Query Factory와 달리 일관된 관리 불가능
+
+---
+
+## ✨ 개선된 방식
+
+### Callback Context 활용
+
+```tsx
+// Mutation의 callback에서 제공되는 context의 client 사용
+return useMutation({
+  mutationFn: async (sessionId: string) => {
+    return await likeSession(sessionId);
+  },
+  onSuccess: (data, variables, context) => {
+    // context에서 제공되는 client 사용
+    context.queryClient?.invalidateQueries({
+      queryKey: sessionQueries.list(),
+    });
+  },
+});
+```
+
+---
+
+## Factory 패턴으로의 전환
+
+### Query Factory와 유사한 구조
+
+```tsx
+// 추후 Factory 방식으로 관리 가능
+export const sessionMutations = {
+  like: () =>
+    useMutation({
+      mutationFn: likeSession,
+      onSuccess: (data, variables, context) => {
+        context?.invalidateQueries({ queryKey: sessionQueries.list() });
+      },
+    }),
+  unlike: () =>
+    useMutation({
+      mutationFn: unlikeSession,
+      onSuccess: (data, variables, context) => {
+        context?.invalidateQueries({ queryKey: sessionQueries.list() });
+      },
+    }),
+};
+```
+
+---
+
+## 관심사 분리: UI 액션 처리
+
+### 🤔 문제점
+
+**Mutation의 onSuccess/onError 내에서 UI 액션을 모두 처리**
+
+```tsx
+export function useLikeMutation() {
+  return useMutation({
+    mutationFn: likeSession,
+    onSuccess: () => {
+      queryClient.invalidateQueries(...);
+      toast.success('찜했어요!'); // UI 액션
+      router.push('/...'); // 네비게이션
+    },
+  });
+}
+```
+
+---
+
+## ✨ 개선안: 사용처에서 UI 액션 처리
+
+### 원칙
+
+**Hook 파일**: Query Invalidation만 처리  
+**사용처**: 비즈니스 로직에 맞는 UI 액션 처리
+
+### 구현 예시
+
+```tsx
+// src/components/LikeButton.tsx
+export function LikeButton({ sessionId }: Props) {
+  const { mutate: like } = sessionMutations.like();
+
+  const handleLike = async () => {
+    try {
+      await like(
+        { sessionId, liked },
+        {
+          onSuccess: () => {
+            toast.success(
+              liked
+                ? '찜한 세션에서 제외되었습니다.'
+                : '찜한 세션에 추가되었습니다.'
+            );
+          },
+          // ...
+        }
+      );
+      // 이 페이지/컴포넌트의 맥락에 맞는 UI 액션
+      toast.success('찜했어요!');
+    } catch (error) {
+      toast.error('찜하기에 실패했어요.');
+    }
+  };
+
+  return <button onClick={handleLike}>❤️ 찜하기</button>;
+}
+```
+
+---
+
+## 개선의 이점
+
+| 항목             | 기존 방식         | 개선 방식             |
+| ---------------- | ----------------- | --------------------- |
+| **관심사 분리**  | Hook 내 모두 처리 | Hook과 사용처 분리    |
+| **UI 액션 통제** | 어려움            | 사용 시점에 주입 가능 |
+| **코드 응집도**  | 낮음              | 높음                  |
+| **재사용성**     | 제한적            | Factory 확장 용이     |
+| **맥락 이해**    | 어려움            | 명확함                |
 
 ---
 
