@@ -272,7 +272,11 @@ export default function SigninModalProvider() {
 
 ---
 
+<!-- _class: lead -->
+
 ## Suspense + ErrorBoundary 사용
+
+---
 
 ### 🤔 기존 방식의 문제점
 
