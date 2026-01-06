@@ -3,15 +3,15 @@ import { CREW_SORT_OPTIONS } from '@/constants/crew';
 import { CrewListFilters } from '@/types';
 import CrewRegionFilter from './CrewRegionFilter';
 
-interface CrewFilterBarProps {
+interface CrewFiltersProps {
   filters: CrewListFilters;
   applyFilters: (filters: CrewListFilters) => void;
 }
 
-export default function CrewFilterBar({
+export default function CrewFilters({
   filters,
   applyFilters,
-}: CrewFilterBarProps) {
+}: CrewFiltersProps) {
   return (
     <div className="flex w-full items-center justify-between">
       <CrewRegionFilter

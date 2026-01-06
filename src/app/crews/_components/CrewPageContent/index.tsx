@@ -2,7 +2,7 @@ import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { crewQueries } from '@/api/queries/crewQueries';
 import { useCrewFilters } from '@/hooks/crew/useCrewFilters';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
-import CrewFilterBar from '../CrewFilterBar';
+import CrewFilters from '../CrewFilters';
 import CrewList from '../CrewList';
 
 export default function CrewPageContent() {
@@ -15,7 +15,7 @@ export default function CrewPageContent() {
 
   return (
     <div className="flex w-full flex-col">
-      <CrewFilterBar applyFilters={applyFilters} filters={filters} />
+      <CrewFilters applyFilters={applyFilters} filters={filters} />
       <CrewList
         data={data?.crews}
         isFetchingNextPage={isFetchingNextPage}
