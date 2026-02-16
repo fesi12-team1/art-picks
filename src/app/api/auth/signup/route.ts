@@ -1,9 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { getBackendUrl } from '@/server/api/utils';
+import {
+  createSignupPostHandler,
+  SignupProvider,
+} from '@/server/auth/signupPostHandler';
 
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
+const javaBackendSignupProvider: SignupProvider = {
+  async signUp(request: NextRequest, body: unknown) {
     const proxyResponse = await fetch(getBackendUrl(request.nextUrl), {
       method: 'POST',
       headers: {
@@ -13,27 +16,12 @@ export async function POST(request: NextRequest) {
       cache: 'no-cache',
     });
 
-    if (!proxyResponse.ok) {
-      const errorData = await proxyResponse.json();
-      const response = NextResponse.json(errorData, {
-        status: proxyResponse.status,
-      });
+    const payload = await proxyResponse.json();
+    return {
+      status: proxyResponse.status,
+      body: payload,
+    };
+  },
+};
 
-      return response;
-    }
-
-    const data = await proxyResponse.json();
-    const response = NextResponse.json(data, { status: proxyResponse.status });
-
-    return response;
-  } catch (error) {
-    return NextResponse.json(
-      {
-        code: 'SERVER_ERROR',
-        message:
-          error instanceof Error ? error.message : '서버에 연결할 수 없습니다.',
-      },
-      { status: 500 }
-    );
-  }
-}
+export const POST = createSignupPostHandler(javaBackendSignupProvider);

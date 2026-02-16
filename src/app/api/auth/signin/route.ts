@@ -1,9 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { getBackendUrl } from '@/server/api/utils';
+import {
+  createSigninPostHandler,
+  SigninProvider,
+} from '@/server/auth/signinPostHandler';
 
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
+const javaBackendSigninProvider: SigninProvider = {
+  async signIn(request: NextRequest, body: unknown) {
     const proxyResponse = await fetch(getBackendUrl(request.nextUrl), {
       method: 'POST',
       headers: {
@@ -15,51 +18,34 @@ export async function POST(request: NextRequest) {
 
     if (!proxyResponse.ok) {
       const errorData = await proxyResponse.json();
-      const response = NextResponse.json(
-        { ...errorData },
-        { status: proxyResponse.status }
-      );
-
-      return response;
+      return {
+        status: proxyResponse.status,
+        body: { ...errorData },
+      };
     }
 
-    const { success, data, error } = await proxyResponse.json();
-    if (!data?.token) {
-      return NextResponse.json(
-        { code: 'INVALID_RESPONSE', message: '서버 응답에 토큰이 없습니다.' },
-        { status: 500 }
-      );
+    const payload = await proxyResponse.json();
+    const token = payload?.data?.token;
+
+    if (!token) {
+      return {
+        status: 500,
+        body: {
+          code: 'INVALID_RESPONSE',
+          message: '서버 응답에 토큰이 없습니다.',
+        },
+      };
     }
 
-    const response = NextResponse.json(
-      { success, data, error },
-      { status: proxyResponse.status }
-    );
+    return {
+      status: proxyResponse.status,
+      body: payload,
+      accessToken: token,
+      forwardedSetCookies: proxyResponse.headers
+        .getSetCookie()
+        .map((cookieString) => cookieString.replace(/Path=\/[^;]*/i, 'Path=/')),
+    };
+  },
+};
 
-    response.cookies.set('accessToken', data.token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
-      path: '/',
-      maxAge: 60 * 60, // 1 hour
-    });
-
-    const proxySetCookies = proxyResponse.headers.getSetCookie();
-
-    proxySetCookies.forEach((cookieString) => {
-      const modifiedCookie = cookieString.replace(/Path=\/[^;]*/i, 'Path=/');
-      response.headers.append('Set-Cookie', modifiedCookie);
-    });
-
-    return response;
-  } catch (error) {
-    return NextResponse.json(
-      {
-        code: 'SERVER_ERROR',
-        message:
-          error instanceof Error ? error.message : '서버에 연결할 수 없습니다.',
-      },
-      { status: 500 }
-    );
-  }
-}
+export const POST = createSigninPostHandler(javaBackendSigninProvider);
